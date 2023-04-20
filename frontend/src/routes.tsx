@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import MainPage from './Pages/MainPage';
 import React from 'react';
 import MainLayout from './Layouts/MainLayout';
+import ProfilePage from './pages/ProfilePage';
 
 const routes = createBrowserRouter([
   {
@@ -14,7 +15,7 @@ const routes = createBrowserRouter([
       },
       {
         path: '/profile',
-        element: <div>TODO</div>
+        element: <ProfilePage />
       },
       {
         path: '/insights',
