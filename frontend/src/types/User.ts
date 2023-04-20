@@ -7,7 +7,7 @@ type User = {
   createdAt: Date;
   updatedAt: Date;
   avatar: string;
-  gender: "Female" | "Male" | "Non Binary" | "Prefer not to say";
+  gender: string;
 };
 
 export default User;

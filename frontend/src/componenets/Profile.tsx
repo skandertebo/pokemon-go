@@ -1,4 +1,4 @@
-import { FormEvent, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import avatar from "../assets/avatar-girledited.png";
 import { Card, Button, Typography } from "@material-tailwind/react";
 import { AiFillEdit } from "react-icons/ai";
@@ -45,14 +45,16 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
   }
 
   const handleSave = () => {
-    const updatedUser = {
+    const newUser = {
+      ...user,
       name,
       username,
       email,
-      imagePreview,
+      avatar: imagePreview || user.avatar,
       gender,
+      updatedAt: new Date(),
     };
-    const newUser = { ...user, ...updatedUser, updatedAt: new Date() };
+
     console.log(JSON.stringify(newUser));
     updateUser(newUser);
   };
