@@ -1,8 +1,9 @@
 import { Loader } from '@googlemaps/js-api-loader';
 import React, { createContext, useContext } from 'react';
+import { googleMapsApikey } from '../env';
 
 const loader = new Loader({
-  apiKey: 'AIzaSyCKh-TCMnsxcllDAyxj2n7G0UFOnB6hTuw',
+  apiKey: googleMapsApikey,
   version: 'weekly',
   libraries: ['places', 'geometry', 'visualization', 'drawing']
 });
