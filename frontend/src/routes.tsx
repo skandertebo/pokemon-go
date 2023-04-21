@@ -3,6 +3,7 @@ import MainPage from './Pages/MainPage';
 import React from 'react';
 import MainLayout from './Layouts/MainLayout';
 import ProfilePage from './pages/ProfilePage';
+import Leaderboard from './Pages/Leaderboard';
 
 const routes = createBrowserRouter([
   {
@@ -28,6 +29,10 @@ const routes = createBrowserRouter([
       {
         path: 'signup',
         element: <div>TODO</div>
+      },
+      {
+        path: '/leaderboard',
+        element: <Leaderboard />
       }
     ]
   }

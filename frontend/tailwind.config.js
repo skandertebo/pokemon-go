@@ -2,7 +2,7 @@ import withMT from '@material-tailwind/react/utils/withMT';
 
 /** @type {import('tailwindcss').Config} */
 export default withMT({
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
@@ -16,7 +16,7 @@ export default withMT({
       sans: ['Poppins', 'sans-serif']
     }
   },
-  plugins: [],
+  plugins: []
 });
 
 // module.exports = {
