@@ -11,6 +11,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
+    "@heroicons/react": "^2.0.17",
     "@material-tailwind/react": "^1.4.2",
     "@mui/material": "^5.12.1",
     "@tailwindcss/forms": "^0.5.3",
@@ -19,6 +20,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",
+    "react-router-dom": "^6.10.0",
     "vite-plugin-mkcert": "^1.14.0"
   },
   "devDependencies": {
