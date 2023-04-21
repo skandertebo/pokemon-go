@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\SpawnRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -30,22 +31,30 @@ class Spawn
     #[ORM\JoinColumn(nullable: false)]
     private ?Pokemon $pokemon = null;
 
-    #[ORM\ManyToOne(targetEntity: Player::class, inversedBy: "spawns")]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Player $player = null;
+    #[ORM\OneToMany(mappedBy: 'spawn', targetEntity: Capture::class, orphanRemoval: true)]
+    private $captures;
 
-    public function setPlayer(?Player $player): self
+    public function __construct()
     {
-        $this->player = $player;
+        $this->captures = new ArrayCollection();
+    }
+
+    public function getCaptures(): ArrayCollection
+    {
+        return $this->captures;
+    }
+    
+    public function addCapture(Capture $capture): self
+    {
+        if (!$this->captures->contains($capture)) {
+            $this->captures[] = $capture;
+            $capture->setSpawn($this);
+        }
 
         return $this;
     }
 
-    public function getPlayer(): ?Player
-    {
-        return $this->player;
-    }
-
+   
     public function setPokemon(?Pokemon $pokemon): self
     {
         $this->pokemon = $pokemon;

@@ -3,7 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\PlayerRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints\Collection;
 
 #[ORM\Entity(repositoryClass: PlayerRepository::class)]
 
@@ -14,11 +16,6 @@ class Player extends User
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'notifications')]
-    private $notifications;
-
-    #[ORM\OneToMany(targetEntity: Spawn::class, mappedBy: 'spawns')]
-    private $spawns;
 
     #[ORM\Column(length: 255)]
     private ?string $playerTag = null;
@@ -30,12 +27,16 @@ class Player extends User
     #[ORM\OneToMany(targetEntity: Capture::class, mappedBy: "spawn", orphanRemoval: true)]
     private $captures;
 
+    #[ORM\OneToMany(mappedBy: 'playerId', targetEntity: NotificationPlayer::class, orphanRemoval: true)]
+    private \Doctrine\Common\Collections\Collection $notifications;
+
     public function __construct()
     {
-        $this->posts = new ArrayCollection();
+        //$this->posts = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
     }
 
-    public function getNotifications(): Collection
+    public function getNotifications(): ArrayCollection
     {
         return $this->notifications;
     }
@@ -44,29 +45,6 @@ class Player extends User
     {
         if (!$this->notifications->contains($notification)) {
             $this->notifications[] = $notification;
-        }
-
-        return $this;
-    }
-
-    public function getSpawns(): Collection
-    {
-        return $this->spawns;
-    }
-
-    public function addSpawn(Spawn $spawn): self
-    {
-        if (!$this->spawns->contains($spawn)) {
-            $this->spawns[] = $spawn;
-            $spawn->setPlayer($this);
-            //add capture
-            $capture = new Capture();
-            $capture->setPlayer($this);
-            $capture->setSpawn($spawn);
-            $capture->setDate(new \DateTime());
-            $this->addCapture($capture);
-            //set score
-            $this->setScore($this->getScore() + $spawn->getPokemon()->getBaseScore());
         }
 
         return $this;
@@ -101,7 +79,7 @@ class Player extends User
         return $this;
     }
 
-    public function getCaptures(): Collection
+    public function getCaptures(): ArrayCollection
     {
         return $this->captures;
     }
@@ -115,5 +93,6 @@ class Player extends User
 
         return $this;
     }
+
 
 }
