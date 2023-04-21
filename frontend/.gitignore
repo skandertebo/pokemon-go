@@ -25,4 +25,4 @@ dist-ssr
 
 .env
 
-src/env.ts 
+src/env.ts

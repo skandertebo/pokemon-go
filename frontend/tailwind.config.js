@@ -1,4 +1,4 @@
-const withMT = require("@material-tailwind/react/utils/withMT");
+import withMT from '@material-tailwind/react/utils/withMT';
 
 /** @type {import('tailwindcss').Config} */
 export default withMT({
@@ -6,15 +6,15 @@ export default withMT({
   theme: {
     extend: {
       colors: {
-        primary: " #00295F",
-        secondary: "#F0F3D1",
-        third: "#F09393",
-        fourth: "#8A8D91",
-      },
+        primary: ' #00295F',
+        secondary: '#F0F3D1',
+        third: '#F09393',
+        fourth: '#8A8D91'
+      }
     },
     fontFamily: {
-      sans: ["Poppins", "sans-serif"],
-    },
+      sans: ['Poppins', 'sans-serif']
+    }
   },
   plugins: [],
 });

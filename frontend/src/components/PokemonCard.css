@@ -1,0 +1,11 @@
+.pokemoncard {
+  transform: rotateY(180deg);
+  transition: 1s;
+}
+.pokemoncard-notransition {
+  transform: rotateY(180deg);
+}
+
+.rotate-data {
+  transform: rotateY(-180deg);
+}
