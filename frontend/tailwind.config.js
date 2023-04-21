@@ -18,3 +18,14 @@ export default withMT({
   },
   plugins: [],
 });
+
+// module.exports = {
+//   theme:{
+//     colors:{
+//       'coral': '#F09393',
+//       'yellow': '#F0F3D1',
+//       'grey': '#8A8D91',
+//       'blue':"#00295F"
+//     }
+//   }
+// }
