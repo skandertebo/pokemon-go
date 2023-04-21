@@ -61,10 +61,10 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
 
   return (
     <div
-      className='container absolute top-1/2 left-1/2  my-auto mt-11 transform -translate-x-1/2 -translate-y-1/2 
+      className='container absolute top-1/3 mt-20 left-1/2  transform -translate-x-1/2 -translate-y-1/2 
              md:w-2/3 lg:w-1/2 xl:w-1/3 2xl:w-1/4 2xl:h-max p-3 '
     >
-      <Card className=' bg-secondary drop-shadow-2xl mx-auto rounded-2xl xl:mt-32'>
+      <Card className=' bg-secondary shadow-2xl mx-auto rounded-2xl xl:mt-32'>
         <Button
           className=' mod_button ml-auto mt-2 mr-2 hover:transform hover:scale-105 hover:transition hover:duration-200 bg-third   rounded-full h-16 border-none w-16 flex justify-center items-center  text-9xl'
           onClick={lockForm}
@@ -78,16 +78,23 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
           </Typography>
         </div>
         <div>
-          <form className=' mb-2 mx-auto w-80  ' onSubmit={handleSave}>
+          <form
+            className=' mb-2 mx-auto w-80 maw-h-screen '
+            onSubmit={handleSave}
+          >
             <div>
               <img
                 src={imagePreview || avatar}
                 alt='image avatar'
-                className='mx-auto mb-4 w-[250px] h-[250px] rounded-full border-8 border-third p-3 justify-self-center flex '
+                className='mx-auto mb-4 w-[200px] h-[200px] rounded-full border-8 border-third p-3 justify-self-center flex '
               />
-              <div className='mb-4'>
+              <div>
                 <label className='  hover:text-third   rounded-full text-lg '>
-                  {modify ? <div>Edit profile picture</div> : <div></div>}
+                  {modify ? (
+                    <div className='text-center'>Edit profile picture</div>
+                  ) : (
+                    <div></div>
+                  )}
                   <input
                     type='file'
                     ref={imageInput}
@@ -129,7 +136,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                   disabled={!modify}
                 />
               </div>
-              <div>
+              {/* <div>
                 <label className='text-black mr-60 p-0  text-lg font-medium'>
                   Name
                 </label>
@@ -141,7 +148,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                     setName(e.target.value);
                   }}
                 />
-              </div>
+              </div> */}
               <div>
                 <label className='text-black mr-60 p-0  text-lg font-medium'>
                   Gender
