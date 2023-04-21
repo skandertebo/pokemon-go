@@ -16,8 +16,6 @@ class Notification
     #[ORM\Column(length: 255)]
     private ?string $contenu = null;
 
-    #[ORM\ManyToMany(mappedBy: 'notification', targetEntity: Player::class)]
-    private $players;
 
     public function getId(): ?int
     {

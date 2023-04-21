@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\PokemonRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PokemonRepository::class)]
@@ -96,7 +97,7 @@ class Pokemon
         return $this;
     }
 
-    public function getSpawns(): Collection
+    public function getSpawns(): ArrayCollection
     {
         return $this->spawns;
     }
