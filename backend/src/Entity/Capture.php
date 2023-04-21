@@ -14,9 +14,9 @@ class Capture
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Pokemon::class, inversedBy: "captures")]
+    #[ORM\ManyToOne(targetEntity: Player::class, inversedBy: "captures")]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Pokemon $pokemon = null;
+    private ?Player $player = null;
 
     #[ORM\ManyToOne(targetEntity: Spawn::class, inversedBy: "captures")]
     #[ORM\JoinColumn(nullable: false)]
@@ -40,5 +40,30 @@ class Capture
         $this->dateCapture = $dateCapture;
 
         return $this;
+    }
+
+    public function setSpawn(?Spawn $spawn): self
+    {
+        $this->spawn = $spawn;
+
+        return $this;
+    }
+
+    public function getSpawn(): ?Spawn
+    {
+        return $this->spawn;
+    }
+
+
+    public function setPlayer(?Player $player): self
+    {
+        $this->player = $player;
+
+        return $this;
+    }
+
+    public function getPlayer(): ?Player
+    {
+        return $this->player;
     }
 }
