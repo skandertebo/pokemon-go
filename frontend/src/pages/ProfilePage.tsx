@@ -12,7 +12,8 @@ function ProfilePage() {
     createdAt: new Date(),
     updatedAt: new Date(),
     avatar: avatar,
-    gender: 'Female'
+    gender: 'Female',
+    score: 0
   };
 
   const [user, setUser] = useState<User>(useryas);
