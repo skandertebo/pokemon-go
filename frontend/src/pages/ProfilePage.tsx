@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Profile from "../componenets/Profile";
+import Profile from "../components/Profile";
 import User from "../types/User";
-import avatar from "./assets/avatar-girledited.png";
+import avatar from "../assets/avatar-girledited.png";
 function ProfilePage() {
   const useryas: User = {
     id: 1,
