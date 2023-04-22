@@ -1,4 +1,4 @@
-import RegisterComp from "../components/RegisterComp";
+import RegisterComp from '../components/RegisterComp';
 
 function Login() {
     return (
