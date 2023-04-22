@@ -5,7 +5,8 @@ import './App.css';
 import { Button } from '@material-tailwind/react';
 
 function App() {
-  return <div className='App'></div>;
+  return <div className='App w-screen'>
+  </div>;
 }
 
 export default App;
