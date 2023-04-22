@@ -61,10 +61,10 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
 
   return (
     <div
-      className='container absolute top-1/3 mt-20 left-1/2  transform -translate-x-1/2 -translate-y-1/2 
-             md:w-2/3 lg:w-1/2 xl:w-1/3 2xl:w-1/4 2xl:h-max p-3 '
+      className='w-screen sm:absolute sm:top-1/3 sm:mt-20 sm:left-1/2  sm:transform sm:-translate-x-1/2 sm:-translate-y-1/2 
+             md:w-2/3 lg:w-1/2 xl:w-1/3 2xl:w-1/4 2xl:h-max p-3'
     >
-      <Card className=' bg-secondary shadow-2xl mx-auto rounded-2xl xl:mt-32'>
+      <Card className=' bg-secondary shadow-2xl mx-auto mb-16 rounded-2xl xl:mt-32'>
         <Button
           className=' mod_button ml-auto mt-2 mr-2 hover:transform hover:scale-105 hover:transition hover:duration-200 bg-third   rounded-full h-16 border-none w-16 flex justify-center items-center  text-9xl'
           onClick={lockForm}
@@ -112,7 +112,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                   UserName
                 </label>
                 <input
-                  className='inline-block w-full focus:outline-none  rounded-full bg-transparent  p-3 leading-relaxed text-fourth placeholder-primary shadow focus:shadow-third  placeholder:opacity-50'
+                  className='inline-block w-full shrink-1 focus:outline-none  rounded-full bg-transparent  p-3 leading-relaxed text-fourth placeholder-primary shadow focus:shadow-third  placeholder:opacity-50'
                   placeholder='Ex: GrumpyChef'
                   type='text'
                   value={username}
@@ -127,7 +127,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                   Email
                 </label>
                 <input
-                  className='inline-block w-full focus:outline-none  rounded-full bg-transparent  p-3 leading-relaxed text-fourth placeholder-primary shadow focus:shadow-third  placeholder:opacity-50'
+                  className='inline-block w-full shrink-1 focus:outline-none  rounded-full bg-transparent  p-3 leading-relaxed text-fourth placeholder-primary shadow focus:shadow-third  placeholder:opacity-50'
                   placeholder='mail@user.com'
                   value={email}
                   onChange={(e) => {
@@ -154,7 +154,8 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                   Gender
                 </label>
                 <select
-                  className='  inline-block  w-full focus:outline-none  rounded-full bg-transparent  p-3 leading-relaxed text-fourth placeholder-primary shadow focus:shadow-third  placeholder:opacity-50'
+                title='gender'
+                  className='  inline-block  w-full shrink-1 focus:outline-none  rounded-full bg-transparent  p-3 leading-relaxed text-fourth placeholder-primary shadow focus:shadow-third  placeholder:opacity-50'
                   onChange={(e) => {
                     setGender(e.target.value);
                   }}
