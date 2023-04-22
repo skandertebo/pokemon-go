@@ -35,6 +35,9 @@ class Spawn implements JsonSerializable
     #[ORM\ManyToOne(inversedBy: 'spawns')]
     private ?Player $owner = null;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $captureDate = null;
+
 
 
     public function setPokemon(?Pokemon $pokemon): self
@@ -125,5 +128,17 @@ class Spawn implements JsonSerializable
             'pokemon' => $this->getPokemon(),
             'owner' => $this->getOwner(),
         ];
+    }
+
+    public function getCaptureDate(): ?\DateTimeInterface
+    {
+        return $this->captureDate;
+    }
+
+    public function setCaptureDate(?\DateTimeInterface $captureDate): self
+    {
+        $this->captureDate = $captureDate;
+
+        return $this;
     }
 }
