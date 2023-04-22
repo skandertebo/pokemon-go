@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\PokemonRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
@@ -98,7 +99,7 @@ class Pokemon implements JsonSerializable
         return $this;
     }
 
-    public function getSpawns(): Collection
+    public function getSpawns(): ArrayCollection
     {
         return $this->spawns;
     }
