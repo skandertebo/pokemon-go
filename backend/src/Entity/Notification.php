@@ -3,10 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\NotificationRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
+//might be useful to add a type on the notification entity if there are multiple types of notification
 #[ORM\Entity(repositoryClass: NotificationRepository::class)]
-class Notification
+class Notification implements JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -15,9 +18,11 @@ class Notification
 
     #[ORM\Column(length: 255)]
     private ?string $contenu = null;
+    
+    
+    #[ORM\OneToMany(mappedBy: 'userId', targetEntity: UserNotification::class, orphanRemoval: true)]
+    private Collection $userNotifications;
 
-    #[ORM\ManyToMany(mappedBy: 'notification', targetEntity: Player::class)]
-    private $players;
 
     public function getId(): ?int
     {
@@ -34,5 +39,45 @@ class Notification
         $this->contenu = $contenu;
 
         return $this;
+    }
+
+
+    
+    /**
+     * @return Collection<int, UserNotification>
+     */
+    public function getUserNotifications(): Collection
+    {
+        return $this->userNotifications;
+    }
+
+    public function addUserNotification(UserNotification $userNotification): self
+    {
+        if (!$this->userNotifications->contains($userNotification)) {
+            $this->userNotifications->add($userNotification);
+            $userNotification->setNotification($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserNotification(UserNotification $userNotification): self
+    {
+        if ($this->userNotifications->removeElement($userNotification)) {
+            // set the owning side to null (unless already changed)
+            if ($userNotification->getNotification() === $this) {
+                $userNotification->setNotification(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'contenu' => $this->getContenu(),
+        ];
     }
 }

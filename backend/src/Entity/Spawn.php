@@ -5,9 +5,10 @@ namespace App\Entity;
 use App\Repository\SpawnRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 #[ORM\Entity(repositoryClass: SpawnRepository::class)]
-class Spawn
+class Spawn implements JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -30,21 +31,10 @@ class Spawn
     #[ORM\JoinColumn(nullable: false)]
     private ?Pokemon $pokemon = null;
 
-    #[ORM\ManyToOne(targetEntity: Player::class, inversedBy: "spawns")]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Player $player = null;
+    #[ORM\ManyToOne(inversedBy: 'spawns')]
+    private ?Player $owner = null;
 
-    public function setPlayer(?Player $player): self
-    {
-        $this->player = $player;
 
-        return $this;
-    }
-
-    public function getPlayer(): ?Player
-    {
-        return $this->player;
-    }
 
     public function setPokemon(?Pokemon $pokemon): self
     {
@@ -109,5 +99,30 @@ class Spawn
         $this->spawnDate = $spawnDate;
 
         return $this;
+    }
+
+    public function getOwner(): ?Player
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?Player $owner): self
+    {
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'latitude' => $this->getLatitude(),
+            'longitude' => $this->getLongitude(),
+            'range' => $this->getRange(),
+            'spawnDate' => $this->getSpawnDate(),
+            'pokemon' => $this->getPokemon(),
+            'owner' => $this->getOwner(),
+        ];
     }
 }
