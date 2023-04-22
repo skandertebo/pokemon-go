@@ -1,7 +1,8 @@
 import { useState } from "react";
 import Profile from "../componenets/Profile";
 import User from "../types/User";
-import avatar from "./assets/avatar-girledited.png";
+// import avatar from "./assets/avatar-girledited.png";
+
 function ProfilePage() {
   const useryas: User = {
     id: 1,
@@ -11,7 +12,7 @@ function ProfilePage() {
     password: "blalbal",
     createdAt: new Date(),
     updatedAt: new Date(),
-    avatar: avatar,
+    avatar: "../assets/avatar-girledited.png",
     gender: "Female",
   };
 
