@@ -6,9 +6,10 @@ use App\Repository\SpawnRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 #[ORM\Entity(repositoryClass: SpawnRepository::class)]
-class Spawn
+class Spawn implements JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -31,30 +32,14 @@ class Spawn
     #[ORM\JoinColumn(nullable: false)]
     private ?Pokemon $pokemon = null;
 
-    #[ORM\OneToMany(mappedBy: 'spawn', targetEntity: Capture::class, orphanRemoval: true)]
-    private $captures;
+    #[ORM\ManyToOne(inversedBy: 'spawns')]
+    private ?Player $owner = null;
 
-    public function __construct()
-    {
-        $this->captures = new ArrayCollection();
-    }
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $captureDate = null;
 
-    public function getCaptures(): ArrayCollection
-    {
-        return $this->captures;
-    }
-    
-    public function addCapture(Capture $capture): self
-    {
-        if (!$this->captures->contains($capture)) {
-            $this->captures[] = $capture;
-            $capture->setSpawn($this);
-        }
 
-        return $this;
-    }
 
-   
     public function setPokemon(?Pokemon $pokemon): self
     {
         $this->pokemon = $pokemon;
@@ -116,6 +101,43 @@ class Spawn
     public function setSpawnDate(\DateTimeInterface $spawnDate): self
     {
         $this->spawnDate = $spawnDate;
+
+        return $this;
+    }
+
+    public function getOwner(): ?Player
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?Player $owner): self
+    {
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'latitude' => $this->getLatitude(),
+            'longitude' => $this->getLongitude(),
+            'range' => $this->getRange(),
+            'spawnDate' => $this->getSpawnDate(),
+            'pokemon' => $this->getPokemon(),
+            'owner' => $this->getOwner(),
+        ];
+    }
+
+    public function getCaptureDate(): ?\DateTimeInterface
+    {
+        return $this->captureDate;
+    }
+
+    public function setCaptureDate(?\DateTimeInterface $captureDate): self
+    {
+        $this->captureDate = $captureDate;
 
         return $this;
     }
