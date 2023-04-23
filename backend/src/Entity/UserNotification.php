@@ -4,9 +4,10 @@ namespace App\Entity;
 
 use App\Repository\UserNotificationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 #[ORM\Entity(repositoryClass: UserNotificationRepository::class)]
-class UserNotification
+class UserNotification implements JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -17,11 +18,11 @@ class UserNotification
     private ?bool $isRead = false;
 
     #[ORM\ManyToOne(inversedBy: 'userNotifications')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Notification $notification= null;
 
     #[ORM\ManyToOne(inversedBy: 'userNotifications')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?User $user = null;
 
     public function getId(): ?int
@@ -63,5 +64,14 @@ class UserNotification
         $this->user = $user;
 
         return $this;
+    }
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'isRead' => $this->isRead,
+            'notification' => $this->notification,
+            'user' => $this->user,
+        ];
     }
 }
