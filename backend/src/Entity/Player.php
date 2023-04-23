@@ -4,17 +4,19 @@ namespace App\Entity;
 
 use App\Repository\PlayerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints\Collection;
+use JsonSerializable;
 
 #[ORM\Entity(repositoryClass: PlayerRepository::class)]
 
-class Player extends User
+class Player extends User implements JsonSerializable
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\OneToOne(targetEntity:'User')]
+    #[ORM\JoinColumn(name: 'id', referencedColumnName: 'id')]
     private ?int $id = null;
+
 
 
     #[ORM\Column(length: 255)]
@@ -23,32 +25,17 @@ class Player extends User
     #[ORM\Column]
     private ?int $score = null;
 
-    /* *** */
-    #[ORM\OneToMany(targetEntity: Capture::class, mappedBy: "spawn", orphanRemoval: true)]
-    private $captures;
-
-    #[ORM\OneToMany(mappedBy: 'playerId', targetEntity: NotificationPlayer::class, orphanRemoval: true)]
-    private \Doctrine\Common\Collections\Collection $notifications;
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Spawn::class)]
+    private Collection $spawns;
 
     public function __construct()
     {
-        //$this->posts = new ArrayCollection();
-        $this->notifications = new ArrayCollection();
+        parent::__construct();
+        $this->spawns = new ArrayCollection();
     }
 
-    public function getNotifications(): ArrayCollection
-    {
-        return $this->notifications;
-    }
 
-    public function addNotification(Notification $notification): self
-    {
-        if (!$this->notifications->contains($notification)) {
-            $this->notifications[] = $notification;
-        }
 
-        return $this;
-    }
 
     public function getId(): ?int
     {
@@ -79,20 +66,45 @@ class Player extends User
         return $this;
     }
 
-    public function getCaptures(): ArrayCollection
+
+
+    public function jsonSerialize()
     {
-        return $this->captures;
+        return [
+            'id' => $this->getId(),
+            'email' => $this->getEmail(),
+            'playerTag' => $this->getPlayerTag(),
+            'score' => $this->getScore(),
+        ];
     }
 
-    public function addCapture(Capture $capture): self
+    /**
+     * @return Collection<int, Spawn>
+     */
+    public function getSpawns(): Collection
     {
-        if (!$this->captures->contains($capture)) {
-            $this->captures[] = $capture;
-            $capture->setPlayer($this);
+        return $this->spawns;
+    }
+
+    public function addSpawn(Spawn $spawn): self
+    {
+        if (!$this->spawns->contains($spawn)) {
+            $this->spawns->add($spawn);
+            $spawn->setOwner($this);
         }
 
         return $this;
     }
 
+    public function removeSpawn(Spawn $spawn): self
+    {
+        if ($this->spawns->removeElement($spawn)) {
+            // set the owning side to null (unless already changed)
+            if ($spawn->getOwner() === $this) {
+                $spawn->setOwner(null);
+            }
+        }
 
+        return $this;
+    }
 }
