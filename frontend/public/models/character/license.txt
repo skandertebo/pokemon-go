@@ -1,0 +1,11 @@
+Model Information:
+* title:	digimon Loogamon
+* source:	https://sketchfab.com/3d-models/digimon-loogamon-f1d85e2a739841f09dfd887a1b73db01
+* author:	kishi (https://sketchfab.com/ash.takafumi)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "digimon Loogamon" (https://sketchfab.com/3d-models/digimon-loogamon-f1d85e2a739841f09dfd887a1b73db01) by kishi (https://sketchfab.com/ash.takafumi) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
