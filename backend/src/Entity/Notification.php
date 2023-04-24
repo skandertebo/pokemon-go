@@ -23,10 +23,7 @@ class Notification implements JsonSerializable
     #[ORM\Column(type: 'datetime')]
     private ?\DateTimeInterface $date = null;
 
-    // for reasons of optimization we could make the notification concern all users or only a specific group of users that share a property without having to make many UserNotification entities
-    // value '*' means all users
-    #[ORM\Column(length:10)]
-    private ?string $concerne = null;
+
     
 
     #[ORM\OneToMany(mappedBy: 'userId', targetEntity: UserNotification::class, orphanRemoval: true)]
@@ -95,25 +92,7 @@ class Notification implements JsonSerializable
         ];
     }
 
-    /**
-     * Get the value of concerne
-     */ 
-    public function getConcerne()
-    {
-        return $this->concerne;
-    }
 
-    /**
-     * Set the value of concerne
-     *
-     * @return  self
-     */ 
-    public function setConcerne($concerne)
-    {
-        $this->concerne = $concerne;
-
-        return $this;
-    }
 
     /**
      * Get the value of date
