@@ -39,7 +39,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     
      #[ORM\Column]
     #[Assert\NotBlank]
-    #[Assert\Length(min: 4)]
+    
     private ?string $password = null;
 
     #[ORM\OneToMany(mappedBy: 'userId', targetEntity: UserNotification::class, orphanRemoval: true)]

@@ -15,6 +15,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use App\Entity\User;
 use App\Entity\Admin;
 use App\Entity\Player;
+use App\Functions\CreateValidationErrorResponse ;
 
 /**
  * @Route("/api", name="api_")
@@ -49,9 +50,32 @@ class UserController extends AbstractController
         }
        
 
-        // Generate a JWT token and return it to the client
        
-       
+      }
+
+
+
+ /**
+ * @Route("/login", name="login", methods={"POST"})
+ */
+   public  function login(Request $request, JWTTokenManagerInterface $jwtManagerInt, UserPasswordHasherInterface $passwordHasher)
+   {
+    $data = json_decode($request->getContent(), true);
+    $user=$this->userService->checkUserLogin($data); 
+
+    
+    try{
+        return new JsonResponse([
+            // 'id' => $user->getId(),
+            'email' => $user->getEmail(),
+            'message' => 'Logged in Successfully',
+            'token' => $token
+        ]);}
+    catch (\InvalidArgumentException $e) {
+                return createValidationErrorResponse($e);
+            }
+     }
+
 
        
     }
@@ -59,4 +83,4 @@ class UserController extends AbstractController
  
 
    
-}
+  

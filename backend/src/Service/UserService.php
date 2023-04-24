@@ -43,7 +43,7 @@ class UserService
                 $user->setRoles(['ROLE_USER']);
                 break;
             default:
-                return new JsonResponse(['error' => 'Invalid user type'], 400);
+                 throw new \InvalidArgumentException('role column should be admin or player');
         }
 
         $user->setEmail($email);
@@ -56,12 +56,11 @@ class UserService
         $errors = $this->validator->validate($user);
 
         if (count($errors) > 0) {
-            return new JsonResponse(['error' => (string) $errors], 400);
+             throw new \InvalidArgumentException('Validation error');
         }
 
 
          $user=$this->userRepository->save($user,true);
-        $this->logger->debug('hello',['userid'=>$user->getId()]);
 
          return $user; 
 
@@ -69,6 +68,35 @@ class UserService
     }
 
 
+
+    public function getUserByEmail(string $email): ?User
+{
+    return $this->userRepository->findOneBy(['email' => $email]);
+}
+
+
+
+
+public function checkUserLogin(array $data):User{
+
+    $email = $data['email'];
+    $password = $data['password'];
+
+    $user = $this->getUserByEmail($email);
+
+    if ($user===null ) {
+         throw new \InvalidArgumentException('a User with these credentials does not exist ');
+    }
+
+    if (!$this->passwordHasher->isPasswordValid($user, $password)) {
+         throw new \InvalidArgumentException('wrong password');
+    }
+return $user;
+    
+}
+
+
+   
     public function remove(User $user, bool $flush = false): void
     {
         $userRepository->remove($user, $flush);
