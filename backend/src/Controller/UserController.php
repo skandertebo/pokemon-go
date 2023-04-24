@@ -21,7 +21,7 @@ use App\Functions\CreateValidationErrorResponse ;
  * @Route("/api", name="api_")
  */
   
-class UserController extends AbstractController
+class UserController extends AbstractController 
 {
 
   public function __construct(private UserService $userService)
@@ -58,7 +58,7 @@ class UserController extends AbstractController
  /**
  * @Route("/login", name="login", methods={"POST"})
  */
-   public  function login(Request $request, JWTTokenManagerInterface $jwtManagerInt, UserPasswordHasherInterface $passwordHasher)
+   public  function login(Request $request, JWTTokenManagerInterface $jwtManagerInt)
    {
     $data = json_decode($request->getContent(), true);
     $user=$this->userService->checkUserLogin($data); 
@@ -78,7 +78,20 @@ class UserController extends AbstractController
 
 
        
+
+
+ /**
+ * @Route("/user", name="getUsers", methods={"GET"})
+ */
+     public function getUsers()
+     {
+        $users= $this->userService->findAll(); 
+        return new JsonResponse($users);
+
+     }
     }
+
+
 
  
 

@@ -32,11 +32,13 @@ class UserService
         switch ($role) {
             case 'admin':
                 $user = new Admin();
+                $this->logger->debug('hello',['id'=>$user->getId()]);
 
                 $user->setRoles(['ROLE_ADMIN']);
                 break;
             case 'player':
                 $user = new Player();
+                $this->logger->debug('hello',['id'=>$user->getId()]);
                 $playerTag = $data['playerTag'];
                 $user->setPlayerTag($playerTag);
                 $user->setScore(0);
@@ -111,7 +113,7 @@ return $user;
 
     public function findAll(): array
     {
-        return $userRepository->findAll();
+        return $this->userRepository->findAll();
     }
     
 
