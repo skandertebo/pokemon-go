@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\NotificationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
@@ -19,9 +20,19 @@ class Notification implements JsonSerializable
     #[ORM\Column(length: 255)]
     private ?string $contenu = null;
     
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $date = null;
+
+
     
+
     #[ORM\OneToMany(mappedBy: 'userId', targetEntity: UserNotification::class, orphanRemoval: true)]
     private Collection $userNotifications;
+
+    public function __construct()
+    {
+        $this->userNotifications = new ArrayCollection();
+    }
 
 
     public function getId(): ?int
@@ -79,5 +90,27 @@ class Notification implements JsonSerializable
             'id' => $this->getId(),
             'contenu' => $this->getContenu(),
         ];
+    }
+
+
+
+    /**
+     * Get the value of date
+     */ 
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * Set the value of date
+     *
+     * @return  self
+     */ 
+    public function setDate($date)
+    {
+        $this->date = $date;
+
+        return $this;
     }
 }
