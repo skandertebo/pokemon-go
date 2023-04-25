@@ -10,6 +10,10 @@ export default withMT({
         secondary: '#F0F3D1',
         third: '#F09393',
         fourth: '#8A8D91'
+      },
+      screens:{
+        'md': '500px',
+        'lg': '1115px',
       }
     },
     fontFamily: {

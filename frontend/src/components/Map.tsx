@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { useGoogleMapsLoader } from '../context/GoogleMapsLoaderContext';
 import { useAppContext } from '../context/AppContext';
 
+
 const WebMap: React.FC = () => {
   const googleMapsRef = useRef<typeof google.maps>();
   const mapRef = useRef<google.maps.Map>();
