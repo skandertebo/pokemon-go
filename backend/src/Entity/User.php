@@ -18,7 +18,7 @@ use JsonSerializable;
       'player' => Player ::class,
   ])]
 
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -119,6 +119,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
   
+     /**
+     * @inheritDoc
+     *
+     */
+    public function jsonSerialize(): array 
+    {
+        return [
+            'id' => $this->id,
+            'email' => $this->email,
+        ];
+    }
 
     /**
      * @return Collection<int, UserNotification>

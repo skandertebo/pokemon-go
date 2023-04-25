@@ -32,8 +32,6 @@ class UserService
         switch ($role) {
             case 'admin':
                 $user = new Admin();
-                $this->logger->debug('hello',['id'=>$user->getId()]);
-
                 $user->setRoles(['ROLE_ADMIN']);
                 break;
             case 'player':
@@ -63,6 +61,7 @@ class UserService
 
 
          $user=$this->userRepository->save($user,true);
+
 
          return $user; 
 

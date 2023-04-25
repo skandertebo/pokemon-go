@@ -12,12 +12,6 @@ use JsonSerializable;
 
 class Player extends User implements JsonSerializable
 {
-    #[ORM\Id]
-    #[ORM\OneToOne(targetEntity:'User')]
-    #[ORM\JoinColumn(name: 'id', referencedColumnName: 'id')]
-    private ?int $id = null;
-
-
 
     #[ORM\Column(length: 255)]
     private ?string $playerTag = null;
@@ -37,10 +31,7 @@ class Player extends User implements JsonSerializable
 
 
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+  
 
     public function getPlayerTag(): ?string
     {
@@ -68,7 +59,7 @@ class Player extends User implements JsonSerializable
 
 
 
-    public function jsonSerialize()
+    public function jsonSerialize():array
     {
         return [
             'id' => $this->getId(),

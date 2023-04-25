@@ -40,7 +40,7 @@ class UserController extends AbstractController
             $user = $this->userService->createUser($data);
              $token = $jwtManagerInt->create($user);
             return new JsonResponse([
-                'email' => $user->getEmail(),
+                'user' => $user,
                 'message' => 'Registered Successfully',
                 'token' => $token
                 
