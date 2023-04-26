@@ -1,6 +1,6 @@
 import { Loader } from '@googlemaps/js-api-loader';
 import React, { createContext, useContext } from 'react';
-import { googleMapsApikey } from '../../env';
+import { googleMapsApikey } from '../env';
 
 const loader = new Loader({
   apiKey: googleMapsApikey,
