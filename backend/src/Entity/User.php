@@ -9,6 +9,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+
 use JsonSerializable; 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\InheritanceType('JOINED')]
@@ -17,6 +18,7 @@ use JsonSerializable;
       'admin' => Admin::class,
       'player' => Player ::class,
   ])]
+  
 
 class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSerializable
 {
@@ -30,6 +32,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     #[Assert\Email]
     private ?string $email = null;
 
+
+
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
@@ -41,7 +45,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     #[Assert\NotBlank]
     private ?string $password = null;
 
-    #[ORM\OneToMany(mappedBy: 'userId', targetEntity: UserNotification::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserNotification::class, orphanRemoval: true)]
     private Collection $userNotifications;
 
     public function getId(): ?int

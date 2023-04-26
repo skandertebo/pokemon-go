@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Entity;
-
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\PlayerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,9 +12,10 @@ use JsonSerializable;
 
 class Player extends User implements JsonSerializable
 {
-
-    #[ORM\Column(length: 255)]
-    private ?string $playerTag = null;
+    #[ORM\Column(length: 180, unique: true)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
+    private ?string $playerTag=null;
 
     #[ORM\Column]
     private ?int $score = null;
