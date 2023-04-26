@@ -1,6 +1,18 @@
 <?php
+namespace App\Service;
 
-class PlayerService{
+use App\Entity\Player;
+use App\Repository\PlayerRepository;
+use App\Entity\User;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Psr\Log\LoggerInterface;
+
+
+class PlayerService
+{
     
     public function __construct(private PlayerRepository $playerRepository){}
 
