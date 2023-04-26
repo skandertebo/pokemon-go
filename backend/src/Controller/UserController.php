@@ -33,6 +33,7 @@ class UserController extends AbstractController
      */
     public function register(Request $request,JWTTokenManagerInterface $jwtManagerInt)
     {
+       
         $data = json_decode($request->getContent(), true);
 
        
@@ -62,7 +63,7 @@ class UserController extends AbstractController
    {
     $data = json_decode($request->getContent(), true);
     $user=$this->userService->checkUserLogin($data); 
-
+    $token = $jwtManagerInt->create($user);
     
     try{
         return new JsonResponse([

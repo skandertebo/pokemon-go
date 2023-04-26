@@ -100,14 +100,14 @@ return $user;
    
     public function remove(User $user, bool $flush = false): void
     {
-        $userRepository->remove($user, $flush);
+        $this->userRepository->remove($user, $flush);
     }
 
 
 
     public function findOneBySomeField($value): ?User
     {
-        return $userRepository->findOneBySomeField($value);
+        return $this->userRepository->findOneBySomeField($value);
     }
 
     public function findAll(): array
@@ -119,7 +119,7 @@ return $user;
 
     public function findByExampleField($value): array
     {
-        return $userRepository->findByExampleField($value);
+        return $this->userRepository->findByExampleField($value);
     }
 
 
