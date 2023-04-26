@@ -13,7 +13,7 @@ use JsonSerializable;
 class Player extends User implements JsonSerializable
 {
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255,unique: true)]
     private ?string $playerTag = null;
 
     #[ORM\Column]

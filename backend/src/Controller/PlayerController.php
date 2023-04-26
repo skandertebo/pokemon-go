@@ -73,7 +73,13 @@ use Symfony\Component\Routing\Annotation\Route;
     {
         $player = $this->userService->getPlayer($id);
         $data = json_decode($request->getContent(), true);
-        $player->updatePlayerTag($data['image']);
+        $playerTag = $data['playerTag'];
+        try{
+            $this->playerService->validatePlayerTag($playerTag);
+        } catch (\InvalidArgumentException $e) {
+            return createValidationErrorResponse($e);
+        }
+        $player->setPlayerTag($playerTag);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($player);
         $entityManager->flush();
