@@ -66,8 +66,7 @@ class UserController extends AbstractController
     
     try{
         return new JsonResponse([
-            // 'id' => $user->getId(),
-            'email' => $user->getEmail(),
+            'user' => $user,
             'message' => 'Logged in Successfully',
             'token' => $token
         ]);}
