@@ -26,16 +26,21 @@ const routes = createBrowserRouter([
         element: <CapturePage />
       },
       {
+        path: '/leaderboard',
+        element: <Leaderboard />
+      }
+    ]
+  },
+  {
+    path: '/',
+    children: [
+      {
         path: 'login',
         element: <Login />
       },
       {
         path: 'signup',
         element: <Register />
-      },
-      {
-        path: '/leaderboard',
-        element: <Leaderboard />
       }
     ]
   }
