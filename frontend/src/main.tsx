@@ -6,6 +6,7 @@ import { RouterProvider } from 'react-router-dom';
 import routes from './routes';
 import { AppContextProvider } from './context/AppContext';
 import { ThemeProvider, createTheme } from '@mui/material';
+
 declare module '@mui/material/styles' {
   interface Palette {
     third: Palette['primary'];
