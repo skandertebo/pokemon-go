@@ -7,7 +7,8 @@ import Register from './pages/Register';
 import ProfilePage from './pages/ProfilePage';
 
 function App() {
-  return <div className='App'></div>;
+  return <div className='App w-screen'>
+  </div>;
 }
 
 export default App;

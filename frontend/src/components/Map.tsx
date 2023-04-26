@@ -1,13 +1,13 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useGoogleMapsLoader } from '../context/GoogleMapsLoaderContext';
 import { useAppContext } from '../context/AppContext';
-
-
+import { IoMdLocate } from 'react-icons/io';
+import { Spawn } from '../types/Spawn';
+import { spawns } from '../assets/fakeData.ts/spawns';
 const WebMap: React.FC = () => {
   const googleMapsRef = useRef<typeof google.maps>();
   const mapRef = useRef<google.maps.Map>();
   const loader = useGoogleMapsLoader();
-  const MarkerRef = useRef<google.maps.MarkerLibrary>();
   const userMarkerRef = useRef<google.maps.Marker>();
   const { geoLocationPosition } = useAppContext() as {
     geoLocationPosition: GeolocationPosition;
@@ -22,6 +22,12 @@ const WebMap: React.FC = () => {
     mapTypeControl: false,
     fullscreenControl: false
   };
+  const handleLocateClick = useCallback(() => {
+    if (userMarkerRef.current && mapRef.current) {
+      mapRef.current.panTo(userMarkerRef.current.getPosition()!);
+    }
+  }, []);
+
   useEffect(() => {
     loader.load().then(async (google) => {
       mapRef.current = new google.maps.Map(
@@ -32,6 +38,7 @@ const WebMap: React.FC = () => {
           gestureHandling: 'greedy'
         }
       );
+
       googleMapsRef.current = google.maps;
       const Marker = google.maps.Marker;
       userMarkerRef.current = new Marker({
@@ -51,16 +58,63 @@ const WebMap: React.FC = () => {
     });
   }, [loader]);
 
+  useCharactersOnMap(mapRef, googleMapsRef);
+
   useEffect(() => {
-    if (geoLocationPosition && mapRef.current) {
-      mapRef.current.setCenter({
+    if (geoLocationPosition && mapRef.current && userMarkerRef.current) {
+      userMarkerRef.current.setPosition({
         lat: geoLocationPosition?.coords?.latitude,
         lng: geoLocationPosition?.coords?.longitude
       });
     }
   }, [geoLocationPosition]);
 
-  return <div className='h-full w-full' id='map'></div>;
+  return (
+    <div className='wrapper h-full w-full relative'>
+      <div className='h-full w-full' id='map'></div>
+      <IoMdLocate
+        className='absolute top-4 right-2  bg-white rounded-full p-2 h-10 w-10 cursor-pointer text-primary'
+        onClick={handleLocateClick}
+      />
+    </div>
+  );
+};
+
+const useCharactersOnMap = (
+  mapRef: React.MutableRefObject<google.maps.Map | undefined>,
+  googleMapApiRef: React.MutableRefObject<typeof google.maps | undefined>
+) => {
+  const characters = useCharacters() as Spawn[];
+  const markersRef = useRef<google.maps.Marker[]>([]);
+  useEffect(() => {
+    if (mapRef.current && googleMapApiRef.current) {
+      markersRef.current.forEach((marker) => {
+        marker.setMap(null);
+      });
+      markersRef.current = [];
+      characters.forEach((character) => {
+        const marker = new googleMapApiRef.current!.Marker({
+          position: {
+            lat: character.latitude,
+            lng: character.longitude
+          },
+          icon: {
+            url: '/images/pokeball.png',
+            scaledSize: new googleMapApiRef.current!.Size(50, 50),
+            origin: new googleMapApiRef.current!.Point(0, 0),
+            anchor: new googleMapApiRef.current!.Point(25, 25)
+          },
+          map: mapRef.current
+        });
+        markersRef.current.push(marker);
+      });
+    }
+  }, [characters, googleMapApiRef.current, mapRef.current]);
+};
+
+const useCharacters = () => {
+  const [characters] = useState<Spawn[]>(spawns);
+  return characters;
 };
 
 export default WebMap;
