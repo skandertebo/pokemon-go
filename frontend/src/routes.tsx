@@ -2,6 +2,8 @@ import { createBrowserRouter } from 'react-router-dom';
 import MainPage from './Pages/MainPage';
 import React from 'react';
 import MainLayout from './Layouts/MainLayout';
+import Login from './pages/Login';
+import Register from './pages/Register';
 
 const routes = createBrowserRouter([
   {
@@ -19,14 +21,19 @@ const routes = createBrowserRouter([
       {
         path: '/insights',
         element: <div>TODO</div>
-      },
+      }
+    ]
+  },
+  {
+    path: '/',
+    children: [
       {
         path: 'login',
-        element: <div>TODO</div>
+        element: <Login />
       },
       {
-        path: 'signup',
-        element: <div>TODO</div>
+        path: 'register',
+        element: <Register />
       }
     ]
   }
