@@ -29,10 +29,11 @@ class PlayerService{
     public function updateImage(Player $player, string $image): Player
     {
         $player->setImage($image);
-        $this->playerRepository->update($player);
+        $this->playerRepository->updateImage($player);
         return $player;
     }
-    // get all player ordered by score
+
+    // get all players ordered by score
     public function getOrderedPlayers(): array
     {
         return $this->playerRepository->findBy([], ['score' => 'DESC']);

@@ -12,12 +12,16 @@ use Symfony\Component\Routing\Annotation\Route;
 
  class PlayerController extends AbstractController
  {
+
+    public function __construct(private PlayerService $playerService)
+    {
+    }
     /**
      * @Route("/leaderboard", name="leaderboard", methods={"GET"})
      */
     public function leaderboard(): Response
     {
-        $players = $this->getDoctrine()->getRepository(Player::class)->findBy([], ['score' => 'DESC']);
+        $players = $this->playerService->getOrderedPlayers();
         return $this->json([
             'players' => $players,
             'message' => 'Welcome to your new controller!',
@@ -31,7 +35,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
     public function getPlayer($id): Response
     {
-        $player = $this->getDoctrine()->getRepository(Player::class)->find($id);
+        $player = $this->playerService->getPlayer($id);
         return $this->json([
             'player' => $player,
             'message' => 'Welcome to your new controller!',
@@ -43,7 +47,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
     public function deletePlayer($id): Response
     {
-        $player = $this->getDoctrine()->getRepository(Player::class)->find($id);
+        $player = $this->playerService->deletePlayer($id);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($player);
         $entityManager->flush();
@@ -54,8 +58,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
     public function updateImage($id, Request $request): Response
     {
-        $player = $this->getDoctrine()->getRepository(Player::class)->find($id);
         $data = json_decode($request->getContent(), true);
+        $player = $this->playerService->getPlayer($id);
         $player->setImage($data['image']);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($player);
@@ -67,9 +71,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
     public function updatePlayerTag($id, Request $request): Response
     {
-        $player = $this->getDoctrine()->getRepository(Player::class)->find($id);
+        $player = $this->userService->getPlayer($id);
         $data = json_decode($request->getContent(), true);
-        $player->setPlayerTag($data['playerTag']);
+        $player->updatePlayerTag($data['image']);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($player);
         $entityManager->flush();
