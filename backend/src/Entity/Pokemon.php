@@ -3,10 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\PokemonRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 #[ORM\Entity(repositoryClass: PokemonRepository::class)]
-class Pokemon
+class Pokemon implements JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -96,7 +99,7 @@ class Pokemon
         return $this;
     }
 
-    public function getSpawns(): Collection
+    public function getSpawns(): ArrayCollection
     {
         return $this->spawns;
     }
@@ -111,7 +114,30 @@ class Pokemon
         return $this;
     }
 
+    public function removeSpawn(Spawn $spawn): self
+    {
+        if ($this->spawns->removeElement($spawn)) {
+            // set the owning side to null (unless already changed)
+            if ($spawn->getPokemon() === $this) {
+                $spawn->setPokemon(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'baseScore' => $this->baseScore,
+            'description' => $this->description,
+            'image' => $this->image,
+            'model3D' => $this->model3D,
+            'name' => $this->name,
+        ];
+    }
+    
+
 }
 
-// nb captures w nahi l association bin l player wl spawn
-// naamel instead association bin l player wl pokemon 

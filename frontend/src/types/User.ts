@@ -8,6 +8,7 @@ type User = {
   updatedAt: Date;
   avatar: string;
   gender: string;
+  score: number;
 };
 
 export default User;

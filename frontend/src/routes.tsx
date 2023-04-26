@@ -1,9 +1,12 @@
 import { createBrowserRouter } from 'react-router-dom';
-import MainPage from './Pages/MainPage';
 import React from 'react';
 import MainLayout from './Layouts/MainLayout';
+import ProfilePage from './pages/ProfilePage';
+import CapturePage from './pages/CapturePage';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Leaderboard from './pages/Leaderboard';
+import MainPage from './pages/MainPage';
 
 const routes = createBrowserRouter([
   {
@@ -16,17 +19,12 @@ const routes = createBrowserRouter([
       },
       {
         path: '/profile',
-        element: <div>TODO</div>
+        element: <ProfilePage />
       },
       {
         path: '/insights',
-        element: <div>TODO</div>
-      }
-    ]
-  },
-  {
-    path: '/',
-    children: [
+        element: <CapturePage />
+      },
       {
         path: 'login',
         element: <Login />

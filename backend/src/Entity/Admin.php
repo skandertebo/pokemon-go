@@ -4,17 +4,17 @@ namespace App\Entity;
 
 use App\Repository\AdminRepository;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 #[ORM\Entity(repositoryClass: AdminRepository::class)]
-class Admin extends User
+class Admin extends User implements JsonSerializable
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
-
-    public function getId(): ?int
+  
+    public function jsonSerialize():array
     {
-        return $this->id;
+        return [
+            'id' => $this->getId(),
+            'email' => $this->getEmail(),
+        ];
     }
 }
