@@ -32,6 +32,7 @@ class UserController extends AbstractController
  */
     public function register(Request $request)
     {
+       
         $data = json_decode($request->getContent(), true);
         
 

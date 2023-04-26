@@ -23,6 +23,9 @@ class Player extends User implements JsonSerializable
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Spawn::class)]
     private Collection $spawns;
 
+    #[ORM\Column(length: 255)]
+    private ?string $image = null;
+
     public function __construct()
     {
         parent::__construct();
