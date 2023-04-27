@@ -26,6 +26,15 @@ const routes = createBrowserRouter([
         element: <CapturePage />
       },
       {
+        path: '/leaderboard',
+        element: <Leaderboard />
+      }
+    ]
+  },
+  {
+    path: '/',
+    children: [
+      {
         path: 'login',
         element: <Login />
       },
