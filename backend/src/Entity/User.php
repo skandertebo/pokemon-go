@@ -42,7 +42,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      * @var string The hashed password
      */
     
-     #[ORM\Column]
+     #[ORM\Column(nullable:false)]
     #[Assert\NotBlank]
     private ?string $password = null;
 
