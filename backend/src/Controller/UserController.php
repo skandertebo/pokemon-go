@@ -36,9 +36,9 @@ class UserController extends AbstractController
         $data = json_decode($request->getContent(), true);
         
 
-
         try {
             [$user, $token] = $this->userService->createUser($data);
+
             $errors = $this->validator->validate($user);
 
             if (count($errors) > 0)

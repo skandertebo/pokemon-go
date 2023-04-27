@@ -2,8 +2,8 @@ lexik_jwt_authentication:
   secret_key: "%env(resolve:JWT_SECRET_KEY)%"
   public_key: "%env(resolve:JWT_PUBLIC_KEY)%"
   pass_phrase: "%env(JWT_PASSPHRASE)%"
-  token_ttl: 3600 # token TTL in seconds, defaults to 1 hour
-  user_identity_field: email # key under which the user identity will be stored in the token payload
+  token_ttl: 604800 # token TTL in seconds, defaults to 1 hour
+  user_identity_field: id # key under which the user identity will be stored in the token payload
   clock_skew: 0
   allow_no_expiration: false # set to true to allow tokens without exp claim
 

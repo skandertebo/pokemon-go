@@ -44,7 +44,6 @@ class UserService
             case 'player':
                 $user = new Player();
                 $playerTag = $data['playerTag'];
-                
                 if ($this->playerRepository->findOneBy(['playerTag' => $playerTag])) {
                     throw new \InvalidArgumentException('Player tag already exists');
                 }; 
