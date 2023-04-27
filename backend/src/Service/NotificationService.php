@@ -9,7 +9,7 @@ use App\UtilityClasses\Observable;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class NotificationService implements Observable{
+class NotificationService {
     public function __construct(
         private NotificationRepository $notificationRepository,
         private UserNotificationRepository $userNotificationRepository,
