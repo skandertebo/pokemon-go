@@ -5,7 +5,7 @@ import React from 'react';
 const MainLayout: React.FC = () => {
   const outlet = useOutlet();
   return (
-    <div className='bg-white'>
+    <div className='bg-white w-screen'>
       {outlet}
       <BottomNav />
     </div>

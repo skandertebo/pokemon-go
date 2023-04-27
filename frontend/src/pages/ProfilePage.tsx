@@ -12,7 +12,7 @@ function ProfilePage() {
     createdAt: new Date(),
     updatedAt: new Date(),
     avatar: avatar,
-    gender: 'Female',
+    gender: "Female",
     score: 0
   };
 

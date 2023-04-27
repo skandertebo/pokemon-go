@@ -7,28 +7,39 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+use JsonSerializable; 
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\InheritanceType('JOINED')]
 #[ORM\DiscriminatorColumn(name: 'role', type: 'string')]
+#[ORM\DiscriminatorMap([
+      'admin' => Admin::class,
+      'player' => Player ::class,
+  ])]
 
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private ?int $id=0;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\NotBlank]
+    #[Assert\Email]
     private ?string $email = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'json')]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
-    #[ORM\Column]
+    
+     #[ORM\Column]
+    #[Assert\NotBlank]
     private ?string $password = null;
 
     #[ORM\OneToMany(mappedBy: 'userId', targetEntity: UserNotification::class, orphanRemoval: true)]
@@ -108,7 +119,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
-
+  
+     /**
+     * @inheritDoc
+     *
+     */
+    public function jsonSerialize(): array 
+    {
+        return [
+            'id' => $this->id,
+            'email' => $this->email,
+        ];
+    }
 
     /**
      * @return Collection<int, UserNotification>

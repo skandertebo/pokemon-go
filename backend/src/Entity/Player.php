@@ -12,14 +12,8 @@ use JsonSerializable;
 
 class Player extends User implements JsonSerializable
 {
-    #[ORM\Id]
-    #[ORM\OneToOne(targetEntity:'User')]
-    #[ORM\JoinColumn(name: 'id', referencedColumnName: 'id')]
-    private ?int $id = null;
 
-
-
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255,unique: true)]
     private ?string $playerTag = null;
 
     #[ORM\Column]
@@ -27,6 +21,9 @@ class Player extends User implements JsonSerializable
 
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Spawn::class)]
     private Collection $spawns;
+
+    #[ORM\Column(length: 255)]
+    private ?string $image = null;
 
     public function __construct()
     {
@@ -37,10 +34,7 @@ class Player extends User implements JsonSerializable
 
 
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+  
 
     public function getPlayerTag(): ?string
     {
@@ -68,7 +62,7 @@ class Player extends User implements JsonSerializable
 
 
 
-    public function jsonSerialize()
+    public function jsonSerialize():array
     {
         return [
             'id' => $this->getId(),
