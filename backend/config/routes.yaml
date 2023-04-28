@@ -5,3 +5,18 @@ controllers:
   type: attribute
 api_login_check:
   path: /api/login_check
+
+getPlayer:
+    path: /player/{id}
+    controller: App\Controller\PlayerController::getPlayer
+    methods: GET
+
+deletePlayer:
+    path: /player/{id}
+    controller: App\Controller\PlayerController::deletePlayer
+    methods: DELETE
+
+updatePlayer:
+    path: /player/{id}
+    controller: App\Controller\PlayerController::updatePlayer
+    methods: PATCH

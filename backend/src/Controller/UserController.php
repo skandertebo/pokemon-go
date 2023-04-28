@@ -35,8 +35,6 @@ class UserController extends AbstractController
     {
        
         $data = json_decode($request->getContent(), true);
-
-       
         try {
             $user = $this->userService->createUser($data);
              $token = $jwtManagerInt->create($user);
@@ -50,10 +48,7 @@ class UserController extends AbstractController
             return createValidationErrorResponse($e);
         }
        
-
-       
       }
-
 
 
  /**

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Service;
 
@@ -14,17 +14,17 @@ use App\Entity\Player;
 
 class UserService
 {
-    
 
-    public function __construct(private UserRepository $userRepository, private ValidatorInterface $validator , private UserPasswordHasherInterface $passwordHasher, private LoggerInterface $logger)
+
+    public function __construct(private UserRepository $userRepository, private ValidatorInterface $validator, private UserPasswordHasherInterface $passwordHasher, private LoggerInterface $logger)
     {
     }
 
 
 
-     public function createUser(array $data): User
+    public function createUser(array $data): User
     {
-         $role = $data['role'];
+        $role = $data['role'];
         $email = $data['email'];
         $password = $data['password'];
 
@@ -36,14 +36,16 @@ class UserService
                 break;
             case 'player':
                 $user = new Player();
-                $this->logger->debug('hello',['id'=>$user->getId()]);
+                $this->logger->debug('hello', ['id' => $user->getId()]);
                 $playerTag = $data['playerTag'];
                 $user->setPlayerTag($playerTag);
                 $user->setScore(0);
                 $user->setRoles(['ROLE_USER']);
+                $image = $data['image'];
+                $user->setImage($image);
                 break;
             default:
-                 throw new \InvalidArgumentException('role column should be admin or player');
+                throw new \InvalidArgumentException('role column should be admin or player');
         }
 
         $user->setEmail($email);
@@ -56,48 +58,46 @@ class UserService
         $errors = $this->validator->validate($user);
 
         if (count($errors) > 0) {
-             throw new \InvalidArgumentException('Validation error');
+            throw new \InvalidArgumentException('Validation error');
         }
 
 
-         $user=$this->userRepository->save($user,true);
+        $user = $this->userRepository->save($user, true);
 
 
-         return $user; 
-
-        
+        return $user;
     }
 
 
 
     public function getUserByEmail(string $email): ?User
-{
-    return $this->userRepository->findOneBy(['email' => $email]);
-}
-
-
-
-
-public function checkUserLogin(array $data):User{
-
-    $email = $data['email'];
-    $password = $data['password'];
-
-    $user = $this->getUserByEmail($email);
-
-    if ($user===null ) {
-         throw new \InvalidArgumentException('a User with these credentials does not exist ');
+    {
+        return $this->userRepository->findOneBy(['email' => $email]);
     }
 
-    if (!$this->passwordHasher->isPasswordValid($user, $password)) {
-         throw new \InvalidArgumentException('wrong password');
+
+
+
+    public function checkUserLogin(array $data): User
+    {
+
+        $email = $data['email'];
+        $password = $data['password'];
+
+        $user = $this->getUserByEmail($email);
+
+        if ($user === null) {
+            throw new \InvalidArgumentException('a User with these credentials does not exist ');
+        }
+
+        if (!$this->passwordHasher->isPasswordValid($user, $password)) {
+            throw new \InvalidArgumentException('wrong password');
+        }
+        return $user;
     }
-return $user;
-    
-}
 
 
-   
+
     public function remove(User $user, bool $flush = false): void
     {
         $this->userRepository->remove($user, $flush);
@@ -114,16 +114,11 @@ return $user;
     {
         return $this->userRepository->findAll();
     }
-    
+
 
 
     public function findByExampleField($value): array
     {
         return $this->userRepository->findByExampleField($value);
     }
-
-
-
-
 }
-
