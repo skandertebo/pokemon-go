@@ -30,7 +30,7 @@ class Player extends User implements JsonSerializable
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Spawn::class)]
     private Collection $spawns;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
     public function __construct()
@@ -113,7 +113,7 @@ class Player extends User implements JsonSerializable
 
     public function setImage(string $image): self
     {
-        $this->$image = $image;
+        $this->image = $image;
         return $this;
     }
 }

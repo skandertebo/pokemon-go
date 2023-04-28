@@ -63,11 +63,10 @@ class PlayerController extends AbstractController
         //check if player with $id exists
         try {
             $player = $this->playerService->getPlayerById($id);
-            var_dump($player);
         } catch (HttpException $e) {
             return createErrorResponse($e->getMessage(), $e->getStatusCode());
         }
-        $this->playerService->deletePlayer($id);
+        $this->playerService->deletePlayer($player);
         return $this->json([
             'message' => 'Player deleted successfully',
         ]);
@@ -90,7 +89,7 @@ class PlayerController extends AbstractController
         if (isset($data['image'])) {
             $player->setImage($data['image']);
         }
-        
+
         //set playerTag with checking
         if (isset($data['playerTag'])) {
             $playerWithPlayerTag = $this->playerService->getPlayerByPlayerTag($data['playerTag']);

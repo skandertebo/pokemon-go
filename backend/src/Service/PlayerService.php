@@ -27,10 +27,9 @@ class PlayerService
         return $this->playerRepository->findOneByPlayerTag($playerTag);
     }
 
-    public function deletePlayer(int $id): void
+    public function deletePlayer(Player $player): void
     {
-        $player = $this->getPlayerById($id);
-        $this->playerRepository->remove($player);
+        $this->playerRepository->remove($player,true);
     }
 
     public function updatePlayer(Player $player): Player
