@@ -50,5 +50,14 @@ class SpawnService
         $spawn->setCaptureDate(new \DateTime());
         return $this->spawnRepository->save($spawn,true);
     }
+    function getCaptureHistory($playerId)
+    {
+        $player=$this->playerRepository->find($playerId);
+        if($player==null)
+        {
+            throw new HttpException(404,"Player of id {$playerId} not found");
+        }
+        return $this->spawnRepository->findBy(['owner'=>$player]);
+    }
     
 }

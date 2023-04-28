@@ -67,5 +67,18 @@ class SpawnController extends AbstractController
         }
         return new JsonResponse($newPokemon) ;
     }
+    #[Route('/history/{playerId}', name: 'getSpawnHistory',methods:['GET'])]
+    public function getCaptureHistory($playerId)
+    {
+        try
+        {
+            $newPokemon=$this->spawnService->getCaptureHistory($playerId);
+        }
+        catch(HttpException $e)
+        {
+            return createErrorResponse($e->getMessage(),$e->getStatusCode());
+        }
+        return new JsonResponse($newPokemon) ;
+    }
 
 }
