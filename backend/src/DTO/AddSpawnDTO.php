@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\DTO;
 
 
 use Symfony\Component\Validator\Constraints as Assert;
@@ -11,29 +11,32 @@ class AddSpawnDTO
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Type(type:"float")]
-    private  $latitude = null;
+    public  $latitude = null;
 
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Type(type:"float")]
-    private  $longitude = null;
+    public  $longitude = null;
 
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Type(type:"int")]
-    private  $range = null;
+    public  $radius = null;
 
    
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Type(type:"int")]
-    private $pokemonId;
+    public $pokemonId;
 
     public function __construct(array $data)
     {
         $this->latitude = $data['latitude'] ?? null;
         $this->longitude = $data['longitude'] ?? null;
-        $this->range = $data['range'] ?? null;
+        $this->radius = $data['radius'] ?? null;
         $this->pokemonId = $data['pokemonId'] ?? null;
     }
+
+
+
 }
