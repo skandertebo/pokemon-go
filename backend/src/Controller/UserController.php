@@ -14,6 +14,8 @@ use App\Entity\Admin;
 use App\Entity\Player;
 use App\Functions\CreateValidationErrorResponse ;
 use App\Functions\CreateErrorResponse ;
+use App\DTO\AddUserDTO;
+
 
 
 /**
@@ -32,19 +34,17 @@ class UserController extends AbstractController
  */
     public function register(Request $request)
     {
-       
         $data = json_decode($request->getContent(), true);
-        
+        $userDTO = new AddUserDTO($data); 
+        $errors = $this->validator->validate($userDTO, null, ['Default', 'playerSpecific']);
 
+        if (count($errors) > 0) {
+            return new JsonResponse([
+                "errors" => createValidationErrorResponse($errors)
+            ]);
+        }
         try {
             [$user, $token] = $this->userService->createUser($data);
-
-            $errors = $this->validator->validate($user);
-
-            if (count($errors) > 0)
-            {
-            return createValidationErrorResponse($errors);}
-    
             return new JsonResponse([
                 'user' => $user,
                 'message' => 'Registered Successfully',
