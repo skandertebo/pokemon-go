@@ -89,9 +89,8 @@ class PlayerController extends AbstractController
         //set image without checking
         if (isset($data['image'])) {
             $player->setImage($data['image']);
-            $this->playerService->updatePlayer($player);
         }
-
+        
         //set playerTag with checking
         if (isset($data['playerTag'])) {
             $playerWithPlayerTag = $this->playerService->getPlayerByPlayerTag($data['playerTag']);
@@ -106,6 +105,7 @@ class PlayerController extends AbstractController
             createValidationErrorResponse($errors);
         }
 
+        $this->playerService->updatePlayer($player);
 
         return $this->json([
             'player' => $player,

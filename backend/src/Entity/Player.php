@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Entity;
+
 use App\Repository\PlayerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -110,10 +111,9 @@ class Player extends User implements JsonSerializable
         return $this->image;
     }
 
-    public function setImage(?string $image): self
+    public function setImage(string $image): self
     {
-        $this->image = $image;
-
+        $this->$image = $image;
         return $this;
     }
 }
