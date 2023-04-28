@@ -16,17 +16,16 @@ use App\Entity\Player;
 class UserService
 {
 
-
-    public function __construct(private UserRepository $userRepository,private PlayerRepository $playerRepository, private UserPasswordHasherInterface $passwordHasher, private LoggerInterface $logger,private JWTTokenManagerInterface $jwtManagerInt)
+    public function __construct(private UserRepository $userRepository, private PlayerRepository $playerRepository, private UserPasswordHasherInterface $passwordHasher, private LoggerInterface $logger, private JWTTokenManagerInterface $jwtManagerInt)
     {
     }
 
     public function getUserByEmail(string $email): ?User
-{
-    return $this->userRepository->findOneBy(['email' => $email]);
-}
+    {
+        return $this->userRepository->findOneBy(['email' => $email]);
+    }
 
-     public function createUser(array $data): array 
+    public function createUser(array $data): array
     {
         $role = $data['role'];
         $email = $data['email'];
@@ -46,8 +45,8 @@ class UserService
                 $playerTag = $data['playerTag'];
                 if ($this->playerRepository->findOneBy(['playerTag' => $playerTag])) {
                     throw new \InvalidArgumentException('Player tag already exists');
-                }; 
-                
+                };
+
                 $user->setPlayerTag($playerTag);
                 $user->setScore(0);
                 $user->setRoles(['ROLE_USER']);
@@ -56,7 +55,6 @@ class UserService
                 break;
             default:
                 throw new \InvalidArgumentException('Invalid user role');
-                
         }
 
         $user->setEmail($email);
@@ -65,18 +63,16 @@ class UserService
             $password
         );
         $user->setPassword($hashedPassword);
-        
-       
 
-        $token =$this->jwtManagerInt->create($user);
-        $user=$this->userRepository->save($user,true);
 
-        $array=[$user,$token];
 
-        
-         return $array; 
+        $token = $this->jwtManagerInt->create($user);
+        $user = $this->userRepository->save($user, true);
 
-        
+        $array = [$user, $token];
+
+
+        return $array;
     }
 
 
@@ -86,7 +82,8 @@ class UserService
 
 
 
-public function checkUserLogin(array $data):array{
+    public function checkUserLogin(array $data): array
+    {
 
         $email = $data['email'];
         $password = $data['password'];
@@ -96,24 +93,20 @@ public function checkUserLogin(array $data):array{
         if ($user === null) {
             throw new \InvalidArgumentException('a User with these credentials does not exist ');
         }
-
-    if (!$this->passwordHasher->isPasswordValid($user, $password)) {
-         throw new \InvalidArgumentException('wrong password');
+        $token = $this->jwtManagerInt->create($user);
+        $array = [$user, $token];
+        return $array;
     }
-    $token =$this->jwtManagerInt->create($user);
-    $array=[$user,$token];
-return $array;
-    
-}
 
 
-   
+
     public function deleteUser(int $id, bool $flush = false): void
-    {   $user = $this->userRepository->find($id);
+    {
+        $user = $this->userRepository->find($id);
         if (!$user) {
             throw new \InvalidArgumentException('User does not exist');
         }
-        
+
         $this->userRepository->remove($user, $flush);
     }
 
@@ -128,13 +121,20 @@ return $array;
     {
         return $this->userRepository->findAll();
     }
-    
 
-
-    public function findByExampleField($value): array
+    public function find(int $id): ?User
     {
-        return $this->userRepository->findByExampleField($value);
+        $user = $this->userRepository->find($id);
+        if (!$user) {
+            throw new \InvalidArgumentException('User does not exist');
+        }
+        return $user;
     }
+
+    // public function findByExampleField($value): array
+    // {
+    //     return $userRepository->findByExampleField($value);
+    // }
 
 
 

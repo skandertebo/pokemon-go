@@ -15,6 +15,7 @@ use App\Entity\Player;
 use App\Functions\CreateValidationErrorResponse ;
 use App\Functions\CreateErrorResponse ;
 
+use function App\createErrorResponse;
 
 /**
  * @Route("/api", name="api_")
@@ -57,10 +58,9 @@ class UserController extends AbstractController
        
     }
        
-      }
-
-
-
+    
+    
+    
  /**
  * @Route("/login", name="login", methods={"POST"})
  */
@@ -98,7 +98,7 @@ class UserController extends AbstractController
      {
         $users= $this->userService->findAll(); 
         return new JsonResponse($users);
-
+        
      }
 
 
@@ -136,3 +136,4 @@ public function deleteUser(Request $request, $id)
 }
 }
   
+
