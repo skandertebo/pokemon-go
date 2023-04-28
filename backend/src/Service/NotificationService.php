@@ -5,10 +5,11 @@ use App\Entity\UserNotification;
 use App\Repository\NotificationRepository;
 use App\Repository\UserNotificationRepository;
 use App\Repository\UserRepository;
+use App\UtilityClasses\Observable;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class NotificationService{
+class NotificationService {
     public function __construct(
         private NotificationRepository $notificationRepository,
         private UserNotificationRepository $userNotificationRepository,

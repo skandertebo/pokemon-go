@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Entity;
-
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\PlayerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -30,7 +30,7 @@ class Player extends User implements JsonSerializable
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Spawn::class)]
     private Collection $spawns;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255,nullable:true)]
     private ?string $image = null;
 
     public function __construct()
@@ -103,17 +103,6 @@ class Player extends User implements JsonSerializable
             }
         }
 
-        return $this;
-    }
-
-    public function getImage(): ?string
-    {
-        return $this->image;
-    }
-
-    public function setImage(string $image): self
-    {
-        $this->$image = $image;
         return $this;
     }
 }
