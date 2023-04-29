@@ -27,15 +27,8 @@ class PlayerRepository extends ServiceEntityRepository
         $this->getEntityManager()->persist($entity);
 
         if ($flush) {
-            
             $this->getEntityManager()->flush();
-            $this->getEntityManager()->refresh($entity);
-
         }
-       
-        return $entity;
-
-        
     }
 
     public function remove(Player $entity, bool $flush = false): void
@@ -46,6 +39,4 @@ class PlayerRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
-
 }
