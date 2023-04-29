@@ -18,12 +18,12 @@ class AddUserDTO implements GroupSequenceProviderInterface
     #[Assert\Type(type:"string")]
     private  $password = null;
 
-    #[Assert\NotBlank]
-    #[Assert\NotNull]
+    #[Assert\NotBlank(groups: ['registration'])]
+    #[Assert\NotNull(groups: ['registration'])]
     #[Assert\Choice(
         choices: ['admin', 'player'],
         message: 'Choose a valid role.',
-    )]
+        groups: ['registration'])]
     private  $role= null;
 
     #[Assert\NotBlank(groups: ['playerSpecific'])]
@@ -36,18 +36,7 @@ class AddUserDTO implements GroupSequenceProviderInterface
     #[Assert\NotNull(groups: ['playerSpecific'])]
     #[ORM\Column(length: 180, unique: true)]
     #[Assert\Type(type:"string")]
-    private $playerTag;
-
-    public function getGroupSequence(): array
-    {    dd('getGroupSequence() called');
-        $groups = ['Default'];
-        if ($this->role === 'player') {
-            $groups[] = 'playerSpecific';
-        }
-        return $groups;
-    }
-
-   
+    private $playerTag=null;
 
     public function __construct(array $data)
     {
@@ -57,5 +46,19 @@ class AddUserDTO implements GroupSequenceProviderInterface
         if ($this->role==='player' ){
         $this->image = $data['image'] ?? null;
         $this->playerTag = $data['playerTag'] ?? null;}
+        
+    }
+    
+    public function getGroupSequence(): array
+       { $groups = ['Default'];
+        if (isset($this->role)) {
+            $groups= ['registration','Default'];
+            if ($this->role === 'player') {
+            $groups= ['registration','Default','playerSpecific'];
+           
+        }
+        }
+        
+        return $groups;
     }
 }

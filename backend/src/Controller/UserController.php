@@ -15,6 +15,7 @@ use App\Entity\Player;
 use App\Functions\CreateValidationErrorResponse ;
 use App\Functions\CreateErrorResponse ;
 use App\DTO\AddUserDTO;
+use Psr\Log\LoggerInterface;
 
 
 
@@ -25,7 +26,7 @@ use App\DTO\AddUserDTO;
 class UserController extends AbstractController 
 {
 
-  public function __construct(private UserService $userService,private ValidatorInterface $validator )
+  public function __construct(private UserService $userService,private ValidatorInterface $validator,  private LoggerInterface $logger)
     {
     }
 
@@ -36,13 +37,11 @@ class UserController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
         $userDTO = new AddUserDTO($data); 
-        $errors = $this->validator->validate($userDTO, null, ['Default', 'playerSpecific']);
+        
+         $errors = $this->validator->validate($userDTO, null, $userDTO->getGroupSequence());
 
         if (count($errors) > 0) {
-            return new JsonResponse([
-                "errors" => createValidationErrorResponse($errors)
-            ]);
-        }
+            return createValidationErrorResponse($errors); }
         try {
             [$user, $token] = $this->userService->createUser($data);
             return new JsonResponse([
@@ -52,7 +51,7 @@ class UserController extends AbstractController
                 
             ]);
         } catch (\InvalidArgumentException $e) {
-            return createErrorResponse($e->getMessage(), 400);
+            return createErrorResponse($e->getMessage(), 422);
         }
        
     }
@@ -68,14 +67,16 @@ class UserController extends AbstractController
    {
     $data = json_decode($request->getContent(), true);
 
-    
+    $userDTO = new AddUserDTO($data); 
+    $errors = $this->validator->validate($userDTO, null, $userDTO->getGroupSequence());
+
+    if (count($errors) > 0) {
+         return createValidationErrorResponse($errors); }
+        
     try{
         [$user,$token]=$this->userService->checkUserLogin($data);
         
-        $errors = $this->validator->validate($user);
-        if (count($errors) > 0)
-        {
-        return createValidationErrorResponse($errors);}
+        
             
         return new JsonResponse([
             'user' => $user,
