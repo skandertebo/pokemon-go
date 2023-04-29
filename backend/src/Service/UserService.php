@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Service;
 
@@ -15,20 +15,19 @@ use App\Entity\Player;
 
 class UserService
 {
-    
 
-    public function __construct(private UserRepository $userRepository,private PlayerRepository $playerRepository, private UserPasswordHasherInterface $passwordHasher, private LoggerInterface $logger,private JWTTokenManagerInterface $jwtManagerInt)
+    public function __construct(private UserRepository $userRepository, private PlayerRepository $playerRepository, private UserPasswordHasherInterface $passwordHasher, private LoggerInterface $logger, private JWTTokenManagerInterface $jwtManagerInt)
     {
     }
 
     public function getUserByEmail(string $email): ?User
-{
-    return $this->userRepository->findOneBy(['email' => $email]);
-}
-
-     public function createUser(array $data): array 
     {
-         $role = $data['role'];
+        return $this->userRepository->findOneBy(['email' => $email]);
+    }
+
+    public function createUser(array $data): array
+    {
+        $role = $data['role'];
         $email = $data['email'];
         if ($this->getUserByEmail($email)) {
             throw new \InvalidArgumentException('User email already exists');
@@ -46,15 +45,16 @@ class UserService
                 $playerTag = $data['playerTag'];
                 if ($this->playerRepository->findOneBy(['playerTag' => $playerTag])) {
                     throw new \InvalidArgumentException('Player tag already exists');
-                }; 
-                
+                };
+
                 $user->setPlayerTag($playerTag);
                 $user->setScore(0);
                 $user->setRoles(['ROLE_USER']);
+                $image = $data['image'];
+                $user->setImage($image);
                 break;
             default:
                 throw new \InvalidArgumentException('Invalid user role');
-                
         }
 
         $user->setEmail($email);
@@ -63,18 +63,16 @@ class UserService
             $password
         );
         $user->setPassword($hashedPassword);
-        
-       
 
-        $token =$this->jwtManagerInt->create($user);
-        $user=$this->userRepository->save($user,true);
 
-        $array=[$user,$token];
 
-        
-         return $array; 
+        $token = $this->jwtManagerInt->create($user);
+        $user = $this->userRepository->save($user, true);
 
-        
+        $array = [$user, $token];
+
+
+        return $array;
     }
 
 
@@ -84,34 +82,31 @@ class UserService
 
 
 
-public function checkUserLogin(array $data):array{
+    public function checkUserLogin(array $data): array
+    {
 
-    $email = $data['email'];
-    $password = $data['password'];
+        $email = $data['email'];
+        $password = $data['password'];
 
-    $user = $this->getUserByEmail($email);
+        $user = $this->getUserByEmail($email);
 
-    if ($user===null ) {
-         throw new \InvalidArgumentException('a User with these credentials does not exist ');
+        if ($user === null) {
+            throw new \InvalidArgumentException('a User with these credentials does not exist ');
+        }
+        $token = $this->jwtManagerInt->create($user);
+        $array = [$user, $token];
+        return $array;
     }
 
-    if (!$this->passwordHasher->isPasswordValid($user, $password)) {
-         throw new \InvalidArgumentException('wrong password');
-    }
-    $token =$this->jwtManagerInt->create($user);
-    $array=[$user,$token];
-return $array;
-    
-}
 
 
-   
     public function deleteUser(int $id, bool $flush = false): void
-    {   $user = $this->userRepository->find($id);
+    {
+        $user = $this->userRepository->find($id);
         if (!$user) {
             throw new \InvalidArgumentException('User does not exist');
         }
-        
+
         $this->userRepository->remove($user, $flush);
     }
 
@@ -126,14 +121,14 @@ return $array;
     {
         return $this->userRepository->findAll();
     }
-    
+
     public function find(int $id): ?User
-    { 
-        $user= $this->userRepository->find($id);
+    {
+        $user = $this->userRepository->find($id);
         if (!$user) {
-         throw new \InvalidArgumentException('User does not exist');}
+            throw new \InvalidArgumentException('User does not exist');
+        }
         return $user;
-   
     }
 
     // public function findByExampleField($value): array
@@ -145,4 +140,3 @@ return $array;
 
 
 }
-

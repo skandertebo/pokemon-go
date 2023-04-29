@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Entity;
-use Symfony\Component\Validator\Constraints as Assert;
+
 use App\Repository\PlayerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 
@@ -12,10 +13,16 @@ use JsonSerializable;
 
 class Player extends User implements JsonSerializable
 {
-    #[ORM\Column(length: 180, unique: true)]
+
+    #[ORM\Column(length: 255, unique: true)]
     #[Assert\NotBlank]
-    #[Assert\NotNull]
-    private ?string $playerTag=null;
+    #[Assert\Length(
+        min: 3,
+        max: 30,
+        minMessage: 'Your first name must be at least {{ limit }} characters long',
+        maxMessage: 'Your first name cannot be longer than {{ limit }} characters',
+    )]
+    private ?string $playerTag = null;
 
     #[ORM\Column]
     private ?int $score = null;
@@ -23,7 +30,7 @@ class Player extends User implements JsonSerializable
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Spawn::class)]
     private Collection $spawns;
 
-    #[ORM\Column(length: 255,nullable:true)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
     public function __construct()
@@ -31,11 +38,6 @@ class Player extends User implements JsonSerializable
         parent::__construct();
         $this->spawns = new ArrayCollection();
     }
-
-
-
-
-  
 
     public function getPlayerTag(): ?string
     {
@@ -63,13 +65,14 @@ class Player extends User implements JsonSerializable
 
 
 
-    public function jsonSerialize():array
+    public function jsonSerialize(): array
     {
         return [
             'id' => $this->getId(),
             'email' => $this->getEmail(),
             'playerTag' => $this->getPlayerTag(),
             'score' => $this->getScore(),
+            'image' => $this->getImage(),
         ];
     }
 
@@ -107,6 +110,7 @@ class Player extends User implements JsonSerializable
     {
         return $this->image;
     }
+
     public function setImage(string $image): self
     {
         $this->image = $image;
