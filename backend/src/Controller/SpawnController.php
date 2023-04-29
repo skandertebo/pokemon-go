@@ -80,5 +80,28 @@ class SpawnController extends AbstractController
         }
         return new JsonResponse($newPokemon) ;
     }
+    #[Route('/near', name: '_getNearbySpawns',methods:['GET'])]
+    public function getSpawns(HttpFoundationRequest $request):JsonResponse
+    {
+        $latitude=$request->query->get('latitude');
+        $longitude=$request->query->get('longitude');
+        if($latitude==null && $longitude==null)
+        {
+            return new JsonResponse($this->spawnService->getAllSpawns());
+        }
+        if($latitude==null || $longitude==null)
+        {
+            return createErrorResponse("latitude and longitude are required if you're looking for nearby spawns",400);
+        }
+        try
+        {
+            $spawns=$this->spawnService->getNearbySpawns(floatval($latitude),floatval($longitude));
+        }
+        catch(HttpException $e)
+        {
+            return createErrorResponse($e->getMessage(),$e->getStatusCode());
+        }
+        return new JsonResponse($spawns) ;
+    }
 
 }

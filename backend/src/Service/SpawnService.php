@@ -59,5 +59,25 @@ class SpawnService
         }
         return $this->spawnRepository->findBy(['owner'=>$player]);
     }
+    function getNearbySpawns($latitude,$longitude)
+    {
+        $spawns=$this->spawnRepository->findAll();
+        $nearbySpawns=[];
+        foreach($spawns as $spawn)
+        {
+            dump($latitude,$longitude,$spawn->getLatitude(),$spawn->getLongitude());
+            $distance=getDistance($latitude,$longitude,$spawn->getLatitude(),$spawn->getLongitude());
+            dump($distance);
+            if($distance<=$spawn->getRadius())
+            {
+                $nearbySpawns[]=$spawn;
+            }
+        }
+        return $nearbySpawns;
+    }
+    function getAllSpawns()
+    {
+        return $this->spawnRepository->findAll();
+    }
     
 }
