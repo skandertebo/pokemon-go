@@ -1,5 +1,5 @@
 <?php
-
+namespace App;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 

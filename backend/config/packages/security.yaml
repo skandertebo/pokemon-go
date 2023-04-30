@@ -9,7 +9,7 @@ security:
     app_user_provider:
       entity:
         class: App\Entity\User
-        property: email
+        property: id
   firewalls:
     login:
       pattern: ^/api/login
@@ -34,3 +34,4 @@ security:
   access_control:
     - { path: ^/api/register, roles: PUBLIC_ACCESS }
     - { path: ^/api/login, roles: PUBLIC_ACCESS }
+    - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
