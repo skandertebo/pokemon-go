@@ -66,8 +66,9 @@ class UserService
 
 
 
-        $token = $this->jwtManagerInt->create($user);
+        
         $user = $this->userRepository->save($user, true);
+        $token = $this->jwtManagerInt->create($user);
 
         $array = [$user, $token];
 
