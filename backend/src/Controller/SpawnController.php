@@ -17,6 +17,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 use function App\createErrorResponse;
+use function App\createValidationErrorResponse;
 
 /**
      * @Route("/spawn", name="spawn")

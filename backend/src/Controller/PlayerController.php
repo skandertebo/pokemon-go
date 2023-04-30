@@ -4,21 +4,23 @@ namespace App\Controller;
 
 use App\Entity\Player;
 use App\Service\PlayerService;
-use FOS\RestBundle\Controller\Annotations\Delete;
-use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\Patch;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use FOS\RestBundle\Controller\Annotations\Delete;
+use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Patch;
+use PHPUnit\Util\Json;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use function App\createErrorResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use function App\createValidationErrorResponse;
+use function App\createErrorResponse;
 
 /**
- * @Route("/player", name="player")
+ * @Route("/api/player", name="player")
  */
 
 class PlayerController extends AbstractController
@@ -28,6 +30,7 @@ class PlayerController extends AbstractController
     {
     }
     #[Get("/leaderboard", name: "GetLeaderboard")]
+    #[Security("is_granted('ROLE_USER')")]
     public function leaderboard(): Response
     {
         $players = $this->playerService->getOrderedPlayers();
@@ -35,7 +38,7 @@ class PlayerController extends AbstractController
     }
 
     #[Get("/{id}", name: "GetPlayer")]
-
+    #[Security("is_granted('ROLE_USER')")]
     public function getPlayer($id): JsonResponse
     {
         //check if player with $id exists
@@ -47,8 +50,19 @@ class PlayerController extends AbstractController
         return new JsonResponse($player);
     }
 
-    #[Delete("/{id}", name: "DeletePlayer")]
-    public function deletePlayer($id): Response
+    #[Delete("/{id}", name: "DeletePlayer")]    
+    #[Security("is_granted('ROLE_USER')")]
+    public function deletePlayerByPlayer(Request $request): JsonResponse
+    {
+        $id = $request->attributes->get('jwt_payload')['id'];
+        $player = $this->playerService->getPlayerById($id);
+        $this->playerService->deletePlayer($player);
+        return new JsonResponse("player deleted successfuly");
+    }
+
+    #[Delete('/{id}', name: 'deletePlayerByAdmin')]
+    #[Security("is_granted('ROLE_ADMIN')")]
+    public function deletePlayerByAdmin($id): JsonResponse
     {
         //check if player with $id exists
         try {
@@ -60,16 +74,15 @@ class PlayerController extends AbstractController
         return new JsonResponse("player deleted successfuly");
     }
 
-    #[Patch("/{id}", name: "UpdatePlayer")]
-    public function updatePlayer($id, Request $request): Response
+
+    #[Patch("/{id}", name: "updatePlayer")]
+    #[Security("is_granted('ROLE_PLAYER')")]
+    public function updatePlayer(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-        //check if player with $id exists
-        try {
-            $player = $this->playerService->getPlayerById($id);
-        } catch (HttpException $e) {
-            return createErrorResponse($e->getMessage(), $e->getStatusCode());
-        }
+
+        $id = $request->attributes->get('jwt_payload')['id'];
+        $player = $this->playerService->getPlayerById($id);
 
         //set image without checking
         if (isset($data['image'])) {
@@ -93,6 +106,9 @@ class PlayerController extends AbstractController
 
         $this->playerService->updatePlayer($player);
 
-        return new JsonResponse($player);
+        return new JsonResponse([
+            "message" => "player updated successfuly",
+            "player" => $player
+        ]);
     }
 }

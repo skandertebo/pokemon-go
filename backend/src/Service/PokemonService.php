@@ -8,9 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttoKernel\Exception\HttpException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\DTO\AddPokemonDTO;
-
-
-
+use Symfony\Component\HttpKernel\Exception\HttpExceptio;
 
 class PokemonService {
 
