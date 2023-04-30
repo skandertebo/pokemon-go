@@ -16,10 +16,12 @@ use App\Functions\CreateValidationErrorResponse ;
 use App\Functions\CreateErrorResponse ;
 use App\DTO\AddUserDTO;
 use Psr\Log\LoggerInterface;
+
+
 use function App\createErrorResponse;
 
 /**
- * @Route("/user", name="user_")
+ * @Route("/api", name="api_")
  */
 
 class UserController extends AbstractController
@@ -90,7 +92,7 @@ class UserController extends AbstractController
 
 
     /**
-     * @Route("/", name="getUsers", methods={"GET"})
+     * @Route("/user", name="getUsers", methods={"GET"})
      */
     public function getUsers()
     {
@@ -102,7 +104,7 @@ class UserController extends AbstractController
 
 
     /**
-     * @Route("/{id}", name="getUser", methods={"GET"})
+     * @Route("/user/{id}", name="getUser", methods={"GET"})
      */
     public function getUserRedefned(Request $request, $id)
     {
@@ -118,7 +120,7 @@ class UserController extends AbstractController
 
 
     /**
-     * @Route("/delete/{id}", name="deleteUser", methods={"DELETE"})
+     * @Route("/user/delete/{id}", name="deleteUser", methods={"DELETE"})
      */
     public function deleteUser(Request $request, $id)
     {
