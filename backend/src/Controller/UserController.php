@@ -18,8 +18,10 @@ use App\CreateErrorResponse;
 use function App\createErrorResponse;
 use function App\createValidationErrorResponse;
 use App\DTO\AddUserDTO;
+use App\DTO\UpdateUserDTO;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use App\EventSubscriber\JwtRefreshSubscriber;
 
 
 
@@ -109,6 +111,24 @@ class UserController extends AbstractController
     }
 
 
+    /**
+     * @Route("/user/me", name="getUsers", methods={"GET"})
+     */
+    public function getMe(Request $request)
+    {
+      
+        $id = $request->attributes->get('jwt_payload')['id'];
+        $user = $this->userService->find($id);
+        return new JsonResponse($user);
+        
+        
+    } 
+
+
+
+
+
+
 
 
     /**
@@ -141,4 +161,35 @@ class UserController extends AbstractController
             return createErrorResponse($e->getMessage(), 400);
         }
     }
+
+
+
+    /**
+     * @Route("/user/update/{id}", name="updateUser", methods={"PATCH"})
+     * @Security("is_granted('ROLE_USER')")
+     */
+    public function updateUser(Request $request, $id){
+         
+        $idAuthenticated = $request->attributes->get('jwt_payload')['id']; 
+        $id = intval($id);
+        if ($idAuthenticated !== $id) {
+            return createErrorResponse('You are not allowed to update this user', 403);
+        }
+        $data = json_decode($request->getContent(), true);
+        $userDTO = new UpdateUserDTO($data); 
+        $errors = $this->validator->validate($userDTO);
+
+        if (count($errors) > 0) {
+            return createValidationErrorResponse($errors); }
+        try {
+            $user = $this->userService->updateUser($id, $data);
+            return new JsonResponse([
+                'user' => $user,
+                'message' => 'User updated Successfully'
+            ]);
+        } catch (\InvalidArgumentException $e) {
+            return createErrorResponse($e->getMessage(), 400);
+        }
+    }
+
 }
