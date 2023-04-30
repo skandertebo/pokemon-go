@@ -14,6 +14,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
+use function App\createErrorResponse;
 
 /**
      * @Route("/spawn", name="spawn")
@@ -27,6 +30,9 @@ class SpawnController extends AbstractController
     }
 
     #[Route('', name: 'addSpawn',methods:['POST'])]
+        /**
+     * @Security("is_granted('ROLE_ADMIN')")
+     */
     public function addSpawn(HttpFoundationRequest $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -68,8 +74,12 @@ class SpawnController extends AbstractController
         return new JsonResponse($newPokemon) ;
     }
     #[Route('/history/{playerId}', name: 'getSpawnHistory',methods:['GET'])]
-    public function getCaptureHistory($playerId)
+            /**
+     * @Security("is_granted('ROLE_USER')")
+     */
+    public function getCaptureHistory(HttpFoundationRequest $request, $playerId)
     {
+        dump($request->attributes->get('jwt_payload')['id']);
         try
         {
             $newPokemon=$this->spawnService->getCaptureHistory($playerId);

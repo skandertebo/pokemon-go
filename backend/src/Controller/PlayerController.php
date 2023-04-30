@@ -30,16 +30,12 @@ class PlayerController extends AbstractController
     public function leaderboard(): Response
     {
         $players = $this->playerService->getOrderedPlayers();
-        return $this->json([
-            'players' => $players,
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/PlayerController.php',
-        ]);
+        return $this->json($players);
     }
 
     #[Get("/{id}", name: "GetPlayer")]
 
-    public function getPlayer($id): Response
+    public function getPlayer($id): JsonResponse
     {
         //check if player with $id exists
         try {
@@ -47,11 +43,7 @@ class PlayerController extends AbstractController
         } catch (HttpException $e) {
             return createErrorResponse($e->getMessage(), $e->getStatusCode());
         }
-        return $this->json([
-            'player' => $player,
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/PlayerController.php',
-        ]);
+        return new JsonResponse($player);
     }
 
     #[Delete("/{id}", name: "DeletePlayer")]
@@ -64,9 +56,7 @@ class PlayerController extends AbstractController
             return createErrorResponse($e->getMessage(), $e->getStatusCode());
         }
         $this->playerService->deletePlayer($player);
-        return $this->json([
-            'message' => 'Player deleted successfully',
-        ]);
+        return new JsonResponse("player deleted successfuly");
     }
 
     #[Patch("/{id}", name: "UpdatePlayer")]
@@ -87,11 +77,12 @@ class PlayerController extends AbstractController
 
         //set playerTag with checking
         if (isset($data['playerTag'])) {
-            $playerWithPlayerTag = $this->playerService->getPlayerByPlayerTag($data['playerTag']);
-            if (isset($playerWithPlayerTag) && $playerWithPlayerTag->getId() != $id) {
-                return createErrorResponse("PlayerTag already exists", 409);
+            try {
+                $this->playerService->checkPlayerTag($data['playerTag']);
+                $player->setPlayerTag($data['playerTag']);
+            } catch (HttpException $e) {
+                return createErrorResponse($e->getMessage(), $e->getStatusCode());
             }
-            $player->setPlayerTag($data['playerTag']);
         }
 
         $errors = $this->validator->validate($player, null, ['update']);
@@ -101,8 +92,6 @@ class PlayerController extends AbstractController
 
         $this->playerService->updatePlayer($player);
 
-        return $this->json([
-            'player' => $player,
-        ]);
+        return new JsonResponse($player);
     }
 }

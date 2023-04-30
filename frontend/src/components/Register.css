@@ -1,0 +1,22 @@
+.image::-webkit-file-upload-button {
+    visibility: hidden;
+    width: 170px;
+  }
+
+  .image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+   
+  .image::before {
+    content: 'Select Your Photo';
+    border-radius: 3px;
+    padding: 8px 8px;
+    background-color: white;
+    color: #c9cacc;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
