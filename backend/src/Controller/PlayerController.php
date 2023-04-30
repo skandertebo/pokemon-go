@@ -42,7 +42,6 @@ class PlayerController extends AbstractController
     {
         //check if player with $id exists
         try {
-            // $id = $request->attributes->get('jwt_payload')['id'];
             $player = $this->playerService->getPlayerById($id);
         } catch (HttpException $e) {
             return createErrorResponse($e->getMessage(), $e->getStatusCode());
@@ -50,30 +49,39 @@ class PlayerController extends AbstractController
         return new JsonResponse($player);
     }
 
-    #[Route('/{id}', name: 'deletePlayer', methods: ['DELETE'])]
+    #[Route('/', name: 'deletePlayerByPlayer', methods: ['DELETE'])]
     #[Security("is_granted('ROLE_USER')")]
-    public function deletePlayer($id): JsonResponse
-    {        
-        // $id = $request->attributes->get('jwt_payload')['id'];
+    public function deletePlayerByPlayer(Request $request): JsonResponse
+    {
+        $id = $request->attributes->get('jwt_payload')['id'];
         $player = $this->playerService->getPlayerById($id);
         $this->playerService->deletePlayer($player);
         return new JsonResponse("player deleted successfuly");
     }
 
-    //delete
-
-    #[Route('/', name: 'updatePlayer', methods: ['PUT'])]
-    #[Security("is_granted('ROLE_USER')")]
-    public function updatePlayer(Request $request): JsonResponse
+    #[Route('/{id}', name: 'deletePlayerByAdmin', methods: ['PUT'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
+    public function deletePlayerByAdmin($id): JsonResponse
     {
-        $id = $request->attributes->get('jwt_payload')['id'];
-        $data = json_decode($request->getContent(), true);
         //check if player with $id exists
         try {
             $player = $this->playerService->getPlayerById($id);
         } catch (HttpException $e) {
             return createErrorResponse($e->getMessage(), $e->getStatusCode());
         }
+        $this->playerService->deletePlayer($player);
+        return new JsonResponse("player deleted successfuly");
+    }
+
+
+    #[Route('/', name: 'updatePlayer', methods: ['PUT'])]
+    #[Security("is_granted('ROLE_PLAYER')")]
+    public function updatePlayer(Request $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $id = $request->attributes->get('jwt_payload')['id'];
+        $player = $this->playerService->getPlayerById($id);
 
         //set image without checking
         if (isset($data['image'])) {

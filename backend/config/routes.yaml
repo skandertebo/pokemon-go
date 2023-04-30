@@ -11,10 +11,16 @@ getPlayer:
   controller: App\Controller\PlayerController::getPlayer
   methods: GET
 
-deletePlayer:
+deletePlayerByAdmin:
   path: /player/{id}
-  controller: App\Controller\PlayerController::deletePlayer
+  controller: App\Controller\PlayerController::deletePlayerByAdmin
   methods: DELETE
+
+deletePlayerByPlayer:
+  path: /player/
+  controller: App\Controller\PlayerController::deletePlayerByPlayer
+  methods: DELETE
+
 
 updatePlayer:
   path: /player/{id}

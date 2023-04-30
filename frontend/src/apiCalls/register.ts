@@ -10,13 +10,14 @@ export async function registerUser(data : registerBody) {
     if(response.ok){
         return await response.json()
     }else{
-        throw new Error('Failer to register')
+        throw new Error('Failed to register')
     }
 }
 
 export type registerBody = {
-    username: string,
+    playerTag: string,
     email: string,
     password: string,
-    Image: string
+    image: string,
+    role:"player"
 }
