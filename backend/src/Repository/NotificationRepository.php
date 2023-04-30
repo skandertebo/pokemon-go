@@ -44,9 +44,26 @@ class NotificationRepository extends ServiceEntityRepository
         $entity->setContenu($content);
         $this->getEntityManager()->flush();
     }
-    public function getNotificationsConcerningGroupOfUsers($groupOfUsersSymbol): array
-    {
-        return $this->findBy(array('concerne' => $groupOfUsersSymbol));
+
+    public function getNotificationsByPagination($page, $rows, $user = null){
+        if(is_null($user)){
+            $notifications = $this->createQueryBuilder('n')
+                ->orderBy('n.id', 'DESC')
+                ->setFirstResult($rows * ($page - 1))
+                ->setMaxResults($rows)
+                ->getQuery()
+                ->getResult();
+        }else{
+            $notifications = $this->createQueryBuilder('n')
+                ->leftJoin('n.userNotifications', 'un')
+                ->where('un.user = :user')
+                ->setParameter('user', $user)
+                ->orderBy('n.id', 'DESC')
+                ->setFirstResult($rows * ($page - 1))
+                ->setMaxResults($rows)
+                ->getQuery()
+                ->getResult();
+        }
     }
 
 //    /**

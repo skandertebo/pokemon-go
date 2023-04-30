@@ -1,4 +1,6 @@
 <?php
+namespace App\Service;
+
 use App\Entity\Notification;
 use App\Entity\User;
 use App\Entity\UserNotification;
@@ -9,7 +11,7 @@ use App\UtilityClasses\Observable;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class NotificationService implements Observable{
+class NotificationService {
     public function __construct(
         private NotificationRepository $notificationRepository,
         private UserNotificationRepository $userNotificationRepository,
@@ -82,14 +84,9 @@ class NotificationService implements Observable{
         }
     }
 
-    public function updateNotification($notification, $contenu, $concerne = null): Notification
+    public function updateNotification($notification, $contenu): Notification
     {
         $notification->setContenu($contenu);
-        if(isset(
-            $concerne
-        )){
-            $notification->setConcerne($concerne);
-        }
         $this->notificationRepository->update($notification, true);
         return $notification;
     }
@@ -130,16 +127,46 @@ class NotificationService implements Observable{
     {
         return $this->notificationRepository->find($id);
     }
-
     
-    public function readNotification(User $user, Notification $notification): void
+    public function getNotificationsByPagination($page, $rows, $user=null){
+        if(is_null($user)){
+            return $this->notificationRepository->getNotificationsByPagination($page, $rows);
+        }else{
+            return $this->notificationRepository->getNotificationsByPaginationAndUser($page, $rows, $user);
+        }
+    }
+    /**
+     * Notifications that are created after the given date
+    */
+    public function getNotificationsByUserFromDate(User $user, \DateTime $date): array
     {
-        $userNotification = $this->userNotificationRepository->findOneBy(['user' => $user, 'notification' => $notification]);
+        
+        $q = $this->entityManager->createQuery(
+            'SELECT n FROM App\Entity\Notification n
+            JOIN App\Entity\UserNotification un
+            WHERE un.user = :user
+            AND n.date > :date
+            AND un.notification = n.id
+            ORDER BY n.date DESC'
+        );
+        $q->setParameter('user', $user);
+        $q->setParameter('date', $date);
+        return $q->getResult();
+    }
+    
+    public function readNotification(int $userid, Notification $notification): void
+    {
+        $userNotification = $this->userNotificationRepository->findOneBy(['user' => $userid, 'notification' => $notification]);
         if($userNotification){
             $this->userNotificationRepository->updateRead($userNotification, true);
         }else{
             throw new HttpException(404, 'Notification not found');
         }
+    }
+
+    public function getAllNotifications(): array
+    {
+        return $this->notificationRepository->findAll();
     }
 }
 
