@@ -52,6 +52,7 @@ class SpawnService
     }
     function getCaptureHistory($playerId)
     {
+        
         $player=$this->playerRepository->find($playerId);
         if($player==null)
         {

@@ -7,22 +7,26 @@ api_login_check:
   path: /api/login_check
 
 getPlayer:
-    path: /player/{id}
-    controller: App\Controller\PlayerController::getPlayer
-    methods: GET
+  path: /player/{id}
+  controller: App\Controller\PlayerController::getPlayer
+  methods: GET
 
 deletePlayer:
-    path: /player/{id}
-    controller: App\Controller\PlayerController::deletePlayer
-    methods: DELETE
+  path: /player/{id}
+  controller: App\Controller\PlayerController::deletePlayer
+  methods: DELETE
 
 updatePlayer:
-    path: /player/{id}
-    controller: App\Controller\PlayerController::updatePlayer
-    methods: PATCH
+  path: /player/{id}
+  controller: App\Controller\PlayerController::updatePlayer
+  methods: PATCH
 
-# api:
-#     path: ^/api/
-#     defaults: { _controller: App\Controller\ApiController::indexAction }
-#     methods: [GET, OPTIONS]
-#     cors: true
+app.swagger_ui:
+  path: /doc
+  methods: GET
+  defaults: { _controller: nelmio_api_doc.controller.swagger_ui }
+
+app.swagger:
+  path: /doc.json
+  methods: GET
+  defaults: { _controller: nelmio_api_doc.controller.swagger }
