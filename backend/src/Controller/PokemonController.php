@@ -15,9 +15,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use function App\createErrorResponse;
 use function App\createValidationErrorResponse;
 
-use function App\createErrorResponse;
-use function App\createValidationErrorResponse;
-
 #[Route('/pokemon', name: 'pokemon_')]
 class PokemonController extends AbstractController
 {
