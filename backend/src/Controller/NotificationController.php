@@ -25,7 +25,7 @@ class NotificationController extends AbstractController
 
 
     /**
-     * @Route("/", name="leaderboard", methods={"GET", "POST"})
+     * @Route("/api", name="notifications", methods={"GET", "POST", "DELETE"})
      */
     // getAllByPaginationd
     #[Get('/notifications')]
