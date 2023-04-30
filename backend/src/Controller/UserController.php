@@ -16,12 +16,13 @@ use App\Functions\CreateValidationErrorResponse ;
 use App\Functions\CreateErrorResponse ;
 use App\DTO\AddUserDTO;
 use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 
-use function App\createErrorResponse;
 
 /**
  * @Route("/api", name="api_")
+ 
  */
 
 class UserController extends AbstractController
@@ -93,9 +94,30 @@ class UserController extends AbstractController
 
     /**
      * @Route("/user", name="getUsers", methods={"GET"})
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function getUsers()
+
     {
+        $token = $request->headers->get('Authorization');
+        
+        
+        if (!$token) {
+            throw new AccessDeniedException('Access denied');
+        }
+
+        $token = str_replace('Bearer ', '', $token);
+
+        try {
+            $payload = $this->jwtManager->decode($token);
+        } catch (\Exception $e) {
+            throw new AccessDeniedException('Access denied');
+        }
+
+
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return new Response('Access denied', 403);
+        }
         $users = $this->userService->findAll();
         return new JsonResponse($users);
     }
