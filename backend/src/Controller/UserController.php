@@ -18,8 +18,10 @@ use App\CreateErrorResponse;
 use function App\createErrorResponse;
 use function App\createValidationErrorResponse;
 use App\DTO\AddUserDTO;
+use App\DTO\UpdateUserDTO;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use App\EventSubscriber\JwtRefreshSubscriber;
 
 
 
@@ -145,7 +147,7 @@ class UserController extends AbstractController
 
 
     /**
-     * @Route("/user/update/{id}", name="updateUser", methods={"PUT"})
+     * @Route("/user/update/{id}", name="updateUser", methods={"PATCH"})
      * @Security("is_granted('ROLE_USER')")
      */
     public function updateUser(Request $request, $id){
@@ -156,8 +158,8 @@ class UserController extends AbstractController
             return createErrorResponse('You are not allowed to update this user', 403);
         }
         $data = json_decode($request->getContent(), true);
-        $userDTO = new AddUserDTO($data); 
-        $errors = $this->validator->validate($userDTO, null, $userDTO->getGroupSequence());
+        $userDTO = new UpdateUserDTO($data); 
+        $errors = $this->validator->validate($userDTO);
 
         if (count($errors) > 0) {
             return createValidationErrorResponse($errors); }
