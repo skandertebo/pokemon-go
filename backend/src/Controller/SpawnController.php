@@ -18,6 +18,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 use function App\createErrorResponse;
 
+use function App\createErrorResponse;
+
 /**
      * @Route("/spawn", name="spawn")
 */
