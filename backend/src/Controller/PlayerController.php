@@ -4,6 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Player;
 use App\Service\PlayerService;
+use FOS\RestBundle\Controller\Annotations\Delete;
+use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Patch;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,9 +26,7 @@ class PlayerController extends AbstractController
     public function __construct(private PlayerService $playerService, private ValidatorInterface $validator)
     {
     }
-    /**
-     * @Route("/leaderboard", name="leaderboard", methods={"GET"})
-     */
+    #[Get("/leaderboard", name: "GetLeaderboard")]
     public function leaderboard(): Response
     {
         $players = $this->playerService->getOrderedPlayers();
@@ -36,9 +37,7 @@ class PlayerController extends AbstractController
         ]);
     }
 
-    /**
-     * Route("/{id}", name="getPlayer", methods={"GET"})
-     */
+    #[Get("/{id}", name: "GetPlayer")]
 
     public function getPlayer($id): Response
     {
@@ -55,9 +54,7 @@ class PlayerController extends AbstractController
         ]);
     }
 
-    /**
-     * Route("/{id}", name="DeletePlayer", methods={"DELETE"})
-     */
+    #[Delete("/{id}", name: "DeletePlayer")]
     public function deletePlayer($id): Response
     {
         //check if player with $id exists
@@ -72,9 +69,7 @@ class PlayerController extends AbstractController
         ]);
     }
 
-    /**
-     * Route("/{id}", name="UpdatePlayer", methods={"PATCH"})
-     */
+    #[Patch("/{id}", name: "UpdatePlayer")]
     public function updatePlayer($id, Request $request): Response
     {
         $data = json_decode($request->getContent(), true);

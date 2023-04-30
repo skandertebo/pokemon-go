@@ -12,7 +12,8 @@ use App\Service\NotificationService;
 use App\Service\UserService;
 use FOS\RestBundle\Controller\Annotations\Delete;
 use FOS\RestBundle\Controller\Annotations\Post;
-
+use Symfony\Component\Mercure\HubInterface;
+use Symfony\Component\Mercure\Update;
 use function App\createErrorResponse;
 
 class NotificationController extends AbstractController
@@ -24,11 +25,20 @@ class NotificationController extends AbstractController
     ){}
 
 
-    /**
-     * @Route("/api", name="notifications", methods={"GET", "POST", "DELETE"})
-     */
+    public function publish(HubInterface $hub): Response
+    {
+        $update = new Update(
+            '/notificationstream',
+            json_encode(['status' => 'OutOfStock'])
+        );
+
+        $hub->publish($update);
+
+        return new Response('published!');
+    }
+
     // getAllByPaginationd
-    #[Get('/notifications')]
+    #[Get('/notification')]
     public function getAllByPagination(Request $req): JsonResponse
     {   
         $notifications = null;
@@ -55,14 +65,14 @@ class NotificationController extends AbstractController
     }
 
 
-    #[Get('/notifications/{id}')]
+    #[Get('/notification/{id}')]
     public function getOneById(int $id): JsonResponse
     {
         $notification = $this->notificationService->getNotificationById($id);
         return new JsonResponse($notification, Response::HTTP_OK);
     }
 
-    #[Get('/notifications/unread/count')]
+    #[Get('/notification/unread/count')]
     public function getUnreadNotificationsCount(Request $req): JsonResponse
     {
         $userid = $req->query->get('user');
@@ -75,7 +85,7 @@ class NotificationController extends AbstractController
         return new JsonResponse($count, Response::HTTP_OK);
     }
 
-    #[Get('/notifications/unread')]
+    #[Get('/notification/unread')]
     public function getUnreadNotifications(Request $req): JsonResponse
     {
         $userid = $req->query->get('user');
@@ -88,7 +98,7 @@ class NotificationController extends AbstractController
         return new JsonResponse($notifications, Response::HTTP_OK);
     }
 
-    #[Get('/notifications/read')]
+    #[Get('/notification/read')]
     public function getReadNotifications(Request $req): JsonResponse
     {
         $userid = $req->query->get('user');
@@ -101,7 +111,7 @@ class NotificationController extends AbstractController
         return new JsonResponse($notifications, Response::HTTP_OK);
     }
 
-    #[Get('/notifications/read/count')]
+    #[Get('/notification/read/count')]
     public function getReadNotificationsCount(Request $req): JsonResponse
     {
         $userid = $req->query->get('user');
@@ -114,7 +124,7 @@ class NotificationController extends AbstractController
         return new JsonResponse($count, Response::HTTP_OK);
     }
 
-    #[Get('/notifications/unread/fromDate')]
+    #[Get('/notification/unread/fromDate')]
     public function getNotificationsFromDate(Request $req): JsonResponse
     {
         $userid = $req->query->get('user');
@@ -137,7 +147,7 @@ class NotificationController extends AbstractController
         return new JsonResponse($notifications, Response::HTTP_OK);
     }
 
-    #[Post('/notifications')]
+    #[Post('/notification')]
     public function create(Request $req): JsonResponse
     {
         $data = json_decode($req->getContent(), true);
@@ -150,7 +160,7 @@ class NotificationController extends AbstractController
         return new JsonResponse($notification, Response::HTTP_CREATED);
     }
 
-    #[Post('/notifications/read')]
+    #[Post('/notification/read')]
     public function markAsRead(Request $req): JsonResponse
     {
         $data = json_decode($req->getContent(), true);
@@ -168,7 +178,7 @@ class NotificationController extends AbstractController
         return new JsonResponse(null, Response::HTTP_OK);
     }
 
-    #[Delete('/notifications/{id}')]
+    #[Delete('/notification/{id}')]
     public function delete(int $id): JsonResponse
     {
         $notification = $this->notificationService->getNotificationById($id);

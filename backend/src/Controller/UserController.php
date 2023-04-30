@@ -18,7 +18,7 @@ use App\Functions\CreateErrorResponse;
 use function App\createErrorResponse;
 
 /**
- * @Route("/api", name="api_")
+ * @Route("", name="api_")
  */
 
 class UserController extends AbstractController
