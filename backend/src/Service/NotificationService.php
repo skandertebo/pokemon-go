@@ -8,14 +8,13 @@ use App\Repository\NotificationRepository;
 use App\Repository\UserNotificationRepository;
 use App\Repository\UserRepository;
 use App\UtilityClasses\Observable;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-
+use Doctrine\ORM\EntityManagerInterface;
 class NotificationService {
     public function __construct(
         private NotificationRepository $notificationRepository,
         private UserNotificationRepository $userNotificationRepository,
-        private EntityManager $entityManager,
+        private EntityManagerInterface $entityManager,
         private UserRepository $userRepository,
     ){}
 
@@ -138,7 +137,7 @@ class NotificationService {
     /**
      * Notifications that are created after the given date
     */
-    public function getNotificationsByUserFromDate(User $user, \DateTime $date): array
+    public function getUnreadNotificationsByUserFromDate(User $user, \DateTime $date): array
     {
         
         $q = $this->entityManager->createQuery(
@@ -147,6 +146,7 @@ class NotificationService {
             WHERE un.user = :user
             AND n.date > :date
             AND un.notification = n.id
+            AND un.isRead = false
             ORDER BY n.date DESC'
         );
         $q->setParameter('user', $user);
@@ -154,9 +154,9 @@ class NotificationService {
         return $q->getResult();
     }
     
-    public function readNotification(int $userid, Notification $notification): void
+    public function readNotification(User $user, Notification $notification): void
     {
-        $userNotification = $this->userNotificationRepository->findOneBy(['user' => $userid, 'notification' => $notification]);
+        $userNotification = $this->userNotificationRepository->findOneBy(['user' => $user, 'notification' => $notification]);
         if($userNotification){
             $this->userNotificationRepository->updateRead($userNotification, true);
         }else{
