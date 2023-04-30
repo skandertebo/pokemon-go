@@ -14,6 +14,7 @@ use FOS\RestBundle\Controller\Annotations\Delete;
 use FOS\RestBundle\Controller\Annotations\Post;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use function App\createErrorResponse;
 
 class NotificationController extends AbstractController
@@ -25,7 +26,7 @@ class NotificationController extends AbstractController
     ){}
 
 
-    public function publish(HubInterface $hub): Response
+/*     public function publish(HubInterface $hub): Response
     {
         $update = new Update(
             '/notificationstream',
@@ -35,35 +36,40 @@ class NotificationController extends AbstractController
         $hub->publish($update);
 
         return new Response('published!');
-    }
+    } */
 
     // getAllByPaginationd
+    /**
+     * @Security("is_granted('ROLE_ADMIN')")
+     */
     #[Get('/notification')]
     public function getAllByPagination(Request $req): JsonResponse
     {   
         $notifications = null;
-        $userid = $req->query->get('user');
         $page = $req->query->get('page');
         $rows = $req->query->get('rows');
         if(is_null($page) || is_null($rows)){
-            if(is_null($userid)){
-                $notifications = $this->notificationService->getAllNotifications();
-            }else{
-                $user = $this->userService->find($userid);
-                $notifications = $this->notificationService->getNotificationsByUser($user);
-            }
+            $notifications = $this->notificationService->getAllNotifications();
+
         }
         else{
-            if(is_null($userid)){
-                $notifications = $this->notificationService->getNotificationsByPagination($page, $rows);
-            }else{
-                $user = $this->userService->find($userid);
-                $notifications = $this->notificationService->getNotificationsByPagination($page, $rows, $user);
-            }
+            $notifications = $this->notificationService->getNotificationsByPagination($page, $rows);
+  
         }
         return new JsonResponse($notifications, Response::HTTP_OK);
     }
 
+    #[Get('/notification/user/{id}')]
+    public function getAllByUser(Request $req, int $id): JsonResponse
+    {
+        $user = $this->userService->find($id);
+        if(is_null($user)){
+            $resp = createErrorResponse('User not found', Response::HTTP_NOT_FOUND);
+            return $resp;
+        }
+        $notifications = $this->notificationService->getNotificationsByUser($user);
+        return new JsonResponse($notifications, Response::HTTP_OK);
+    }
 
     #[Get('/notification/{id}')]
     public function getOneById(int $id): JsonResponse
@@ -72,10 +78,9 @@ class NotificationController extends AbstractController
         return new JsonResponse($notification, Response::HTTP_OK);
     }
 
-    #[Get('/notification/unread/count')]
-    public function getUnreadNotificationsCount(Request $req): JsonResponse
+    #[Get('/notification/user/unread/count')]
+    public function getUnreadNotificationsCount(Request $req, int $userid): JsonResponse
     {
-        $userid = $req->query->get('user');
         $user = $this->userService->find($userid);
         if(is_null($user)){
             $resp = createErrorResponse('User not found', Response::HTTP_NOT_FOUND);
@@ -85,10 +90,9 @@ class NotificationController extends AbstractController
         return new JsonResponse($count, Response::HTTP_OK);
     }
 
-    #[Get('/notification/unread')]
-    public function getUnreadNotifications(Request $req): JsonResponse
+    #[Get('/notification/user/unread')]
+    public function getUnreadNotifications(Request $req, int $userid): JsonResponse
     {
-        $userid = $req->query->get('user');
         $user = $this->userService->find($userid);
         if(is_null($user)){
             $resp = createErrorResponse('User not found', Response::HTTP_NOT_FOUND);
@@ -98,10 +102,9 @@ class NotificationController extends AbstractController
         return new JsonResponse($notifications, Response::HTTP_OK);
     }
 
-    #[Get('/notification/read')]
-    public function getReadNotifications(Request $req): JsonResponse
+    #[Get('/notification/user/read')]
+    public function getReadNotifications(Request $req, int $userid): JsonResponse
     {
-        $userid = $req->query->get('user');
         $user = $this->userService->find($userid);
         if(is_null($user)){
             $resp = createErrorResponse('User not found', Response::HTTP_NOT_FOUND);
@@ -111,10 +114,9 @@ class NotificationController extends AbstractController
         return new JsonResponse($notifications, Response::HTTP_OK);
     }
 
-    #[Get('/notification/read/count')]
-    public function getReadNotificationsCount(Request $req): JsonResponse
+    #[Get('/notification/user/read/count')]
+    public function getReadNotificationsCount(Request $req, int $userid): JsonResponse
     {
-        $userid = $req->query->get('user');
         $user = $this->userService->find($userid);
         if(is_null($user)){
             $resp = createErrorResponse('User not found', Response::HTTP_NOT_FOUND);
@@ -124,10 +126,9 @@ class NotificationController extends AbstractController
         return new JsonResponse($count, Response::HTTP_OK);
     }
 
-    #[Get('/notification/unread/fromDate')]
-    public function getNotificationsFromDate(Request $req): JsonResponse
+    #[Get('/notification/user/unread/fromDate')]
+    public function getNotificationsFromDate(Request $req, int $userid): JsonResponse
     {
-        $userid = $req->query->get('user');
         $datetimestamp = $req->query->get('date'); // timestamp
         $user = $this->userService->find($userid);
         if(is_null($user)){
@@ -147,10 +148,21 @@ class NotificationController extends AbstractController
         return new JsonResponse($notifications, Response::HTTP_OK);
     }
 
+    /**
+     * @Security("is_granted('ROLE_ADMIN')")
+     */
     #[Post('/notification')]
     public function create(Request $req): JsonResponse
     {
         $data = json_decode($req->getContent(), true);
+        if(is_null($data['notification'])){
+            $resp = createErrorResponse('Notification not found', Response::HTTP_NOT_FOUND);
+            return $resp;
+        }
+        if(is_null($data['contenu'])){
+            $resp = createErrorResponse('Contenu not found', Response::HTTP_NOT_FOUND);
+            return $resp;
+        }
         $notification = $this->notificationService->createNotification($data['notification']);
         if(is_null($data['users']))
             $this->notificationService->addNotificationToAllUsers($notification);
