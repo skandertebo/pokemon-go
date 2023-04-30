@@ -15,6 +15,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use function App\createErrorResponse;
+use function App\createValidationErrorResponse;
 
 /**
  * @Route("/player", name="player")
