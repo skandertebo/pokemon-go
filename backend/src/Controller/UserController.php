@@ -111,6 +111,24 @@ class UserController extends AbstractController
     }
 
 
+    /**
+     * @Route("/user/me", name="getUsers", methods={"GET"})
+     */
+    public function getMe(Request $request)
+    {
+      
+        $id = $request->attributes->get('jwt_payload')['id'];
+        $user = $this->userService->find($id);
+        return new JsonResponse($user);
+        
+        
+    } 
+
+
+
+
+
+
 
 
     /**
