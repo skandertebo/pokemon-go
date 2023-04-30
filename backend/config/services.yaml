@@ -19,11 +19,14 @@ services:
       - "../src/DependencyInjection/"
       - "../src/Entity/"
       - "../src/Kernel.php"
+<<<<<<< HEAD
   App\EventSubscriber\JwtRequestSubscriber:
     arguments:
       - '@lexik_jwt_authentication.encoder'
     tags:
       - { name: kernel.event_subscriber }
+=======
+>>>>>>> abfb8db01346591173d840727efa38de85754c0a
 
   # add more service definitions when explicit configuration is needed
   # please note that last definitions always *replace* previous ones
