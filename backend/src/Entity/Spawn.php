@@ -5,8 +5,10 @@ namespace App\Entity;
 use App\Repository\SpawnRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
+
 
 #[ORM\Entity(repositoryClass: SpawnRepository::class)]
 class Spawn implements JsonSerializable
@@ -23,22 +25,28 @@ class Spawn implements JsonSerializable
     private ?float $longitude = null;
 
     #[ORM\Column]
-    private ?int $range = null;
+    private ?int $radius = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $spawnDate = null;
+    #[ORM\Column(type:"datetime")]
+    private $spawnDate = null;
 
     #[ORM\ManyToOne(targetEntity: Pokemon::class, inversedBy: "spawns")]
     #[ORM\JoinColumn(nullable: false)]
     private ?Pokemon $pokemon = null;
 
     #[ORM\ManyToOne(inversedBy: 'spawns')]
-    private ?Player $owner = null;
+    #[Assert\Type(type:"int")]
+    private ?Player $owner=null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $captureDate = null;
 
 
+    public function __construct()
+    {
+        $this->spawnDate = new \DateTime();
+    }
+    
 
     public function setPokemon(?Pokemon $pokemon): self
     {
@@ -81,24 +89,24 @@ class Spawn implements JsonSerializable
         return $this;
     }
 
-    public function getRange(): ?int
+    public function getRadius(): ?int
     {
-        return $this->range;
+        return $this->radius;
     }
 
-    public function setRange(int $range): self
+    public function setRadius(int $radius): self
     {
-        $this->range = $range;
+        $this->radius = $radius;
 
         return $this;
     }
 
-    public function getSpawnDate(): ?\DateTimeInterface
+    public function getSpawnDate()
     {
         return $this->spawnDate;
     }
 
-    public function setSpawnDate(\DateTimeInterface $spawnDate): self
+    public function setSpawnDate( $spawnDate): self
     {
         $this->spawnDate = $spawnDate;
 
@@ -123,7 +131,7 @@ class Spawn implements JsonSerializable
             'id' => $this->getId(),
             'latitude' => $this->getLatitude(),
             'longitude' => $this->getLongitude(),
-            'range' => $this->getRange(),
+            'range' => $this->getRadius(),
             'spawnDate' => $this->getSpawnDate(),
             'pokemon' => $this->getPokemon(),
             'owner' => $this->getOwner(),

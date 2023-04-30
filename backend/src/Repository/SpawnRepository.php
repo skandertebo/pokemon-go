@@ -21,13 +21,14 @@ class SpawnRepository extends ServiceEntityRepository
         parent::__construct($registry, Spawn::class);
     }
 
-    public function save(Spawn $entity, bool $flush = false): void
+    public function save(Spawn $entity, bool $flush = false): Spawn
     {
         $this->getEntityManager()->persist($entity);
-
         if ($flush) {
+            dump($entity);
             $this->getEntityManager()->flush();
         }
+        return $entity;
     }
 
     public function remove(Spawn $entity, bool $flush = false): void
