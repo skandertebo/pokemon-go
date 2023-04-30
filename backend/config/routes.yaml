@@ -3,30 +3,16 @@ controllers:
     path: ../src/Controller/
     namespace: App\Controller
   type: attribute
+  prefix: "/api"
 api_login_check:
-  path: /api/login_check
-
-getPlayer:
-  path: /player/{id}
-  controller: App\Controller\PlayerController::getPlayer
-  methods: GET
-
-deletePlayer:
-  path: /player/{id}
-  controller: App\Controller\PlayerController::deletePlayer
-  methods: DELETE
-
-updatePlayer:
-  path: /player/{id}
-  controller: App\Controller\PlayerController::updatePlayer
-  methods: PATCH
+  path: /login_check
 
 app.swagger_ui:
-  path: /doc
+  path: api/doc
   methods: GET
   defaults: { _controller: nelmio_api_doc.controller.swagger_ui }
 
 app.swagger:
-  path: /doc.json
+  path: api/doc.json
   methods: GET
   defaults: { _controller: nelmio_api_doc.controller.swagger }

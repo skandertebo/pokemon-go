@@ -4,6 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Player;
 use App\Service\PlayerService;
+use FOS\RestBundle\Controller\Annotations\Delete;
+use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Patch;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,6 +15,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use function App\createErrorResponse;
+use function App\createValidationErrorResponse;
 
 /**
  * @Route("/player", name="player")
@@ -23,18 +27,14 @@ class PlayerController extends AbstractController
     public function __construct(private PlayerService $playerService, private ValidatorInterface $validator)
     {
     }
-    /**
-     * @Route("/leaderboard", name="leaderboard", methods={"GET"})
-     */
+    #[Get("/leaderboard", name: "GetLeaderboard")]
     public function leaderboard(): Response
     {
         $players = $this->playerService->getOrderedPlayers();
         return $this->json($players);
     }
 
-    /**
-     * Route("/{id}", name="getPlayer", methods={"GET"})
-     */
+    #[Get("/{id}", name: "GetPlayer")]
 
     public function getPlayer($id): JsonResponse
     {
@@ -47,10 +47,8 @@ class PlayerController extends AbstractController
         return new JsonResponse($player);
     }
 
-    /**
-     * Route("/{id}", name="DeletePlayer", methods={"DELETE"})
-     */
-    public function deletePlayer($id): JsonResponse
+    #[Delete("/{id}", name: "DeletePlayer")]
+    public function deletePlayer($id): Response
     {
         //check if player with $id exists
         try {
@@ -62,10 +60,8 @@ class PlayerController extends AbstractController
         return new JsonResponse("player deleted successfuly");
     }
 
-    /**
-     * Route("/{id}", name="UpdatePlayer", methods={"PATCH"})
-     */
-    public function updatePlayer($id, Request $request): JsonResponse
+    #[Patch("/{id}", name: "UpdatePlayer")]
+    public function updatePlayer($id, Request $request): Response
     {
         $data = json_decode($request->getContent(), true);
         //check if player with $id exists

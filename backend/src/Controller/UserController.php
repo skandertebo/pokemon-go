@@ -27,8 +27,7 @@ use App\EventSubscriber\JwtRefreshSubscriber;
 
 
 /**
- * @Route("/api", name="api_")
- 
+ * @Route("", name="api_")
  */
 
 class UserController extends AbstractController
