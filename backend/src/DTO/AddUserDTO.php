@@ -26,8 +26,7 @@ class AddUserDTO implements GroupSequenceProviderInterface
         groups: ['registration'])]
     private  $role= null;
 
-    #[Assert\NotBlank(groups: ['playerSpecific'])]
-    #[Assert\NotNull(groups: ['playerSpecific'])]
+    
     #[ORM\Column(length: 255,nullable:true)]
     #[Assert\Type(type:"string")]
     private  $image = null;
