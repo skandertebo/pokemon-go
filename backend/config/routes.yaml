@@ -20,3 +20,9 @@ updatePlayer:
     path: /player/{id}
     controller: App\Controller\PlayerController::updatePlayer
     methods: PATCH
+
+# api:
+#     path: ^/api/
+#     defaults: { _controller: App\Controller\ApiController::indexAction }
+#     methods: [GET, OPTIONS]
+#     cors: true

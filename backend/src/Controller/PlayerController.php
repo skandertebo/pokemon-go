@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Player;
 use App\Service\PlayerService;
+use PHPUnit\Util\Json;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +15,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use function App\createErrorResponse;
 
 /**
- * @Route("/player", name="player")
+ * @Route("/api/player", name="player")
  */
 
 class PlayerController extends AbstractController
@@ -26,14 +27,10 @@ class PlayerController extends AbstractController
     /**
      * @Route("/leaderboard", name="leaderboard", methods={"GET"})
      */
-    public function leaderboard(): Response
+    public function leaderboard(): JsonResponse
     {
         $players = $this->playerService->getOrderedPlayers();
-        return $this->json([
-            'players' => $players,
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/PlayerController.php',
-        ]);
+        return new JsonResponse($players);
     }
 
     /**
