@@ -20,7 +20,7 @@ use function App\createValidationErrorResponse;
 use function App\createErrorResponse;
 
 /**
- * @Route("/api/player", name="player")
+ * @Route("/player", name="player")
  */
 
 class PlayerController extends AbstractController
