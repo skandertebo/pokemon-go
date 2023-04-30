@@ -29,11 +29,7 @@ class PlayerController extends AbstractController
     public function leaderboard(): Response
     {
         $players = $this->playerService->getOrderedPlayers();
-        return $this->json([
-            'players' => $players,
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/PlayerController.php',
-        ]);
+        return $this->json($players);
     }
 
     /**

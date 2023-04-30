@@ -13,7 +13,7 @@ class SpawnService
     public function __construct(private SpawnRepository $spawnRepository, private PokemonRepository $pokemonRepository, private PlayerRepository $playerRepository)
     {
     }
-    
+
     function addSpawn(AddSpawnDTO $data)
     {
 
@@ -52,6 +52,7 @@ class SpawnService
     }
     function getCaptureHistory($playerId)
     {
+        
         $player=$this->playerRepository->find($playerId);
         if($player==null)
         {
