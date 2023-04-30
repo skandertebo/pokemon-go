@@ -13,7 +13,7 @@ class SpawnService
     public function __construct(private SpawnRepository $spawnRepository, private PokemonRepository $pokemonRepository, private PlayerRepository $playerRepository)
     {
     }
-
+    
     function addSpawn(AddSpawnDTO $data)
     {
 
