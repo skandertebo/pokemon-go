@@ -9,8 +9,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\DTO\AddPokemonDTO;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-;
-
 class PokemonService {
 
     public function __construct(private PokemonRepository $pokemonRepository, private ValidatorInterface $validator)

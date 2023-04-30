@@ -77,7 +77,37 @@ class UserService
     }
 
 
+    public function updateUser(int $id, array $data): User
+    {
+        $user = $this->userRepository->find($id);
+        if (!$user) {
+            throw new \InvalidArgumentException('User does not exist');
+        }
 
+        if (isset($data['email'])) {
+            $email = $data['email'];
+            if ($this->getUserByEmail($email)) {
+                throw new \InvalidArgumentException('User email already exists');
+            }
+            $user->setEmail($email);
+            $this->userRepository->save($user);
+        }
+        
+        if (isset($data['password']))
+        {
+            $password = $data['password'];
+            $hashedPassword = $this->passwordHasher->hashPassword(
+                $user,
+                $password
+            );
+            $this->userRepository->upgradePassword($user, $hashedPassword);
+        }
+
+        
+        
+
+        return $user;
+    }
 
 
 
