@@ -3,8 +3,9 @@ import { useGoogleMapsLoader } from '../context/GoogleMapsLoaderContext';
 import { useAppContext } from '../context/AppContext';
 import { IoMdLocate } from 'react-icons/io';
 import { Spawn } from '../types/Spawn';
-import { spawns } from '../assets/fakeData.ts/spawns';
+import { useSpawnsContext } from '../context/SpawnsContext';
 const WebMap: React.FC = () => {
+  const spawns = useSpawnsContext();
   const googleMapsRef = useRef<typeof google.maps>();
   const mapRef = useRef<google.maps.Map>();
   const loader = useGoogleMapsLoader();
@@ -84,7 +85,7 @@ const useCharactersOnMap = (
   mapRef: React.MutableRefObject<google.maps.Map | undefined>,
   googleMapApiRef: React.MutableRefObject<typeof google.maps | undefined>
 ) => {
-  const characters = useCharacters() as Spawn[];
+  const characters = useSpawnsContext() as Spawn[];
   const markersRef = useRef<google.maps.Marker[]>([]);
   useEffect(() => {
     if (mapRef.current && googleMapApiRef.current) {
@@ -110,11 +111,6 @@ const useCharactersOnMap = (
       });
     }
   }, [characters, googleMapApiRef.current, mapRef.current]);
-};
-
-const useCharacters = () => {
-  const [characters] = useState<Spawn[]>(spawns);
-  return characters;
 };
 
 export default WebMap;
