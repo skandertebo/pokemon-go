@@ -22,6 +22,7 @@ export default function useSpawns(
           if (newSpawns.length !== prev.length) {
             if (newSpawns.length > prev.length) {
               if (!isFirstRender.current) {
+                // since makeNotification toggles a state change and it is called inside a state change, we call it in the next event loop
                 setTimeout(() => {
                   makeNotification({
                     message: 'New spawns detected!',
