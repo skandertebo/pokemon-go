@@ -82,15 +82,19 @@ export default function useSpawns(
         geoLocationPosition!.coords.latitude,
         geoLocationPosition!.coords.longitude
       );
-      if (distance < 100) {
+      if (distance < 0.5) {
         if (findNearbySpawnDistance > distance) {
           findNearbySpawnDistance = distance;
           findNearbySpawn = spawn;
         }
       }
     });
-    if (findNearbySpawn && findNearbySpawn.id !== nearbySpawn?.id) {
-      setNearbySpawn(findNearbySpawn);
+    if (findNearbySpawn) {
+      if (findNearbySpawn.id !== nearbySpawn?.id) {
+        setNearbySpawn(findNearbySpawn);
+      }
+    } else {
+      setNearbySpawn(null);
     }
   }, [spawns, geoLocationPosition]);
 
