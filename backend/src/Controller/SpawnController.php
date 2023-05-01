@@ -52,11 +52,15 @@ class SpawnController extends AbstractController
             return createErrorResponse($e->getMessage(),$e->getStatusCode());
         }
         return new JsonResponse($newPokemon) ;
-         
+        
     }
     #[Route('/catch', name: 'catchSpawn',methods:['POST'])]
+                    /**
+     * @Security("is_granted('ROLE_USER')")
+     */
     public function catchSpawn(HttpFoundationRequest $request)
     {
+        $id = $request->attributes->get('jwt_payload')['id'];
         $data = json_decode($request->getContent(), true);
         $dto= new CatchSpawnDTO($data);
         $errors=$this->validator->validate($dto,null);
@@ -66,7 +70,7 @@ class SpawnController extends AbstractController
         }
         try
         {
-            $newPokemon=$this->spawnService->catchSpawn($dto->playerId,$dto->spawnId);
+            $newPokemon=$this->spawnService->catchSpawn($id,$dto->spawnId);
         }
         catch(HttpException $e)
         {
@@ -74,16 +78,16 @@ class SpawnController extends AbstractController
         }
         return new JsonResponse($newPokemon) ;
     }
-    #[Route('/history/{playerId}', name: 'getSpawnHistory',methods:['GET'])]
+    #[Route('/history', name: 'getSpawnHistory',methods:['GET'])]
             /**
      * @Security("is_granted('ROLE_USER')")
      */
-    public function getCaptureHistory(HttpFoundationRequest $request, $playerId)
+    public function getCaptureHistory(HttpFoundationRequest $request)
     {
-        dump($request->attributes->get('jwt_payload')['id']);
         try
         {
-            $newPokemon=$this->spawnService->getCaptureHistory($playerId);
+            $id = $request->attributes->get('jwt_payload')['id'];
+            $newPokemon=$this->spawnService->getCaptureHistory($id);
         }
         catch(HttpException $e)
         {
