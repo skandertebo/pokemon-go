@@ -19,7 +19,7 @@ use function App\createValidationErrorResponse;
 #[Route('/pokemon', name: 'pokemon_')]
 class PokemonController extends AbstractController
 {
-    public function __construct(private PokemonServie $pokemonService, private ValidatorInterface $validator)
+    public function __construct(private PokemonService $pokemonService, private ValidatorInterface $validator)
     {
     }
     #[Route('', name: 'app_pokemon_list' , methods: ['GET'])]
