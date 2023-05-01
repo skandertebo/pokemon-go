@@ -58,11 +58,14 @@ class NotificationController extends AbstractController
         }
         return new JsonResponse($notifications, Response::HTTP_OK);
     }
-
+    /**
+     * @Security("is_granted('ROLE_USER')")
+    */
     #[Get('/notification/user/{id}')]
     public function getAllByUser(Request $req, int $id): JsonResponse
     {
         $user = $this->userService->find($id);
+        $this->verifyUserAuthorization($req, $id);
         if(is_null($user)){
             $resp = createErrorResponse('User not found', Response::HTTP_NOT_FOUND);
             return $resp;
@@ -71,6 +74,9 @@ class NotificationController extends AbstractController
         return new JsonResponse($notifications, Response::HTTP_OK);
     }
 
+    /**
+     * @Security("is_granted('ROLE_USER')")
+    */
     #[Get('/notification/{id}')]
     public function getOneById(int $id): JsonResponse
     {
@@ -78,6 +84,9 @@ class NotificationController extends AbstractController
         return new JsonResponse($notification, Response::HTTP_OK);
     }
 
+    /**
+     * @Security("is_granted('ROLE_USER')")
+    */
     #[Get('/notification/user/unread/count')]
     public function getUnreadNotificationsCount(Request $req, int $userid): JsonResponse
     {
@@ -90,6 +99,9 @@ class NotificationController extends AbstractController
         return new JsonResponse($count, Response::HTTP_OK);
     }
 
+    /**
+     * @Security("is_granted('ROLE_USER')")
+    */
     #[Get('/notification/user/unread')]
     public function getUnreadNotifications(Request $req, int $userid): JsonResponse
     {
@@ -102,6 +114,9 @@ class NotificationController extends AbstractController
         return new JsonResponse($notifications, Response::HTTP_OK);
     }
 
+    /**
+     * @Security("is_granted('ROLE_USER')")
+    */
     #[Get('/notification/user/read')]
     public function getReadNotifications(Request $req, int $userid): JsonResponse
     {
@@ -114,6 +129,9 @@ class NotificationController extends AbstractController
         return new JsonResponse($notifications, Response::HTTP_OK);
     }
 
+    /**
+     * @Security("is_granted('ROLE_USER')")
+    */
     #[Get('/notification/user/read/count')]
     public function getReadNotificationsCount(Request $req, int $userid): JsonResponse
     {
@@ -126,6 +144,9 @@ class NotificationController extends AbstractController
         return new JsonResponse($count, Response::HTTP_OK);
     }
 
+    /**
+     * @Security("is_granted('ROLE_USER')")
+    */
     #[Get('/notification/user/unread/fromDate')]
     public function getNotificationsFromDate(Request $req, int $userid): JsonResponse
     {
@@ -172,6 +193,9 @@ class NotificationController extends AbstractController
         return new JsonResponse($notification, Response::HTTP_CREATED);
     }
 
+    /**
+     * @Security("is_granted('ROLE_USER')")
+    */
     #[Post('/notification/read')]
     public function markAsRead(Request $req): JsonResponse
     {
@@ -190,6 +214,9 @@ class NotificationController extends AbstractController
         return new JsonResponse(null, Response::HTTP_OK);
     }
 
+    /**
+     * @Security("is_granted('ROLE_ADMIN')")
+     */
     #[Delete('/notification/{id}')]
     public function delete(int $id): JsonResponse
     {
@@ -202,5 +229,16 @@ class NotificationController extends AbstractController
         return new JsonResponse(null, Response::HTTP_OK);
     }
 
+    private function verifyUserAuthorization(Request $req, int $targetUserId){
+        $authenticatedUserId = $req->attributes->get('jwt_payload')['id'];
+        $authenticatedUser = $this->userService->find($authenticatedUserId);
+        if(!in_array('ROLE_ADMIN', $authenticatedUser->getRoles())){
+            if($targetUserId !== $authenticatedUserId){
+                $resp = createErrorResponse('Unauthorized', Response::HTTP_UNAUTHORIZED);
+                return $resp;
+            }
+        }
+        return true;
+    }
 
 }
