@@ -62,7 +62,7 @@ class SpawnService
     }
     function getNearbySpawns($latitude,$longitude)
     {
-        $spawns=$this->spawnRepository->findAll();
+        $spawns=$this->spawnRepository->findBy(['owner'=>null]);
         $nearbySpawns=[];
         foreach($spawns as $spawn)
         {
@@ -78,7 +78,7 @@ class SpawnService
     }
     function getAllSpawns()
     {
-        return $this->spawnRepository->findAll();
+        return $this->spawnRepository->findBy(['owner'=>null]);
     }
     
 }
