@@ -40,6 +40,29 @@ class SpawnRepository extends ServiceEntityRepository
         }
     }
 
+   public function findCapturedSinceDate($date): array
+   {
+       $query = $this->createQueryBuilder('s')
+            ->select('s.id')
+           ->Where('s.captureDate>:date')
+           ->setParameter('date', $date)
+           ->getQuery();
+
+        return $query->getResult();
+   }
+
+   public function findSpawnSinceDate($date): array
+   {
+       $query = $this->createQueryBuilder('s')
+           ->Where('s.spawnDate>:date')
+           ->setParameter('date', $date)
+           ->getQuery();
+
+        return $query->getResult();
+   }
+
+
+
 //    /**
 //     * @return Spawn[] Returns an array of Spawn objects
 //     */
