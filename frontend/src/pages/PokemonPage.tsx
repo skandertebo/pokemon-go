@@ -3,12 +3,11 @@ import { RiCopperCoinLine } from 'react-icons/ri';
 import { BsFire } from 'react-icons/bs';
 import { MdCatchingPokemon } from 'react-icons/md';
 import { useState } from 'react';
-import './PokemonPage.css';
 import Pokemon from '../types/Pokemon';
 
 export default function PokemonPage({ pokemon }: { pokemon: Pokemon }) {
   return (
-    <div className='bg-primary w-full h-screen '>
+    <div className='bg-third w-full h-screen '>
       <div className='w-full h-64 relative'>
         <img
           src={pokemon.image}
@@ -16,7 +15,7 @@ export default function PokemonPage({ pokemon }: { pokemon: Pokemon }) {
           className='w-40 m-auto absolute  bottom-0 left-[calc((100%-160px)/2)] animate-[bounce_4s_ease-in-out_infinite]'
         />
       </div>
-      <div className='bg-third h-[calc(100%-256px)] rounded-2xl p-4'>
+      <div className='bg-secondary h-[calc(100%-256px)] rounded-2xl p-4'>
         <h1 className='text-2xl w-full text-center text-secondary'>
           {pokemon.name}
         </h1>
@@ -32,7 +31,7 @@ export default function PokemonPage({ pokemon }: { pokemon: Pokemon }) {
           <MdCatchingPokemon className='text-2xl inline relative top-[-1px] right-1 text-primary' />
           Spawn: {pokemon.spawn}
         </p>
-        <p className='text-left w-64 mx-auto'>
+        <p className='text-left md:text-center w-64 md:w-auto mx-auto md:mx-32'>
           <span className='text-primary text-xl'>Description:</span>
           {pokemon.description}
         </p>

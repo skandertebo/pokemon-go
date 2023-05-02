@@ -5,6 +5,7 @@ import {RiCopperCoinLine} from 'react-icons/ri';
 import {BsFire} from 'react-icons/bs';
 import {MdCatchingPokemon} from 'react-icons/md';
 import Pokemon from '../types/Pokemon';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function PokemonCard({pokemon}: {pokemon: Pokemon}) {
@@ -13,6 +14,7 @@ export default function PokemonCard({pokemon}: {pokemon: Pokemon}) {
     const [isRotated, setIsRotated] = useState(false);
     const [showPokemon, setShowPokemon] = useState(' hidden');
     const [rotate , setRotate] = useState('cursor-pointer');
+    const navigate = useNavigate();
     const delayedExecution = () => {
         setImage('./src/assets/images/cardface.png');
         setIsRotated(true);
@@ -22,7 +24,8 @@ export default function PokemonCard({pokemon}: {pokemon: Pokemon}) {
         if(!isRotated) {
             setRotate('pokemoncard');
             setTimeout(delayedExecution, 340);
-            
+        }else{
+            navigate('/pokemon/' + pokemon.id);
         }
     }
     useEffect(() => {
@@ -40,7 +43,7 @@ export default function PokemonCard({pokemon}: {pokemon: Pokemon}) {
         >
             <img src={pokemon.background} 
             alt="background" className='w-full h-48 absolute top-8 z-0' id='background' />
-            <img src={image} alt="card background" className='w-full z-10 absolute'/>
+            <img src={image} alt="card background" className='w-full z-1 absolute'/>
             <img src={pokemon.image} alt="eevee" id='pokemon' className={'w-32 absolute top-8 right-6 z-20 rotate-data' + showPokemon} />
             <div className={'absolute block top-[183px] right-5 w-[139px] z-20 rotate-data ' + showPokemon}>
                 <h1 className=' text-2xl w-full text-center'>{pokemon.name}</h1>
