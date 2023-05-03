@@ -12,19 +12,28 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Entity\User;
 use App\Entity\Admin;
 use App\Entity\Player;
-use App\Functions\CreateValidationErrorResponse;
-use App\Functions\CreateErrorResponse;
 
+use App\CreateValidationErrorResponse;
+use App\CreateErrorResponse;
 use function App\createErrorResponse;
+use function App\createValidationErrorResponse;
+use App\DTO\AddUserDTO;
+use App\DTO\UpdateUserDTO;
+use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use App\EventSubscriber\JwtRefreshSubscriber;
+
+
+
 
 /**
- * @Route("/api", name="api_")
+ * @Route("", name="api_")
  */
 
 class UserController extends AbstractController
 {
 
-    public function __construct(private UserService $userService, private ValidatorInterface $validator)
+  public function __construct(private UserService $userService,private ValidatorInterface $validator,  private LoggerInterface $logger)
     {
     }
 
@@ -33,19 +42,15 @@ class UserController extends AbstractController
      */
     public function register(Request $request)
     {
-
         $data = json_decode($request->getContent(), true);
+        $userDTO = new AddUserDTO($data); 
+        
+         $errors = $this->validator->validate($userDTO, null, $userDTO->getGroupSequence());
 
-
+        if (count($errors) > 0) {
+            return createValidationErrorResponse($errors); }
         try {
             [$user, $token] = $this->userService->createUser($data);
-
-            $errors = $this->validator->validate($user);
-
-            if (count($errors) > 0) {
-                return createValidationErrorResponse($errors);
-            }
-
             return new JsonResponse([
                 'user' => $user,
                 'message' => 'Registered Successfully',
@@ -53,7 +58,7 @@ class UserController extends AbstractController
 
             ]);
         } catch (\InvalidArgumentException $e) {
-            return createErrorResponse($e->getMessage(), 400);
+            return createErrorResponse($e->getMessage(), 422);
         }
     }
 
@@ -67,21 +72,23 @@ class UserController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
+    $userDTO = new AddUserDTO($data); 
+    $errors = $this->validator->validate($userDTO, null, $userDTO->getGroupSequence());
 
-        try {
-            [$user, $token] = $this->userService->checkUserLogin($data);
-
-            $errors = $this->validator->validate($user);
-            if (count($errors) > 0) {
-                return createValidationErrorResponse($errors);
-            }
-
-            return new JsonResponse([
-                'user' => $user,
-                'message' => 'Logged in Successfully',
-                'token' => $token
-            ]);
-        } catch (\InvalidArgumentException $e) {
+    if (count($errors) > 0) {
+         return createValidationErrorResponse($errors); }
+        
+    try{
+        [$user,$token]=$this->userService->checkUserLogin($data);
+        
+        
+            
+        return new JsonResponse([
+            'user' => $user,
+            'message' => 'Logged in Successfully',
+            'token' => $token
+        ]);}
+    catch (\InvalidArgumentException $e) {
             return createErrorResponse($e->getMessage(), 400);
         }
     }
@@ -94,10 +101,31 @@ class UserController extends AbstractController
      * @Route("/user", name="getUsers", methods={"GET"})
      */
     public function getUsers()
-    {
+{
+      
         $users = $this->userService->findAll();
         return new JsonResponse($users);
+        
+        
     }
+
+
+    /**
+     * @Route("/user/me", name="getUsers", methods={"GET"})
+     */
+    public function getMe(Request $request)
+    {
+      
+        $id = $request->attributes->get('jwt_payload')['id'];
+        $user = $this->userService->find($id);
+        return new JsonResponse($user);
+        
+        
+    } 
+
+
+
+
 
 
 
@@ -120,6 +148,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("/user/delete/{id}", name="deleteUser", methods={"DELETE"})
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function deleteUser(Request $request, $id)
     {
@@ -131,4 +160,35 @@ class UserController extends AbstractController
             return createErrorResponse($e->getMessage(), 400);
         }
     }
+
+
+
+    /**
+     * @Route("/user/update/{id}", name="updateUser", methods={"PATCH"})
+     * @Security("is_granted('ROLE_USER')")
+     */
+    public function updateUser(Request $request, $id){
+         
+        $idAuthenticated = $request->attributes->get('jwt_payload')['id']; 
+        $id = intval($id);
+        if ($idAuthenticated !== $id) {
+            return createErrorResponse('You are not allowed to update this user', 403);
+        }
+        $data = json_decode($request->getContent(), true);
+        $userDTO = new UpdateUserDTO($data); 
+        $errors = $this->validator->validate($userDTO);
+
+        if (count($errors) > 0) {
+            return createValidationErrorResponse($errors); }
+        try {
+            $user = $this->userService->updateUser($id, $data);
+            return new JsonResponse([
+                'user' => $user,
+                'message' => 'User updated Successfully'
+            ]);
+        } catch (\InvalidArgumentException $e) {
+            return createErrorResponse($e->getMessage(), 400);
+        }
+    }
+
 }

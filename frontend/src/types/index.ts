@@ -13,8 +13,8 @@ export type useAuthOptions = {
 export enum AuthenticationStates {
   NOT_LOGGED_IN,
   VERIFYING_AUTH,
-  AUTHORIZED
-  //ADMIN
+  AUTHORIZED,
+  ADMIN
 }
 
 export type UseLoginReturnType = {

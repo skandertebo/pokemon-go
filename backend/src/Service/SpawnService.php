@@ -52,6 +52,7 @@ class SpawnService
     }
     function getCaptureHistory($playerId)
     {
+        
         $player=$this->playerRepository->find($playerId);
         if($player==null)
         {
@@ -61,7 +62,7 @@ class SpawnService
     }
     function getNearbySpawns($latitude,$longitude)
     {
-        $spawns=$this->spawnRepository->findAll();
+        $spawns=$this->spawnRepository->findBy(['owner'=>null]);
         $nearbySpawns=[];
         foreach($spawns as $spawn)
         {
@@ -75,9 +76,17 @@ class SpawnService
         }
         return $nearbySpawns;
     }
+
+    function getUpdates($date)
+    {
+        $updates=[ "captured" => $this->spawnRepository->findCapturedSinceDate($date), 
+                    "spawned" => $this->spawnRepository->findSpawnSinceDate($date)];
+        return $updates;
+    }
+
     function getAllSpawns()
     {
-        return $this->spawnRepository->findAll();
+        return $this->spawnRepository->findBy(['owner'=>null]);
     }
     
 }

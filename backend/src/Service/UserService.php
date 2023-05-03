@@ -38,7 +38,7 @@ class UserService
         switch ($role) {
             case 'admin':
                 $user = new Admin();
-                $user->setRoles(['ROLE_ADMIN']);
+                $user->setRoles(['ROLE_ADMIN','IS_AUTHENTICATED_FULLY']);
                 break;
             case 'player':
                 $user = new Player();
@@ -49,7 +49,7 @@ class UserService
 
                 $user->setPlayerTag($playerTag);
                 $user->setScore(0);
-                $user->setRoles(['ROLE_USER']);
+                $user->setRoles(['ROLE_USER','IS_AUTHENTICATED_FULLY']);
                 $image = $data['image'];
                 $user->setImage($image);
                 break;
@@ -66,8 +66,9 @@ class UserService
 
 
 
-        $token = $this->jwtManagerInt->create($user);
+        
         $user = $this->userRepository->save($user, true);
+        $token = $this->jwtManagerInt->create($user);
 
         $array = [$user, $token];
 
@@ -76,7 +77,37 @@ class UserService
     }
 
 
+    public function updateUser(int $id, array $data): User
+    {
+        $user = $this->userRepository->find($id);
+        if (!$user) {
+            throw new \InvalidArgumentException('User does not exist');
+        }
 
+        if (isset($data['email'])) {
+            $email = $data['email'];
+            if ($this->getUserByEmail($email)) {
+                throw new \InvalidArgumentException('User email already exists');
+            }
+            $user->setEmail($email);
+            $this->userRepository->save($user);
+        }
+        
+        if (isset($data['password']))
+        {
+            $password = $data['password'];
+            $hashedPassword = $this->passwordHasher->hashPassword(
+                $user,
+                $password
+            );
+            $this->userRepository->upgradePassword($user, $hashedPassword);
+        }
+
+        
+        
+
+        return $user;
+    }
 
 
 
@@ -89,6 +120,8 @@ class UserService
         $password = $data['password'];
 
         $user = $this->getUserByEmail($email);
+        
+        
 
         if ($user === null) {
             throw new \InvalidArgumentException('a User with these credentials does not exist ');

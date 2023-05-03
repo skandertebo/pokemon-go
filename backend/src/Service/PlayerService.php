@@ -43,4 +43,12 @@ class PlayerService
     {
         return $this->playerRepository->findBy([], ['score' => 'DESC']);
     }
+
+    //check unique playerTag
+    public function checkPlayerTag(string $playerTag){
+        $player = $this->getPlayerByPlayerTag($playerTag);
+        if($player){
+            throw new HttpException(400, 'PlayerTag ' . $playerTag . ' already exists!. Please choose another one.');
+        }
+    }
 }
