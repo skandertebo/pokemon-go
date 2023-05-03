@@ -23,7 +23,7 @@ function ProfilePage() {
   }
 
   return (
-    <div className='sm:w-screen sm:h-screen bg-white'>
+    <div className='w-screen bg-white'>
       <Profile {...{ user }} updateUser={updateUser} />
     </div>
   );

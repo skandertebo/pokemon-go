@@ -61,7 +61,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
 
   return (
     <div
-      className='w-screen sm:absolute sm:top-1/3 sm:mt-20 sm:left-1/2  sm:transform sm:-translate-x-1/2 sm:-translate-y-1/2 
+      className='w-full sm:absolute sm:top-1/3 sm:mt-20 sm:left-1/2  sm:transform sm:-translate-x-1/2 sm:-translate-y-1/2 
              md:w-2/3 lg:w-1/2 xl:w-1/3 2xl:w-1/4 2xl:h-max p-3'
     >
       <Card className=' bg-secondary shadow-2xl mx-auto mb-16 rounded-2xl xl:mt-32'>

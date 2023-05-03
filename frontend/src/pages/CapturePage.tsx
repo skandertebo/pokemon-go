@@ -6,7 +6,7 @@ import BottomNav from "../components/BottomNav";
 export default function CapturePage() {
     return (
         <>
-        <div className="bg-secondary pt-4 w-screen">
+        <div className="bg-secondary pt-4 w-screen md:h-screen">
             <h1 className="text-center w-full text-4xl text-primary mb-12 relative z-10">
                 Pokedex
             </h1>

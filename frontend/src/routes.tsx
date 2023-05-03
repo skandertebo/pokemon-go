@@ -10,17 +10,6 @@ import MainPage from './Pages/MainPage';
 import PokemonPage from './Pages/PokemonPage';
 import Pokemon from './types/Pokemon';
 
-const bulbasaur : Pokemon = {
-  id: 2,
-  name: 'Bulbasaur',
-  image: './src/assets/images/bulbasaur.png',
-  score: 89,
-  power: 100,
-  spawn: 100,
-  background: './src/assets/images/backgroundgreen.jpg',
-  description: 'Bulbasaur can be seen napping in bright sunlight. There is a seed on its back. By soaking up the sun\'s rays, the seed grows progressively larger.'
-}
-
 const routes = createBrowserRouter([
   {
     path: '/',
@@ -44,7 +33,7 @@ const routes = createBrowserRouter([
       },
       {
         path: '/pokemon/:id',
-        element: <PokemonPage pokemon={bulbasaur} />
+        element: <PokemonPage />
       }
     ]
   },
