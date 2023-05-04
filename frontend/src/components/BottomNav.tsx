@@ -35,6 +35,11 @@ const BottomNav: React.FC = () => {
       value: '/leaderboard',
       label: 'Leaderboard',
       icon: <TrophyIcon className={iconClassName} />
+    },
+    {
+      value: '/stat',
+      label : 'Statistic',
+      icon: <TrophyIcon className={iconClassName} />
     }
   ];
 
@@ -42,14 +47,15 @@ const BottomNav: React.FC = () => {
     <BottomNavigation
       sx={{
         '& .MuiBottomNavigationAction-label': {
-          color: 'white'
+          color: 'white',
+          zIndex: 200
         }
       }}
       style={{
         position: 'fixed',
         bottom: 0,
         width: '100vw',
-        backgroundColor: palette.primary.dark
+        backgroundColor: palette.primary.dark,
       }}
       showLabels
       value={value}
