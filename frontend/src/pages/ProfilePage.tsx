@@ -5,14 +5,12 @@ import avatar from '../assets/avatar-girledited.png';
 function ProfilePage() {
   const useryas: User = {
     id: 1,
-    name: 'yasmine',
     username: 'GrumpyChef',
     email: 'yasmine@gmail.com',
     password: 'blalbal',
     createdAt: new Date(),
     updatedAt: new Date(),
-    avatar: avatar,
-    gender: "Female",
+    image: avatar,
     score: 0
   };
 

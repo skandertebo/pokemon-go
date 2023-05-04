@@ -120,7 +120,13 @@ class UserService
         $password = $data['password'];
 
         $user = $this->getUserByEmail($email);
-        
+        $hashedPassword = $this->passwordHasher->hashPassword(
+                $user,
+                $password
+            );
+        if ($hashedPassword !== $user->getPassword()) {
+            throw new \InvalidArgumentException('wrong password ');
+        }
         
 
         if ($user === null) {
