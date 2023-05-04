@@ -1,23 +1,24 @@
-export async function registerUser(data : registerBody) {
-    const response =await fetch('http://localhost:8000/api/register',{
+import { apiBaseUrl } from "../config"
+
+export async function registerUser(data : RegisterBody) {
+    const response =await fetch(apiBaseUrl+'/register',{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(data),
-        mode: 'cors'
     })
-    if(response.ok){
-        return await response.json()
-    }else{
-        throw new Error('Failed to register')
-    }
+    return await response.json()
 }
 
-export type registerBody = {
+export type RegisterBody = {
     playerTag: string,
     email: string,
     password: string,
     image: string,
     role:"player"
 }
+function userState(): [any, any] {
+    throw new Error("Function not implemented.")
+}
+

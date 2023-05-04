@@ -1,17 +1,28 @@
 import React, { useRef, useState } from 'react';
 import { Button } from '@material-tailwind/react';
 import './Register.css'
-import { registerBody, registerUser } from '../apiCalls/register';
+import { RegisterBody, registerUser } from '../apiCalls/register';
+import { useAuthContext } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+
   
   function RegisterComp() {
-    const [registerData, setRegisterData] = useState<registerBody>({
+    const {setToken}= useAuthContext() as {
+      setToken:React.Dispatch<React.SetStateAction<string>>
+    };
+
+    const [error,setError]=useState();
+
+    const navigate = useNavigate();
+  
+    const [registerData, setRegisterData] = useState<RegisterBody>({
       playerTag: '',
       email: '',
       password: '',
       image: '',
       role:'player'
     });
-
+    
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = event.target;
       setRegisterData(prevState => ({
@@ -19,15 +30,20 @@ import { registerBody, registerUser } from '../apiCalls/register';
         [name]: value
       }));
     };
+
     
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       try {
         const userData = await registerUser(registerData);
+        setToken(userData.token);
         console.log('User registered in successfully:', userData);
-        localStorage.setItem('token', userData.token); // Store token in local storage
+        console.log(userData.token);
+        navigate('/');
       } catch (error) {
-        console.error('Error registering in:', error);
+        //@ts-ignore
+        setError(error.message)
+        console.error(error)
       }
       console.log(registerData);
     };
@@ -52,6 +68,7 @@ import { registerBody, registerUser } from '../apiCalls/register';
         <div>
           <Button className='bg-primary  w-3/4 h-12 rounded-md font-bold text-secondary md:w-[300px] lg:w-[300px] disabled:bg-secondary disabled:text-primary' type="submit">Register</Button>
         </div>
+        {error && <div>{error}</div>}
       </form>
     );
   }
