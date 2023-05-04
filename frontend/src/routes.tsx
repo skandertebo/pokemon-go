@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Leaderboard from './pages/Leaderboard';
 import MainPage from './pages/MainPage';
+import DashboardPage from './pages/DashboardPage';
 
 const routes = createBrowserRouter([
   {
@@ -43,6 +44,10 @@ const routes = createBrowserRouter([
         element: <Register />
       }
     ]
+  },
+  {
+    path:'dashboard',
+    element: <DashboardPage />
   }
 ]);
 
