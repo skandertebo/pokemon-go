@@ -2,9 +2,11 @@ import {Link, useNavigate} from 'react-router-dom';
 import Register from './RegisterComp';
 import { useState, useEffect } from 'react';
 import { Button } from '@material-tailwind/react';
-import { loginUser,LoginBody } from '../apiCalls/login';
+import { loginUser } from '../apiCalls/login';
 import { useAuthContext } from '../context/AuthContext';
 import { Navigate } from 'react-router-dom';
+import { LoginBody } from '../types/LoginBody';
+
 function LoginComp() {
   const {token,setToken}= useAuthContext() as {
     token:string,
@@ -42,10 +44,10 @@ function LoginComp() {
       }
       setToken(userData.token);
       navigate('/');
-      console.log('User logged in successfully:', userData);
     } catch (error) {
       //@ts-ignore
       setError(error.message)
+      console.error(error)
     }
   };
 

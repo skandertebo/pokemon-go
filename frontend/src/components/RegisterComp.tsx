@@ -1,9 +1,10 @@
 import React, { useRef, useState } from 'react';
 import { Button } from '@material-tailwind/react';
 import './Register.css'
-import { RegisterBody, registerUser } from '../apiCalls/register';
+import { registerUser } from '../apiCalls/register';
 import { useAuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { RegisterBody } from '../types/RegisterBody';
 
   
   function RegisterComp() {

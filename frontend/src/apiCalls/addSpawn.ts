@@ -1,4 +1,5 @@
 import { apiBaseUrl } from "../config"
+import { SpawnBody } from "../types/SpawnBody";
 
 export async function addSpawn(data : SpawnBody) {
     const body = {
@@ -19,9 +20,3 @@ export async function addSpawn(data : SpawnBody) {
 }
 
 
-export type SpawnBody={
-    pokemonId: string,
-    latitude: string,
-    longitude: string,
-    radius: string
-}

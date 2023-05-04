@@ -1,4 +1,5 @@
 import { apiBaseUrl } from "../config"
+import { RegisterBody } from "../types/RegisterBody"
 
 export async function registerUser(data : RegisterBody) {
     const response =await fetch(apiBaseUrl+'/register',{
@@ -11,14 +12,6 @@ export async function registerUser(data : RegisterBody) {
     return await response.json()
 }
 
-export type RegisterBody = {
-    playerTag: string,
-    email: string,
-    password: string,
-    image: string,
-    role:"player"
-}
-function userState(): [any, any] {
-    throw new Error("Function not implemented.")
-}
+
+
 

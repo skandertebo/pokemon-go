@@ -1,12 +1,13 @@
 import { Button } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
-import { addSpawn, SpawnBody } from "../apiCalls/addSpawn";
+import { addSpawn } from "../apiCalls/addSpawn";
 import { useAuthContext } from "../context/AuthContext";
 import User from "../types/User";
 import { Navigate } from "react-router-dom";
 import { getPokemons } from "../apiCalls/getPokemons";
 import Pokemon from "../types/Pokemon";
 import { useAppContext } from "../context/AppContext";
+import { SpawnBody } from "../types/SpawnBody";
 
 function Dashboard(){
     const [spawnData, setSpawnData] = useState<SpawnBody>({
