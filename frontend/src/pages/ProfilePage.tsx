@@ -37,19 +37,18 @@ function ProfilePage() {
     getUser();
   }, []);
 
-  async function updateUser(localUser: User) {
+  async function updateUser(formData: FormData) {
     try {
-      const res = await axios.patch(apiBaseUrl + `/player/${user?.id}`, {
+      const res = await axios.post(apiBaseUrl + `/player/profile`, formData, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
       setLocalUser(res.data);
-      setIsLoaded(true);
     } catch (e) {
       console.error(e);
       makeNotification({
-        message: 'Error loading information',
+        message: 'Error updating information',
         type: 'error',
         duration: 4000
       });

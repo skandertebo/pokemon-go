@@ -1,12 +1,12 @@
 import { useRef, useState } from 'react';
-import avatar from '../assets/avatar-girledited.png';
+import avatar from '../assets/avatar-girl2.png';
 import { Card, Button, Typography } from '@material-tailwind/react';
 import { AiFillEdit } from 'react-icons/ai';
 import User from '../types/User';
 
 interface ProfileProps {
   user: User;
-  updateUser: (user: User) => void;
+  updateUser: (formData: FormData) => void;
 }
 
 const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
@@ -24,20 +24,18 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
     setImagePreview(selectedFile ? URL.createObjectURL(selectedFile) : '_');
   };
 
-  function lockForm(event: React.MouseEvent<HTMLButtonElement>) {
+  function lockForm() {
     setModify((prev) => !prev);
   }
 
   const handleSave = () => {
-    const newUser = {
-      ...user,
-      playerTag,
-      email,
-      password,
-      image: '_'
-    };
+    const formData = new FormData();
+    formData.append('image', imageInput.current?.files?.[0] as Blob);
+    formData.append('playerTag', playerTag);
+    formData.append('email', email);
+    formData.append('password', password);
 
-    updateUser(newUser);
+    updateUser(formData);
   };
 
   return (
