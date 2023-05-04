@@ -2,29 +2,44 @@ import { useState } from 'react';
 import Profile from '../components/Profile';
 import User from '../types/User';
 import avatar from '../assets/avatar-girledited.png';
-function ProfilePage() {
-  const useryas: User = {
-    id: 1,
-    name: 'yasmine',
-    username: 'GrumpyChef',
-    email: 'yasmine@gmail.com',
-    password: 'blalbal',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    avatar: avatar,
-    gender: "Female",
-    score: 0
-  };
+import { useAuthContext } from '../context/AuthContext';
+import { useAppContext } from '../context/AppContext';
+import axios from 'axios';
+import { apiBaseUrl } from '../config';
+import { UseLoginReturnType } from '../types';
+import Player from '../components/Player';
 
-  const [user, setUser] = useState<User>(useryas);
-  function updateUser(user: User) {
-    setUser(user);
-    console.log(JSON.stringify(user));
+function ProfilePage() {
+  const { user, token } = useAuthContext() as UseLoginReturnType;
+  const { makeNotification } = useAppContext();
+
+  async function getPlayer(userID: number) {
+    try {
+      const res = await axios.get(apiBaseUrl + `/player/${userID}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return res.data;
+    } catch (e) {
+      console.error(e);
+      makeNotification({
+        message: 'Error loading information',
+        type: 'error',
+        duration: 4000
+      });
+    }
   }
+
+  const playerData = getPlayer(user!.id);
+
+  const [localUser, setLocalUser] = useState<User>(playerData);
+
+  function updateUser(localUser: User) {}
 
   return (
     <div>
-      <Profile {...{ user }} updateUser={updateUser} />
+      <Profile {...{ localUser }} updateUser={updateUser} />
     </div>
   );
 }
