@@ -1,15 +1,15 @@
 import { createBrowserRouter } from 'react-router-dom';
 import React from 'react';
 import MainLayout from './Layouts/MainLayout';
-import ProfilePage from './Pages/ProfilePage';
-import CapturePage from './Pages/CapturePage';
-import Login from './Pages/Login';
-import Register from './Pages/Register';
-import Leaderboard from './Pages/Leaderboard';
-import MainPage from './Pages/MainPage';
-import PokemonPage from './Pages/PokemonPage';
-import StatPage from './Pages/StatPage';
-import Pokemon from './types/Pokemon';
+import ProfilePage from './pages/ProfilePage';
+import CapturePage from './pages/CapturePage';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Leaderboard from './pages/Leaderboard';
+import MainPage from './pages/MainPage';
+import DashboardPage from './pages/DashboardPage';
+import PokemonPage from './pages/PokemonPage';
+import StatPage from './pages/StatPage';
 
 const routes = createBrowserRouter([
   {
@@ -54,6 +54,10 @@ const routes = createBrowserRouter([
         element: <Register />
       }
     ]
+  },
+  {
+    path:'dashboard',
+    element: <DashboardPage />
   }
 ]);
 

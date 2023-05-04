@@ -10,23 +10,24 @@ interface ProfileProps {
 }
 
 const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
-  const [name, setName] = useState<string>(user.name);
-  const [username, setUsername] = useState<string>(user.username);
+  const [playerTag, setPlayerTag] = useState<string>(user.playerTag);
   const [email, setEmail] = useState<string>(user.email);
   const imageInput = useRef<HTMLInputElement>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(user.avatar);
+  const [imagePreview, setImagePreview] = useState<string>(
+    user.image && user.image !== '_' ? user.image : avatar
+  );
+  const [password, setPassword] = useState<string>(user.password);
   const [modify, setModify] = useState<boolean>(false);
-  const [gender, setGender] = useState<string>(user.gender);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
-    setImagePreview(selectedFile ? URL.createObjectURL(selectedFile) : null);
+    setImagePreview(selectedFile ? URL.createObjectURL(selectedFile) : '_');
   };
 
   function lockForm(event: React.MouseEvent<HTMLButtonElement>) {
     const elements = document.querySelectorAll<
       HTMLInputElement | HTMLTextAreaElement
-    >('input,select');
+    >('input');
 
     elements.forEach((element) => {
       element.disabled = modify;
@@ -47,15 +48,12 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
   const handleSave = () => {
     const newUser = {
       ...user,
-      name,
-      username,
+      playerTag,
       email,
-      avatar: imagePreview || user.avatar,
-      gender,
-      updatedAt: new Date()
+      password,
+      image: '_'
     };
 
-    console.log(JSON.stringify(newUser));
     updateUser(newUser);
   };
 
@@ -84,7 +82,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
           >
             <div>
               <img
-                src={imagePreview || avatar}
+                src={imagePreview}
                 alt='image avatar'
                 className='mx-auto mb-4 w-[200px] h-[200px] rounded-full border-8 border-third p-3 justify-self-center flex '
               />
@@ -101,7 +99,6 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                     onChange={handleImageChange}
                     className='hidden '
                     disabled={!modify}
-                    //   value={imagePreview}
                   ></input>
                 </label>
               </div>
@@ -115,9 +112,9 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                   className='inline-block w-full shrink-1 focus:outline-none  rounded-full bg-transparent  p-3 leading-relaxed text-fourth placeholder-primary shadow focus:shadow-third  placeholder:opacity-50'
                   placeholder='Ex: GrumpyChef'
                   type='text'
-                  value={username}
+                  value={playerTag}
                   onChange={(e) => {
-                    setUsername(e.target.value);
+                    setPlayerTag(e.target.value);
                   }}
                   disabled={!modify}
                 />
@@ -136,40 +133,21 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                   disabled={!modify}
                 />
               </div>
-              {/* <div>
-                <label className='text-black mr-60 p-0  text-lg font-medium'>
-                  Name
-                </label>
-                <input
-                  className='inline-block w-full focus:outline-none  rounded-full bg-transparent  p-3 leading-relaxed text-fourth placeholder-primary shadow focus:shadow-third  placeholder:opacity-50'
-                  placeholder='John Doe'
-                  value={name}
-                  onChange={(e) => {
-                    setName(e.target.value);
-                  }}
-                />
-              </div> */}
               <div>
                 <label className='text-black mr-60 p-0  text-lg font-medium'>
-                  Gender
+                  Password
                 </label>
-                <select
-                title='gender'
-                  className='  inline-block  w-full shrink-1 focus:outline-none  rounded-full bg-transparent  p-3 leading-relaxed text-fourth placeholder-primary shadow focus:shadow-third  placeholder:opacity-50'
+                <input
+                  className='inline-block w-full shrink-1 focus:outline-none  rounded-full bg-transparent  p-3 leading-relaxed text-fourth placeholder-primary shadow focus:shadow-third  placeholder:opacity-50'
+                  placeholder='*************'
+                  value={password}
                   onChange={(e) => {
-                    setGender(e.target.value);
+                    setPassword(e.target.value);
                   }}
-                  value={gender}
                   disabled={!modify}
-                >
-                  <option value='Female'>Female</option>
-                  <option value='Male'>Male</option>
-                  <option value='Non Binary'>Non Binary</option>
-                  <option value='Prefer not to say'>Prefer not to say</option>
-                </select>
+                />
               </div>
             </div>
-
             <div className='mb-4'>
               <Button
                 className=' save mt-2 w-1/2 mx-auto bg-primary disabled:hidden '
