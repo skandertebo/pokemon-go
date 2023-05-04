@@ -11,6 +11,9 @@ use App\Service\PokemonService;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Entity\Pokemon;
 use App\DTO\AddPokemonDTO;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use function App\createErrorResponse;
 use function App\createValidationErrorResponse;
@@ -30,6 +33,19 @@ class PokemonController extends AbstractController
         ]);
     }
 
+    #[Route('/test', name:'test', methods:['POST'])]
+    public function upload(Request $request): Response
+    {
+        /** @var UploadedFile $file */
+        $file = $request->files->get('file');
+        $name = $request-> request -> get('name');
+        dump($name);
+        // Process the uploaded file as required.
+        // For example, move the file to a directory on the server using $file->move()
+        $file->move('../public/Files/pokemonImages');
+        return new Response('File uploaded successfully!');
+    }
+
     #[Route('/{id}', name: 'app_pokemon_id' , methods: ['GET'])]
     public function getPokemonById(int $id): JsonResponse
     {
@@ -46,13 +62,18 @@ class PokemonController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
         $dto = new AddPokemonDTO($data);
+        
         $errors = $this->validator->validate($dto, null);
+        
         if (count($errors) > 0) {
             return createValidationErrorResponse($errors);
         }
         $pokemon = $this->pokemonService->createPokemon($dto);
         return new JsonResponse($pokemon);
     }
+
+   
+
 
     #[Route('/{id}', name: 'app_pokemon_update' , methods: ['PUT'])]
     public function updatePokemon(int $id ,Request $request ): JsonResponse
