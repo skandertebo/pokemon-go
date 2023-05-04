@@ -1,23 +1,16 @@
-export async function registerUser(data : registerBody) {
-    const response =await fetch('http://localhost:8000/api/register',{
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data),
-        mode: 'cors'
-    })
-    if(response.ok){
-        return await response.json()
-    }else{
-        throw new Error('Failed to register')
-    }
-}
+import { apiBaseUrl } from '../config';
+import { RegisterBody } from '../types/RegisterBody';
 
-export type registerBody = {
-    playerTag: string,
-    email: string,
-    password: string,
-    image: string,
-    role:"player"
+export async function registerUser(data: RegisterBody) {
+  const response = await fetch(apiBaseUrl + '/register', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      ...data,
+      image: '_'
+    })
+  });
+  return await response.json();
 }
