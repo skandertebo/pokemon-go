@@ -20,6 +20,7 @@ class NotificationService {
 
     public function createNotification(Notification $notification): Notification
     {
+        $notification->setDate(new \DateTime());
         $this->notificationRepository->save($notification, true);
         return $notification;
     }

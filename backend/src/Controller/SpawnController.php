@@ -6,6 +6,8 @@ use App\DTO\AddSpawnDTO;
 use App\Entity\CatchSpawnDTO;
 use App\Entity\Spawn;
 use App\Service\SpawnService;
+use DateTimeZone;
+use FOS\RestBundle\Controller\Annotations\Get;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,8 +17,10 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 use function App\createErrorResponse;
+use function App\createValidationErrorResponse;
 
 /**
      * @Route("/spawn", name="spawn")
@@ -51,11 +55,15 @@ class SpawnController extends AbstractController
             return createErrorResponse($e->getMessage(),$e->getStatusCode());
         }
         return new JsonResponse($newPokemon) ;
-         
+        
     }
     #[Route('/catch', name: 'catchSpawn',methods:['POST'])]
+                    /**
+     * @Security("is_granted('ROLE_USER')")
+     */
     public function catchSpawn(HttpFoundationRequest $request)
     {
+        $id = $request->attributes->get('jwt_payload')['id'];
         $data = json_decode($request->getContent(), true);
         $dto= new CatchSpawnDTO($data);
         $errors=$this->validator->validate($dto,null);
@@ -65,7 +73,7 @@ class SpawnController extends AbstractController
         }
         try
         {
-            $newPokemon=$this->spawnService->catchSpawn($dto->playerId,$dto->spawnId);
+            $newPokemon=$this->spawnService->catchSpawn($id,$dto->spawnId);
         }
         catch(HttpException $e)
         {
@@ -73,16 +81,16 @@ class SpawnController extends AbstractController
         }
         return new JsonResponse($newPokemon) ;
     }
-    #[Route('/history/{playerId}', name: 'getSpawnHistory',methods:['GET'])]
+    #[Route('/history', name: 'getSpawnHistory',methods:['GET'])]
             /**
      * @Security("is_granted('ROLE_USER')")
      */
-    public function getCaptureHistory(HttpFoundationRequest $request, $playerId)
+    public function getCaptureHistory(HttpFoundationRequest $request)
     {
-        dump($request->attributes->get('jwt_payload')['id']);
         try
         {
-            $newPokemon=$this->spawnService->getCaptureHistory($playerId);
+            $id = $request->attributes->get('jwt_payload')['id'];
+            $newPokemon=$this->spawnService->getCaptureHistory($id);
         }
         catch(HttpException $e)
         {
@@ -114,4 +122,23 @@ class SpawnController extends AbstractController
         return new JsonResponse($spawns) ;
     }
 
+    #[Route('/updates', name: '_getUpdates', methods: ['GET'])]
+    public function getUpdates(HttpFoundationRequest $request): JsonResponse
+    {
+        $dateTimeString = $request->query->get('datetime');
+        $dateTimeConstraint = new DateTime([
+            'format' => 'Y-m-d\TH:i:s\Z',
+            'message' => 'The datetime must be in the format "YYYY-MM-DDTHH:MM:SSZ".',
+        ]);
+        $errors = $this->validator->validate($dateTimeString, $dateTimeConstraint);
+    
+        if ($errors->count() > 0) {
+            return createValidationErrorResponse($errors);
+        }
+        dump($dateTimeString);
+        $dateTime = new \DateTime($dateTimeString);
+        
+        dump($dateTime);
+        return new JsonResponse($this->spawnService->getUpdates($dateTime));
+    }
 }
