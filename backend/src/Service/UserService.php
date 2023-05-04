@@ -120,18 +120,16 @@ class UserService
         $password = $data['password'];
 
         $user = $this->getUserByEmail($email);
-        $hashedPassword = $this->passwordHasher->hashPassword(
-                $user,
-                $password
-            );
-        if ($hashedPassword !== $user->getPassword()) {
-            throw new \InvalidArgumentException('wrong password ');
-        }
-        
-
         if ($user === null) {
             throw new \InvalidArgumentException('a User with these credentials does not exist ');
         }
+        
+        if (!$this->passwordHasher->isPasswordValid($user, $password)) {
+        throw new \InvalidArgumentException('Wrong password');
+        }
+        
+
+       
         $token = $this->jwtManagerInt->create($user);
         $array = [$user, $token];
         return $array;
