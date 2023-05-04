@@ -11,6 +11,8 @@ use App\Service\PokemonService;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Entity\Pokemon;
 use App\DTO\AddPokemonDTO;
+use App\DTO\UpdatePokemonDTO;
+use App\UtilityClasses\FormData;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -25,25 +27,13 @@ class PokemonController extends AbstractController
     public function __construct(private PokemonService $pokemonService, private ValidatorInterface $validator)
     {
     }
+    
     #[Route('', name: 'app_pokemon_list' , methods: ['GET'])]
     public function getPokemonList(): JsonResponse
     {
         return new JsonResponse([
             'list' => $this->pokemonService->getPokemonList()
         ]);
-    }
-
-    #[Route('/test', name:'test', methods:['POST'])]
-    public function upload(Request $request): Response
-    {
-        /** @var UploadedFile $file */
-        $file = $request->files->get('file');
-        $name = $request-> request -> get('name');
-        dump($name);
-        // Process the uploaded file as required.
-        // For example, move the file to a directory on the server using $file->move()
-        $file->move('../public/Files/pokemonImages');
-        return new Response('File uploaded successfully!');
     }
 
     #[Route('/{id}', name: 'app_pokemon_id' , methods: ['GET'])]
@@ -60,7 +50,6 @@ class PokemonController extends AbstractController
     #[Route('', name: 'app_pokemon_create' , methods: ['POST'])]
     public function createPokemon(Request $request)
     {
-
         $data= [
             "image" => $request->files->get('imageFile'),
             "model3D" => $request -> files-> get('modelFile'),
@@ -68,7 +57,6 @@ class PokemonController extends AbstractController
             "description" => $request -> request -> get('description'),
             "baseScore" => $request -> request -> get('baseScore')
         ];
-        dump($data);
         $dto = new AddPokemonDTO($data);
         $errors = $this->validator->validate($dto, null);
         
@@ -82,22 +70,32 @@ class PokemonController extends AbstractController
 
    
 
-
-    #[Route('/{id}', name: 'app_pokemon_update' , methods: ['PUT'])]
-    public function updatePokemon(int $id ,Request $request ): JsonResponse
+//This is a post request due to a bug in php for parsing form-data of patch requests
+    #[Route('/{id}', name: 'app_pokemon_update' , methods: ['POST'])]
+    public function updatePokemon(Request $request,$id ): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-        try{
-            $pokemon = $this->pokemonService->getPokemonById($id);
-        }catch(HttpException $e){
-            return createErrorResponse($e->getMessage(), $e->getStatusCode());
-        }
-        $dto = new AddPokemonDTO($data);
+        $fd = new FormData($request->getContent());
+        $data= [
+            "image" => $request->files->get('imageFile') ,
+            "model3D" => $request -> files-> get('modelFile') ,
+            "name" => $request -> request -> get('name') ,
+            "description" => $request -> request -> get('description') ,
+            "baseScore" => $request -> request -> get('baseScore') 
+        ];
+        
+        $dto = new UpdatePokemonDTO($data);
         $errors = $this->validator->validate($dto, null);
         if (count($errors) > 0) {
             return createValidationErrorResponse($errors);
         }
-        $pokemon = $this->pokemonService->updatePokemon($pokemon,$dto);
+        try
+        {
+            $pokemon = $this->pokemonService->updatePokemon($id,$dto);
+        }
+        catch (HttpException $e)
+        {
+            return createErrorResponse($e->getMessage(),$e->getStatusCode());
+        }
         return new JsonResponse($pokemon);
     }
    
@@ -105,11 +103,10 @@ class PokemonController extends AbstractController
     public function deletePokemon(int $id): JsonResponse
     {
         try{
-            $pokemon = $this->pokemonService->getPokemonById($id);
+            $pokemon = $this->pokemonService->deletePokemon($id);
         }catch(HttpException $e){
             return createErrorResponse($e->getMessage(), $e->getStatusCode());
         }    
-        $pokemon = $this->pokemonService->deletePokemon($pokemon);
-        return new JsonResponse($pokemon);
+        return new JsonResponse(['message'=>'deleted succesfully']);
     }
 }
