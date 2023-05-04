@@ -32,8 +32,20 @@ class PlayerService
         $this->playerRepository->remove($player,true);
     }
 
-    public function updatePlayer(Player $player): Player
-    {
+    public function updatePlayer(int $id,array $data): Player
+    {   
+        $player = $this->getPlayerById($id);
+        if (isset($data['image'])) {
+            $player->setImage($data['image']);
+        }
+
+        //set playerTag with checking
+        if (isset($data['playerTag'])) {
+        
+        $this->checkPlayerTag($data['playerTag']);
+        $player->setPlayerTag($data['playerTag']);
+            
+        }
         $this->playerRepository->save($player,true);
         return $player;
     }
