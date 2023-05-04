@@ -16,7 +16,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
   const [imagePreview, setImagePreview] = useState<string>(
     user.image && user.image !== '_' ? user.image : avatar
   );
-  const [password, setPassword] = useState<string>(user.password);
+  const [password, setPassword] = useState<string>('');
   const [modify, setModify] = useState<boolean>(false);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,24 +25,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
   };
 
   function lockForm(event: React.MouseEvent<HTMLButtonElement>) {
-    const elements = document.querySelectorAll<
-      HTMLInputElement | HTMLTextAreaElement
-    >('input');
-
-    elements.forEach((element) => {
-      element.disabled = modify;
-      element.classList.toggle('bg-white');
-    });
-
-    const saveButton = document.querySelector('.save') as HTMLButtonElement;
-    saveButton.disabled = !modify;
-
-    const modButton = document.querySelector(
-      '.mod_button'
-    ) as HTMLButtonElement;
-    modButton.disabled = modify;
-
-    setModify(!modify);
+    setModify((prev) => !prev);
   }
 
   const handleSave = () => {
@@ -110,7 +93,6 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                 </label>
                 <input
                   className='inline-block w-full shrink-1 focus:outline-none  rounded-full bg-transparent  p-3 leading-relaxed text-fourth placeholder-primary shadow focus:shadow-third  placeholder:opacity-50'
-                  placeholder='Ex: GrumpyChef'
                   type='text'
                   value={playerTag}
                   onChange={(e) => {
@@ -125,7 +107,6 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                 </label>
                 <input
                   className='inline-block w-full shrink-1 focus:outline-none  rounded-full bg-transparent  p-3 leading-relaxed text-fourth placeholder-primary shadow focus:shadow-third  placeholder:opacity-50'
-                  placeholder='mail@user.com'
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
@@ -138,8 +119,9 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                   Password
                 </label>
                 <input
+                  type='password'
                   className='inline-block w-full shrink-1 focus:outline-none  rounded-full bg-transparent  p-3 leading-relaxed text-fourth placeholder-primary shadow focus:shadow-third  placeholder:opacity-50'
-                  placeholder='*************'
+                  placeholder='Edit Password'
                   value={password}
                   onChange={(e) => {
                     setPassword(e.target.value);
