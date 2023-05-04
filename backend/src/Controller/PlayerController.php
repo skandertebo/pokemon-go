@@ -37,8 +37,11 @@ class PlayerController extends AbstractController
         return $this->json($players);
     }
 
+
+    
     #[Get("/{id}", name: "GetPlayer")]
     #[Security("is_granted('ROLE_USER')")]
+
     public function getPlayer($id): JsonResponse
     {
         //check if player with $id exists

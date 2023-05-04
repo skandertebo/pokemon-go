@@ -1,20 +1,14 @@
-export async function loginUser(data: loginBody) {
-  const response = await fetch('https://localhost:8000/api/login', {
+import { useState } from 'react';
+import { apiBaseUrl } from '../config';
+import { LoginBody } from '../types/LoginBody';
+
+export async function loginUser(data: LoginBody) {
+  const response = await fetch(apiBaseUrl + '/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(data),
-    mode: 'cors'
+    body: JSON.stringify(data)
   });
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw new Error('Failed to login');
-  }
+  return await response.json();
 }
-
-export type loginBody = {
-  email: string;
-  password: string;
-};
