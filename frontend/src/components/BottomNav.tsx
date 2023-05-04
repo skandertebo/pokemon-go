@@ -35,6 +35,11 @@ const BottomNav: React.FC = () => {
       value: '/leaderboard',
       label: 'Leaderboard',
       icon: <TrophyIcon className={iconClassName} />
+    },
+    {
+      value: '/stat',
+      label : 'Statistic',
+      icon: <TrophyIcon className={iconClassName} />
     }
   ];
 

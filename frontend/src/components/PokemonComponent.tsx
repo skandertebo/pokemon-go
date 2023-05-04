@@ -6,6 +6,7 @@ import { useState } from 'react';
 import Pokemon from '../types/Pokemon';
 
 export default function PokemonComponent({ pokemon }: { pokemon: Pokemon }) {
+  console.log(pokemon.image)
   return (
     <div className='bg-third w-full h-screen'>
       <div className='w-full h-60 relative'>
@@ -16,20 +17,12 @@ export default function PokemonComponent({ pokemon }: { pokemon: Pokemon }) {
         />
       </div>
       <div className='bg-secondary h-[calc(100%-256px)] rounded-2xl p-4'>
-        <h1 className='text-2xl w-full text-center text-secondary'>
+        <p className='w-full text-center mb-4 text-3xl font-sans text-primary'>
           {pokemon.name}
-        </h1>
+        </p>
         <p className='w-full text-center mb-4'>
           <RiCopperCoinLine className='text-2xl inline relative right-1 text-primary' />
-          Score: {pokemon.score}
-        </p>
-        <p className='w-full text-center mb-4'>
-          <BsFire className='text-2xl inline relative top-[-1px] right-1 text-primary' />
-          Power: {pokemon.power}
-        </p>
-        <p className='w-full text-center mb-2'>
-          <MdCatchingPokemon className='text-2xl inline relative top-[-1px] right-1 text-primary' />
-          Spawn: {pokemon.spawn}
+          Score: {pokemon.baseScore}
         </p>
         <p className='text-left md:text-center w-64 md:w-auto mx-auto md:mx-32'>
           <span className='text-primary text-lg'>Description:</span>

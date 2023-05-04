@@ -6,12 +6,7 @@ import { RouterProvider } from 'react-router-dom';
 import routes from './routes';
 import { AppContextProvider } from './context/AppContext';
 import { ThemeProvider, createTheme } from '@mui/material';
-<<<<<<< HEAD
-import CapturePage from './Pages/CapturePage';
-import BottomNav from './components/BottomNav';
-=======
 import { AuthContextProvider } from './context/AuthContext';
->>>>>>> master
 
 declare module '@mui/material/styles' {
   interface Palette {

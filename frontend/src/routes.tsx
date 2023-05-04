@@ -8,6 +8,7 @@ import Register from './Pages/Register';
 import Leaderboard from './Pages/Leaderboard';
 import MainPage from './Pages/MainPage';
 import PokemonPage from './Pages/PokemonPage';
+import StatPage from './Pages/StatPage';
 import Pokemon from './types/Pokemon';
 
 const routes = createBrowserRouter([
@@ -34,6 +35,10 @@ const routes = createBrowserRouter([
       {
         path: '/pokemon/:id',
         element: <PokemonPage />
+      },
+      {
+        path: '/stat',
+        element: <StatPage />
       }
     ]
   },
