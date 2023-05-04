@@ -33,9 +33,13 @@ class PokemonService {
         $pokemon = new Pokemon();
         $pokemon->setName($data->name);
         $pokemon->setDescription($data->description);
-        $pokemon->setBaseScore($data->baseScore);
-        $pokemon->setImage($data->image);
-        $pokemon->setModel3D($data->model3D);
+        $pokemon->setBaseScore((int)$data->baseScore);
+        $imageFileName= pathinfo($data->image->getClientOriginalName(), PATHINFO_FILENAME). '_' . uniqid() . '.' . $data->image->getClientOriginalExtension();
+        $modelFileName= pathinfo($data->model3D->getClientOriginalName(), PATHINFO_FILENAME). '_' . uniqid() . '.' . $data->model3D->getClientOriginalExtension();
+        $data->image->move('../public/Files/pokemonImages',$imageFileName);
+        $data->model3D->move('../public/Files/pokemonModels',$modelFileName);
+        $pokemon->setImage('Files/pokemonImages'.$imageFileName);
+        $pokemon->setModel3D('Files/pokemonModels'.$modelFileName);
         $this->pokemonRepository->save($pokemon, true);
         return $pokemon;
     }

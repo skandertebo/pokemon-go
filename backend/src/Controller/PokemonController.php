@@ -58,16 +58,24 @@ class PokemonController extends AbstractController
     }
 
     #[Route('', name: 'app_pokemon_create' , methods: ['POST'])]
-    public function createPokemon(Request $request): JsonResponse
+    public function createPokemon(Request $request)
     {
-        $data = json_decode($request->getContent(), true);
+
+        $data= [
+            "image" => $request->files->get('imageFile'),
+            "model3D" => $request -> files-> get('modelFile'),
+            "name" => $request -> request -> get('name'),
+            "description" => $request -> request -> get('description'),
+            "baseScore" => $request -> request -> get('baseScore')
+        ];
+        dump($data);
         $dto = new AddPokemonDTO($data);
-        
         $errors = $this->validator->validate($dto, null);
         
         if (count($errors) > 0) {
             return createValidationErrorResponse($errors);
         }
+
         $pokemon = $this->pokemonService->createPokemon($dto);
         return new JsonResponse($pokemon);
     }

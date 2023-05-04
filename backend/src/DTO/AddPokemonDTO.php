@@ -9,7 +9,7 @@ class AddPokemonDTO {
 
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    #[Assert\Type(type:"int")]
+    #[Assert\Regex(pattern: "/^\d+$/", message:"The value should be an integer")]
     public $baseScore = null;
 
     #[Assert\NotBlank]
@@ -19,16 +19,24 @@ class AddPokemonDTO {
 
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    #[Assert\Type(type:"string")]
+    #[Assert\File(
+        maxSize: '1024k',
+        extensions: ['jpg','png'],
+        extensionsMessage: 'Please upload a valid image: (verify size and extension)',
+    )]
     public $image = null;
 
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    #[Assert\Type(type:"string")]
+    #[Assert\File(
+        maxSize: '10m',
+        extensions: ['gltf','fbx','txt'],
+        extensionsMessage: 'Please upload a valid 3D model: (verify size and extension)',
+    )]
     public $model3D = null;
 
     #[Assert\NotBlank]
-    #[Assert\NotNull]
+    #[Assert\NotNull]   
     #[Assert\Type(type:"string")]
     public $name = null;
 
