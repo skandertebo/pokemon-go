@@ -5,11 +5,9 @@ import avatar from '../assets/avatar-girledited.png';
 function ProfilePage() {
   const useryas: User = {
     id: 1,
-    username: 'GrumpyChef',
+    playerTag: 'GrumpyChef',
     email: 'yasmine@gmail.com',
     password: 'blalbal',
-    createdAt: new Date(),
-    updatedAt: new Date(),
     image: avatar,
     score: 0
   };

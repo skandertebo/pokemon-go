@@ -10,7 +10,7 @@ interface ProfileProps {
 }
 
 const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
-  const [username, setUsername] = useState<string>(user.username);
+  const [playerTag, setPlayerTag] = useState<string>(user.playerTag);
   const [email, setEmail] = useState<string>(user.email);
   const imageInput = useRef<HTMLInputElement>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(user.image);
@@ -46,11 +46,10 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
   const handleSave = () => {
     const newUser = {
       ...user,
-      username,
+      playerTag,
       email,
       password,
-      avatar: imagePreview || user.image,
-      updatedAt: new Date()
+      image: imagePreview || user.image
     };
     updateUser(newUser);
   };
@@ -110,9 +109,9 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                   className='inline-block w-full shrink-1 focus:outline-none  rounded-full bg-transparent  p-3 leading-relaxed text-fourth placeholder-primary shadow focus:shadow-third  placeholder:opacity-50'
                   placeholder='Ex: GrumpyChef'
                   type='text'
-                  value={username}
+                  value={playerTag}
                   onChange={(e) => {
-                    setUsername(e.target.value);
+                    setPlayerTag(e.target.value);
                   }}
                   disabled={!modify}
                 />
