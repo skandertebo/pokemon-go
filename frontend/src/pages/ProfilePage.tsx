@@ -2,21 +2,15 @@ import { useState } from 'react';
 import Profile from '../components/Profile';
 import User from '../types/User';
 import avatar from '../assets/avatar-girledited.png';
-function ProfilePage() {
-  const useryas: User = {
-    id: 1,
-    playerTag: 'GrumpyChef',
-    email: 'yasmine@gmail.com',
-    password: 'blalbal',
-    image: avatar,
-    score: 0
-  };
+import { useAuthContext } from '../context/AuthContext';
+import { useAppContext } from '../context/AppContext';
 
-  const [user, setUser] = useState<User>(useryas);
-  function updateUser(user: User) {
-    setUser(user);
-    console.log(JSON.stringify(user));
-  }
+function ProfilePage() {
+  const { user } = useAuthContext() as { user: User };
+  const [localUser, setLocalUser] = useState<User>(user);
+  const { makeNotification } = useAppContext();
+
+  function updateUser(user: User) {}
 
   return (
     <div>

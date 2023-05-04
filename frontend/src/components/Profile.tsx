@@ -13,13 +13,15 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
   const [playerTag, setPlayerTag] = useState<string>(user.playerTag);
   const [email, setEmail] = useState<string>(user.email);
   const imageInput = useRef<HTMLInputElement>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(user.image);
+  const [imagePreview, setImagePreview] = useState<string>(
+    user.image && user.image !== '_' ? user.image : avatar
+  );
   const [password, setPassword] = useState<string>(user.password);
   const [modify, setModify] = useState<boolean>(false);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
-    setImagePreview(selectedFile ? URL.createObjectURL(selectedFile) : null);
+    setImagePreview(selectedFile ? URL.createObjectURL(selectedFile) : '_');
   };
 
   function lockForm(event: React.MouseEvent<HTMLButtonElement>) {
@@ -49,8 +51,9 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
       playerTag,
       email,
       password,
-      image: imagePreview || user.image
+      image: '_'
     };
+
     updateUser(newUser);
   };
 
@@ -79,7 +82,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
           >
             <div>
               <img
-                src={imagePreview || avatar}
+                src={imagePreview}
                 alt='image avatar'
                 className='mx-auto mb-4 w-[200px] h-[200px] rounded-full border-8 border-third p-3 justify-self-center flex '
               />
