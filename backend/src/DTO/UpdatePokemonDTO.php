@@ -2,7 +2,7 @@
 
 namespace App\DTO;
 
-
+use Symfony\Component\Mime\Message;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class UpdatePokemonDTO {
@@ -17,7 +17,7 @@ class UpdatePokemonDTO {
     #[Assert\File(
         maxSize: '1024k',
         extensions: ['jpg','png'],
-        message: 'Please upload a valid image: (verify size and extension)',
+        // Message: 'Please upload a valid image: (verify size and extension)',
     )]
     public $image = null;
 
@@ -25,7 +25,7 @@ class UpdatePokemonDTO {
     #[Assert\File(
         maxSize: '10m',
         extensions: ['gltf','fbx','txt'],
-        message: 'Please upload a valid 3D model: (verify size and extension)',
+        // Message: 'Please upload a valid 3D model: (verify size and extension)',
     )]
     public $model3D = null;
 

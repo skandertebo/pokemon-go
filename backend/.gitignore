@@ -57,4 +57,4 @@
 /config/jwt/*.pem
 ###< lexik/jwt-authentication-bundle ###
 
-/public/Files
+/public/files

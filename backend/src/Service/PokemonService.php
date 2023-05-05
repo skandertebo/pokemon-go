@@ -37,10 +37,10 @@ class PokemonService {
         $pokemon->setBaseScore((int)$data->baseScore);
         $imageFileName= pathinfo($data->image->getClientOriginalName(), PATHINFO_FILENAME). '_' . uniqid() . '.' . $data->image->getClientOriginalExtension();
         $modelFileName= pathinfo($data->model3D->getClientOriginalName(), PATHINFO_FILENAME). '_' . uniqid() . '.' . $data->model3D->getClientOriginalExtension();
-        $data->image->move('../public/Files/pokemonImages',$imageFileName);
-        $data->model3D->move('../public/Files/pokemonModels',$modelFileName);
-        $pokemon->setImage('Files/pokemonImages/'.$imageFileName);
-        $pokemon->setModel3D('Files/pokemonModels/'.$modelFileName);
+        $data->image->move('../public/files/images',$imageFileName);
+        $data->model3D->move('../public/files/3Dmodels',$modelFileName);
+        $pokemon->setImage($imageFileName);
+        $pokemon->setModel3D($modelFileName);
         $this->pokemonRepository->save($pokemon, true);
         return $pokemon;
     }
@@ -54,11 +54,11 @@ class PokemonService {
         }
         if($pokemon->getImage())
         {
-            unlink("../public/".$pokemon->getImage());
+            unlink("../public/files/images/".$pokemon->getImage());
         }
         if($pokemon->getModel3D())
         {
-            unlink("../public/".$pokemon->getModel3D());
+            unlink("../public/files/3Dmodels/".$pokemon->getModel3D());
         }
         $this->pokemonRepository->remove($pokemon, true);
     }
@@ -84,20 +84,20 @@ class PokemonService {
         if($data->image){
             if($pokemon->getImage())
             {
-                unlink("../public/".$pokemon->getImage());
+                unlink("../public/files/images/".$pokemon->getImage());
             }
             $imageFileName= pathinfo($data->image->getClientOriginalName(), PATHINFO_FILENAME). '_' . uniqid() . '.' . $data->image->getClientOriginalExtension();
-            $data->image->move('../public/Files/pokemonImages',$imageFileName);
-            $pokemon->setImage('Files/pokemonImages/'.$imageFileName);
+            $data->image->move('../public/files/images',$imageFileName);
+            $pokemon->setImage($imageFileName);
         }
         if($data->model3D){
             if($pokemon->getModel3D())
             {
-                unlink("../public/".$pokemon->getModel3D());
+                unlink("../public/files/3Dmodels/".$pokemon->getModel3D());
             }
             $modelFileName= pathinfo($data->model3D->getClientOriginalName(), PATHINFO_FILENAME). '_' . uniqid() . '.' . $data->model3D->getClientOriginalExtension();
-            $data->model3D->move('../public/Files/pokemonModels',$modelFileName);
-            $pokemon->setModel3D('Files/pokemonModels/'.$modelFileName);
+            $data->model3D->move('../public/files/3Dmodels',$modelFileName);
+            $pokemon->setModel3D($modelFileName);
         }
         $this->pokemonRepository->save($pokemon, true);
         return $pokemon;
