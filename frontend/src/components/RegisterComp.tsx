@@ -39,7 +39,7 @@ function RegisterComp() {
         throw new Error(userData.error.message);
       }
       setToken(userData.token);
-      window.location.reload();
+      navigate('/');
     } catch (error) {
       //@ts-ignore
       setError(error.message);
