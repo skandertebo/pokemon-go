@@ -98,6 +98,7 @@ class SpawnController extends AbstractController
         }
         return new JsonResponse($newPokemon) ;
     }
+    
     #[Route('/near', name: '_getNearbySpawns',methods:['GET'])]
     public function getSpawns(HttpFoundationRequest $request):JsonResponse
     {
@@ -135,10 +136,8 @@ class SpawnController extends AbstractController
         if ($errors->count() > 0) {
             return createValidationErrorResponse($errors);
         }
-        dump($dateTimeString);
         $dateTime = new \DateTime($dateTimeString);
         
-        dump($dateTime);
         return new JsonResponse($this->spawnService->getUpdates($dateTime));
     }
 }

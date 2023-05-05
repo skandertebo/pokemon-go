@@ -25,7 +25,7 @@ function Leaderboard () {
         <div className='flex flex-row content-center items-end  text-first'>
           <div className='relative overflow-visible flex h-40 w-24 flex-col items-center rounded-tl-2xl rounded-bl-2xl bg-primary md:w-32'>
             <img
-              src={players[1].image}
+              src='https://127.0.0.1:8000/api/file/forWeb_6454ffcb54324.jpg'
               className=' relative bottom-7 h-16 w-16 rounded-full border-4 border-[#C0C0C0] bg-white '
             />
             <p className='break-all  pl-1 pr-1  relative bottom-3 text-[#C0C0C0] font-black'>

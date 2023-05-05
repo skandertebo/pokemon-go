@@ -29,11 +29,35 @@ class PlayerService
 
     public function deletePlayer(Player $player): void
     {
+        if($player->getImage())
+        {
+            unlink("../public/files/images/".$player->getImage());
+        }
         $this->playerRepository->remove($player,true);
     }
 
-    public function updatePlayer(Player $player): Player
-    {
+    public function updatePlayer(int $id, $data): Player
+    {   
+        $player = $this->getPlayerById($id);
+        
+        if ($data->playerTag) {
+        
+            $this->checkPlayerTag($data->playerTag);
+            $player->setPlayerTag($data->playerTag);
+                
+        }
+        
+        if($data->image){
+            if($player->getImage())
+            {
+                unlink("../public/files/images/".$player->getImage());
+            }
+            $imageFileName= pathinfo($data->image->getClientOriginalName(), PATHINFO_FILENAME). '_' . uniqid() . '.' . $data->image->getClientOriginalExtension();
+            $data->image->move('../public/files/images',$imageFileName);
+            $player->setImage($imageFileName);
+        }
+
+
         $this->playerRepository->save($player,true);
         return $player;
     }

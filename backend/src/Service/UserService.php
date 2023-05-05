@@ -50,8 +50,6 @@ class UserService
                 $user->setPlayerTag($playerTag);
                 $user->setScore(0);
                 $user->setRoles(['ROLE_USER','IS_AUTHENTICATED_FULLY']);
-                $image = $data['image'];
-                $user->setImage($image);
                 break;
             default:
                 throw new \InvalidArgumentException('Invalid user role');

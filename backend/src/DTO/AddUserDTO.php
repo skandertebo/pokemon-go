@@ -26,10 +26,7 @@ class AddUserDTO implements GroupSequenceProviderInterface
         groups: ['registration'])]
     private  $role= null;
 
-    #[Assert\NotBlank(groups: ['playerSpecific'])]
-    #[Assert\NotNull(groups: ['playerSpecific'])]
-    #[Assert\Type(type:"string")]
-    private  $image = null;
+
 
     #[Assert\NotBlank(groups: ['playerSpecific'])]
     #[Assert\NotNull(groups: ['playerSpecific'])]
@@ -42,7 +39,7 @@ class AddUserDTO implements GroupSequenceProviderInterface
         $this->password = $data['password'] ?? null;
         $this->role = $data['role'] ?? null;
         if ($this->role==='player' ){
-        $this->image = $data['image'] ?? null;
+        // $this->image = $data['image'] ?? null;
         $this->playerTag = $data['playerTag'] ?? null;}
         
     }
