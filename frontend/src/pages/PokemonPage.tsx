@@ -6,8 +6,7 @@ import axios from "axios";
 import { apiBaseUrl } from "../config";
 import { useAppContext } from '../context/AppContext';
 import { useAuthContext } from '../context/AuthContext';
-import { UseLoginReturnType } from "../types";
-
+import { UseLoginReturnType } from '../types';
 
 export default function PokemonPage() {
   const { id } = useParams();
@@ -20,24 +19,21 @@ export default function PokemonPage() {
   useEffect(() => {
     async function fetchData() {
       enableWaiting();
-      try{
-        const res = await axios.get(apiBaseUrl + "/pokemon/" + id,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
+      try {
+        const res = await axios.get(apiBaseUrl + '/pokemon/' + id, {
+          headers: {
+            Authorization: `Bearer ${token}`
           }
-        );
+        });
         setPokemon(res.data);
-      }
-      catch(e){
+      } catch (e) {
         console.error(e);
         makeNotification({
           message: 'Error fetching Pokemon!',
-          type: 'error',  
+          type: 'error',
           duration: 4000
         });
-      }finally{
+      } finally {
         disableWaiting();
       }
     }
