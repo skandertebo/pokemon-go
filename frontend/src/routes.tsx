@@ -10,6 +10,7 @@ import MainPage from './pages/MainPage';
 import DashboardPage from './pages/DashboardPage';
 import PokemonPage from './pages/PokemonPage';
 import StatPage from './pages/StatPage';
+import ErrorPage from './pages/ErrorPage';
 
 const routes = createBrowserRouter([
   {
@@ -58,6 +59,10 @@ const routes = createBrowserRouter([
   {
     path: 'dashboard',
     element: <DashboardPage />
+  },
+  {
+    path: '*',
+    element: <ErrorPage />
   }
 ]);
 
