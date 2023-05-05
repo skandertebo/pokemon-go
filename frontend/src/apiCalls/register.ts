@@ -9,7 +9,6 @@ export async function registerUser(data: RegisterBody) {
     },
     body: JSON.stringify({
       ...data,
-      image: '_'
     })
   });
   return await response.json();
