@@ -7,6 +7,7 @@ use App\Repository\PokemonRepository;
 use Doctrine\ORM\EntityManagerInterface;  
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\DTO\AddPokemonDTO;
+use App\DTO\UpdatePokemonDTO;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class PokemonService {
@@ -33,20 +34,44 @@ class PokemonService {
         $pokemon = new Pokemon();
         $pokemon->setName($data->name);
         $pokemon->setDescription($data->description);
-        $pokemon->setBaseScore($data->baseScore);
-        $pokemon->setImage($data->image);
-        $pokemon->setModel3D($data->model3D);
+        $pokemon->setBaseScore((int)$data->baseScore);
+        $imageFileName= pathinfo($data->image->getClientOriginalName(), PATHINFO_FILENAME). '_' . uniqid() . '.' . $data->image->getClientOriginalExtension();
+        $modelFileName= pathinfo($data->model3D->getClientOriginalName(), PATHINFO_FILENAME). '_' . uniqid() . '.' . $data->model3D->getClientOriginalExtension();
+        $data->image->move('../public/files/images',$imageFileName);
+        $data->model3D->move('../public/files/3Dmodels',$modelFileName);
+        $pokemon->setImage($imageFileName);
+        $pokemon->setModel3D($modelFileName);
         $this->pokemonRepository->save($pokemon, true);
         return $pokemon;
     }
 
-    public function deletePokemon(Pokemon $pokemon) : Pokemon
+    public function deletePokemon($id)
     {
+        $pokemon = $this->pokemonRepository->find($id);
+        if(!$pokemon)
+        {
+            throw new HttpException(404,"Pokemon of id " .$id ." not found");
+        }
+        if($pokemon->getImage())
+        {
+            unlink("../public/files/images/".$pokemon->getImage());
+        }
+        if($pokemon->getModel3D())
+        {
+            unlink("../public/files/3Dmodels/".$pokemon->getModel3D());
+        }
         $this->pokemonRepository->remove($pokemon, true);
-        return $pokemon;
     }
-    public function updatePokemon(Pokemon $pokemon,AddPokemonDTO $data): Pokemon
+
+
+    public function updatePokemon(int $id,UpdatePokemonDTO $data): Pokemon
     {
+        $pokemon = $this->pokemonRepository->find($id);
+        if(!$pokemon)
+        {
+            throw new HttpException(404,"Pokemon of id " .$id ." not found");
+        }
+
         if($data->name){
             $pokemon->setName($data->name);
         }
@@ -57,10 +82,22 @@ class PokemonService {
             $pokemon->setBaseScore($data->baseScore);
         }
         if($data->image){
-            $pokemon->setImage($data->image);
+            if($pokemon->getImage())
+            {
+                unlink("../public/files/images/".$pokemon->getImage());
+            }
+            $imageFileName= pathinfo($data->image->getClientOriginalName(), PATHINFO_FILENAME). '_' . uniqid() . '.' . $data->image->getClientOriginalExtension();
+            $data->image->move('../public/files/images',$imageFileName);
+            $pokemon->setImage($imageFileName);
         }
         if($data->model3D){
-            $pokemon->setModel3D($data->model3D);
+            if($pokemon->getModel3D())
+            {
+                unlink("../public/files/3Dmodels/".$pokemon->getModel3D());
+            }
+            $modelFileName= pathinfo($data->model3D->getClientOriginalName(), PATHINFO_FILENAME). '_' . uniqid() . '.' . $data->model3D->getClientOriginalExtension();
+            $data->model3D->move('../public/files/3Dmodels',$modelFileName);
+            $pokemon->setModel3D($modelFileName);
         }
         $this->pokemonRepository->save($pokemon, true);
         return $pokemon;
