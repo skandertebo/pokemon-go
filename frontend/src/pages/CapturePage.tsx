@@ -7,6 +7,7 @@ import { apiBaseUrl } from "../config";
 import { useAppContext } from '../context/AppContext';
 import { useAuthContext } from '../context/AuthContext';
 import { UseLoginReturnType } from "../types";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -16,6 +17,7 @@ export default function CapturePage() {
     const { token, user } = useAuthContext() as UseLoginReturnType;
     const { makeNotification } = useAppContext();
     const { enableWaiting, disableWaiting } = useAppContext();
+    const navigate = useNavigate();
     useEffect(() => {
         async function fetchData() {
             enableWaiting();
@@ -43,7 +45,12 @@ export default function CapturePage() {
         fetchData();
     }, []);
         
-
+    useEffect(
+        ()=>{
+            if (!token){
+                navigate('/login');
+            }
+    },[])
     return (
         <>
         <div className="bg-secondary pt-4 w-screen md:h-screen">

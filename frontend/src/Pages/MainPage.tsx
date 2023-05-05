@@ -25,10 +25,10 @@ const MainPage: React.FC = () => {
   const navigate = useNavigate();
   useEffect(
     ()=>{
-    if (!token){
-    navigate('/login');
-  }
-},[])
+      if (!token){
+        navigate('/login');
+      }
+  },[])
   
   const handleCapture = useCallback(async (spawn: Spawn) => {
     try {

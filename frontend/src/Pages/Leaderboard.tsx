@@ -5,12 +5,23 @@ import { FaCrown } from 'react-icons/fa';
 import { useAppContext } from '../context/AppContext';
 import useLeaderboard from '../hooks/useLeaderboard';
 import { useAuthContext } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 
 
 function Leaderboard () {
   const {token} = useAuthContext()!;
-  const players = useLeaderboard(token);
+  const players = useLeaderboard(token);  
+  const navigate = useNavigate();
+  
+  useEffect(
+    ()=>{
+      if (!token){
+        navigate('/login');
+      }
+    },[])
+
+  
 
   if (!players) {
     return <></>;

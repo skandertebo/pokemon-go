@@ -1,6 +1,6 @@
 import React from "react";
 import PokemonComponent from "../components/PokemonComponent";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect,useState } from "react";
 import axios from "axios";
 import { apiBaseUrl } from "../config";
@@ -15,6 +15,8 @@ export default function PokemonPage() {
   const { token, user } = useAuthContext() as UseLoginReturnType;
   const { makeNotification } = useAppContext();
   const { enableWaiting, disableWaiting } = useAppContext();
+  const navigate = useNavigate();
+
   useEffect(() => {
     async function fetchData() {
       enableWaiting();
@@ -41,6 +43,13 @@ export default function PokemonPage() {
     }
     fetchData();
   }, []);
+
+    useEffect(
+      ()=>{
+        if (!token){
+          navigate('/login');
+        }
+    },[])
 
   return (
     <div>
