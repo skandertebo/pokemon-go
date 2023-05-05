@@ -26,7 +26,7 @@ const routes = createBrowserRouter([
         element: <ProfilePage />
       },
       {
-        path: '/pokdex',
+        path: '/pokedex',
         element: <CapturePage /> // should be renamed to PokedexPage!
       },
       {
