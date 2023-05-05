@@ -2,31 +2,56 @@
 
 namespace App\Controller;
 
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 use function App\createErrorResponse;
 
-#[Route('/file', name: '_files')]
+
 class FileController extends AbstractController
 {
-    #[Route('/{filename}', name: 'app_file')]
-    public function serveFile($filename): Response
+    #[Route('image/{filename}', name: 'app_file')]
+    public function serveImage($filename): Response
     {
     $path = '../public/files/images/'.$filename;
-
+    
     try {
         $response = new BinaryFileResponse($path);
         $response->headers->set('Content-Type', 'image/jpg');
-        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filename);
         return $response;
-    } catch (FileNotFoundException $e) {
-        // Handle the case where the file doesn't exist
-        throw createErrorResponse('File' . $filename . 'was not found',404);
+    } catch (Exception $e) {
+        return createErrorResponse('File' . $filename . 'was not found',404);
     }
+    }
+
+
+
+    #[Route('/file/{filename}', name: '_files')]
+    public function serveModel($filename)
+    {
+        $path = '../public/files/images/'.$filename;
+    
+        try {
+            $response = new BinaryFileResponse($path);
+            $array = explode(".", $filename);
+            if($array[1]=="gltf")
+            {
+                $response->headers->set('Content-Type', 'model/gltf-binary');
+            }
+            else
+            {
+                $response->headers->set('Content-Type', 'application/octet-stream');
+            }
+                
+            return $response;
+        } catch (FileNotFoundException $e) {
+            return createErrorResponse('File' . $filename . 'was not found',404);
+        }
     }
 }
