@@ -58,3 +58,4 @@
 ###< lexik/jwt-authentication-bundle ###
 
 /public/files
+/public/images

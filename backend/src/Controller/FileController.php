@@ -35,7 +35,7 @@ class FileController extends AbstractController
     #[Route('/file/{filename}', name: '_files')]
     public function serveModel($filename)
     {
-        $path = '../public/files/images/'.$filename;
+        $path = '../public/files/3Dmodels/'.$filename;
     
         try {
             $response = new BinaryFileResponse($path);

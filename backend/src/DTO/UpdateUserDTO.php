@@ -9,15 +9,19 @@ class UpdateUserDTO
 
     
     #[Assert\Email]
-    private  $email = null;
+    public $email = null;
 
     
     #[Assert\Type(type:"string")]
-    private  $password = null;
+    public   $password = null;
 
     
-    #[Assert\Type(type:"string")]
-    private  $image = null;
+    #[Assert\File(
+        maxSize: '1024k',
+        extensions: ['jpg','png'],
+        extensionsMessage: 'Please upload a valid image: (verify size and extension)',
+    )]
+    public  $image = null;
 
 
     #[Assert\Type(type:"string")]
@@ -27,7 +31,7 @@ class UpdateUserDTO
         minMessage: 'Your first name must be at least {{ limit }} characters long',
         maxMessage: 'Your first name cannot be longer than {{ limit }} characters',
     )]
-    private $playerTag=null;
+    public $playerTag=null;
 
     public function __construct(array $data)
     {

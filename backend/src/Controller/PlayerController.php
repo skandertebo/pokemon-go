@@ -18,6 +18,8 @@ use PHPUnit\Util\Json;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use App\DTO\UpdateUserDTO;
+use FOS\RestBundle\Controller\Annotations\Post;
+
 use function App\createValidationErrorResponse;
 use function App\createErrorResponse;
 
@@ -55,7 +57,7 @@ class PlayerController extends AbstractController
         return new JsonResponse($player);
     }
 
-    #[Delete("/{id}", name: "DeletePlayer")]    
+    #[Delete("", name: "DeletePlayer")]    
     #[Security("is_granted('ROLE_USER')")]
     public function deletePlayerByPlayer(Request $request): JsonResponse
     {
@@ -79,20 +81,28 @@ class PlayerController extends AbstractController
         return new JsonResponse("player deleted successfuly");
     }
 
-
-    #[Patch("/profile", name: "updatePlayer")]
+// this is a POST method because of a limitation of PHP in reading form-data for PATCH and PUT requests
+    #[Post("", name: "updatePlayer")]
     #[Security("is_granted('ROLE_USER')")]
     public function updatePlayer(Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
         $id = $request->attributes->get('jwt_payload')['id'];
+        
+        $data= [
+            "image" => $request->files->get('image') ,
+            "playerTag" => $request -> request -> get('playerTag') ,
+            "email" => $request -> request -> get('email') ,
+            "password" => $request -> request -> get('password') 
+        ];
+
         $userDTO = new UpdateUserDTO($data); 
+        dump($userDTO);
 
         $errors = $this->validator->validate($userDTO);
         if (count($errors) > 0) {
             return createValidationErrorResponse($errors); }
         try {
-            $this->playerService->updatePlayer($id,$data);
+            $this->playerService->updatePlayer($id,$userDTO);
             $user = $this->userService->updateUser($id, $data);
     
         } catch (\InvalidArgumentException $e) {
