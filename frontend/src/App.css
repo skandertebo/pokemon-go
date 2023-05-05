@@ -1,0 +1,25 @@
+@keyframes scroll-up {
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes scroll-down {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+.scroll-up-animation {
+  animation: scroll-up 0.5s ease-out;
+}
+
+.scroll-down-animation {
+  animation: scroll-down 0.5s ease-out;
+}

@@ -25,8 +25,8 @@ const routes = createBrowserRouter([
         element: <ProfilePage />
       },
       {
-        path: '/insights',
-        element: <CapturePage />
+        path: '/pokdex',
+        element: <CapturePage /> // should be renamed to PokedexPage!
       },
       {
         path: '/leaderboard',
@@ -37,7 +37,7 @@ const routes = createBrowserRouter([
         element: <PokemonPage />
       },
       {
-        path: '/stat',
+        path: '/insights',
         element: <StatPage />
       }
     ]
@@ -56,7 +56,7 @@ const routes = createBrowserRouter([
     ]
   },
   {
-    path:'dashboard',
+    path: 'dashboard',
     element: <DashboardPage />
   }
 ]);
