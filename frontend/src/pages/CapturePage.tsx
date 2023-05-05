@@ -1,22 +1,61 @@
 import React from "react";
 import PokemonCard from "../components/PokemonCard";
 import pokemons from "../assets/pokemonsdata";
+import { useEffect,useState } from "react";
+import axios from "axios";
+import { apiBaseUrl } from "../config";
+import { useAppContext } from '../context/AppContext';
+import { useAuthContext } from '../context/AuthContext';
+import { UseLoginReturnType } from "../types";
+
+
+
 
 export default function CapturePage() {
+    const [pokemons, setPokemons] = useState([]);
+    const { token, user } = useAuthContext() as UseLoginReturnType;
+    const { makeNotification } = useAppContext();
+    const { enableWaiting, disableWaiting } = useAppContext();
+    useEffect(() => {
+        async function fetchData() {
+            enableWaiting();
+            try{
+                const res = await axios.get(apiBaseUrl + "/pokemon",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+                );
+                setPokemons(res.data.list);
+            }
+            catch(e){
+                console.error(e);
+                makeNotification({
+                    message: 'Error fetching Pokemons!',
+                    type: 'error',
+                    duration: 4000
+                });
+            }finally{
+                disableWaiting();
+            }
+        }
+        fetchData();
+    }, []);
+        
+
     return (
-        <div className="py-8 h-fit sm:h-screen bg-primary bg-[url('https://freephonewallpapersformobile.files.wordpress.com/2020/08/umbreon-in-pokeball-lockscreen-mobile-wallpaper-hd.jpg?w=250')] bg-contain
-        sm:bg-[url('https://c4.wallpaperflare.com/wallpaper/280/139/794/pokemon-background-desktop-wallpaper-preview.jpg')] sm:bg-cover">
-        <h1 className="text-center w-full text-4xl text-secondary mb-12 relative z-10">
-            Pokedex
-        </h1>
-            <div className="w-44 sm:w-full h-[1300px] sm:h-auto flex flex-col sm:flex-row justify-between sm:justify-evenly mx-auto mt-32 mb-32 relative z-20">
-        {pokemons.map((pokemon) => (
-            <PokemonCard pokemon={pokemon} key={pokemon.id} />
-        ))}
+        <>
+        <div className="bg-secondary pt-4 w-screen md:h-screen">
+            <h1 className="text-center w-full text-4xl text-primary mb-12 relative z-10 font-sans">
+                Pokedex
+            </h1>
+            <div className="w-44 sm:w-full h-[1300px] sm:h-96 flex flex-col sm:flex-row justify-between sm:justify-evenly mx-auto mt-16 mb-12">
+                {pokemons.map((pokemon,index) => (
+                    <PokemonCard pokemon={pokemon} key={index} />
+                ))}
+            </div>
         </div>
-        <div className="w-full h-1/3 sm:h-1/4 fixed top-0 bg-primary z-0 "></div>
-        <div className="w-full h-1/3 sm:h-2/4 fixed top-1/3 sm:top-1/4 bg-transparent z-0 "></div>
-        <div className="w-full h-1/3 sm:h-1/4 fixed top-2/3 sm:top-3/4 bg-primary z-0 "></div>
-        </div>
+        </>
     );
     }

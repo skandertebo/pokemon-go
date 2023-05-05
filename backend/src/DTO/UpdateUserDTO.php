@@ -9,16 +9,36 @@ class UpdateUserDTO
 
     
     #[Assert\Email]
-    private  $email = null;
+    public $email = null;
 
     
     #[Assert\Type(type:"string")]
-    private  $password = null;
+    public   $password = null;
+
+    
+    #[Assert\File(
+        maxSize: '1024k',
+        extensions: ['jpg','png'],
+        extensionsMessage: 'Please upload a valid image: (verify size and extension)',
+    )]
+    public  $image = null;
+
+
+    #[Assert\Type(type:"string")]
+    #[Assert\Length(
+        min: 3,
+        max: 30,
+        minMessage: 'Your first name must be at least {{ limit }} characters long',
+        maxMessage: 'Your first name cannot be longer than {{ limit }} characters',
+    )]
+    public $playerTag=null;
 
     public function __construct(array $data)
     {
         $this->email = $data['email'] ?? null;
         $this->password = $data['password'] ?? null;
+        $this->image = $data['image'] ?? null;
+        $this->playerTag = $data['playerTag'] ?? null;
         
         
     }
