@@ -2,31 +2,15 @@ import React, { useEffect, useState } from 'react';
 import User from '../types/User';
 import Player from '../components/Player';
 import { FaCrown } from 'react-icons/fa';
-import { getLeaderboard } from '../apiCalls/getLeaderboard';
 import { useAppContext } from '../context/AppContext';
+import useLeaderboard from '../hooks/useLeaderboard';
+import { useAuthContext } from '../context/AuthContext';
 
 
 
 function Leaderboard () {
-  const [players, setPlayers] = useState<User[] | undefined>(undefined);
-  const {enableWaiting,disableWaiting} = useAppContext();
-
-  useEffect(() => {
-    const fetchPlayers = async () => {
-      try{
-        enableWaiting();
-        const players = await getLeaderboard()
-        setPlayers(players);
-      }
-      catch(error){
-        console.log(error)
-      }
-      finally{
-        disableWaiting();
-      }
-    };
-    fetchPlayers();
-  }, []);
+  const {token} = useAuthContext()!;
+  const players = useLeaderboard(token);
 
   if (!players) {
     return <></>;
