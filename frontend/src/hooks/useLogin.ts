@@ -41,7 +41,7 @@ export default function useLogin(): UseLoginReturnType {
         .then((response) => {
           if (response.status === 200) {
             const user = response.data as User;
-            if (!!user.playerTag) {
+            if (user.playerTag !== null && user.playerTag !== undefined) {
               setAuthentication(AuthenticationStates.AUTHORIZED);
             } else {
               setAuthentication(AuthenticationStates.ADMIN);
@@ -52,6 +52,7 @@ export default function useLogin(): UseLoginReturnType {
         .catch((error) => {
           if (error.response.status === 401) {
             setAuthentication(AuthenticationStates.NOT_LOGGED_IN);
+            setToken(null);
           }
         });
     }

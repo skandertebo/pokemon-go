@@ -5,12 +5,14 @@ import {
   useTheme
 } from '@mui/material';
 import {
+  EllipsisHorizontalIcon,
   HomeIcon,
   LightBulbIcon,
   TrophyIcon,
   UserCircleIcon
 } from '@heroicons/react/24/solid';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useIsShowingMenu } from '../Layouts/MainLayout';
 
 const BottomNav: React.FC = () => {
   const route = useLocation().pathname;
@@ -18,14 +20,10 @@ const BottomNav: React.FC = () => {
   const [value, setValue] = useState<string>(route);
   const iconClassName = 'h-6 w-6 text-white';
   const { palette } = useTheme();
+  const { isShowing, toggleIsShowing } = useIsShowingMenu()!;
 
   const bottomNavigationRoutes = [
     { value: '/', label: 'Home', icon: <HomeIcon className={iconClassName} /> },
-    {
-      value: '/profile',
-      label: 'Profile',
-      icon: <UserCircleIcon className={iconClassName} />
-    },
     {
       value: '/insights',
       label: 'Insights',
@@ -61,6 +59,11 @@ const BottomNav: React.FC = () => {
       {bottomNavigationRoutes.map((route) => (
         <BottomNavigationAction key={route.value} {...route} />
       ))}
+      <BottomNavigationAction
+        label='More'
+        onClick={() => !isShowing && toggleIsShowing()}
+        icon={<EllipsisHorizontalIcon className={iconClassName} />}
+      />
     </BottomNavigation>
   );
 };
