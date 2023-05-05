@@ -15,7 +15,7 @@ class UpdatePokemonDTO {
     public $description = null;
 
     #[Assert\File(
-        maxSize: '1024k',
+        maxSize: '10m',
         extensions: ['jpg','png'],
         // Message: 'Please upload a valid image: (verify size and extension)',
     )]

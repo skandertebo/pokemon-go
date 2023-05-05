@@ -4,14 +4,14 @@ import { BsFire } from 'react-icons/bs';
 import { MdCatchingPokemon } from 'react-icons/md';
 import { useState } from 'react';
 import Pokemon from '../types/Pokemon';
+import { apiBaseUrl } from '../config';
 
 export default function PokemonComponent({ pokemon }: { pokemon: Pokemon }) {
-  console.log(pokemon.image)
   return (
     <div className='bg-third w-full h-screen'>
       <div className='w-full h-60 relative'>
         <img
-          src={pokemon.image}
+          src={apiBaseUrl + '/image/' + pokemon.image}
           alt='pokemon'
           className='w-40 m-auto absolute  bottom-0 left-[calc((100%-160px)/2)] animate-[bounce_4s_ease-in-out_infinite]'
         />
