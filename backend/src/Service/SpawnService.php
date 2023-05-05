@@ -76,6 +76,14 @@ class SpawnService
         }
         return $nearbySpawns;
     }
+
+    function getUpdates($date)
+    {
+        $updates=[ "captured" => $this->spawnRepository->findCapturedSinceDate($date), 
+                    "spawned" => $this->spawnRepository->findSpawnSinceDate($date)];
+        return $updates;
+    }
+
     function getAllSpawns()
     {
         return $this->spawnRepository->findBy(['owner'=>null]);

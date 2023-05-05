@@ -1,9 +1,10 @@
 type User = {
   id: number;
-  playerTag: string | undefined;
+  playerTag: string;
+  password: string;
   email: string;
-  score: string | undefined;
-  image: string | undefined;
+  score: number;
+  image: string;
 };
 
 export default User;
