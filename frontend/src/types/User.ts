@@ -5,6 +5,7 @@ type User = {
   email: string;
   score: number;
   image: string;
+  role: string;
 };
 
 export default User;

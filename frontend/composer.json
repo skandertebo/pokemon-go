@@ -1,0 +1,5 @@
+{
+    "require": {
+        "alireaza/php-form-data": "^1.0"
+    }
+}

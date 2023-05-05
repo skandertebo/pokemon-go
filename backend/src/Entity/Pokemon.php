@@ -31,7 +31,7 @@ class Pokemon implements JsonSerializable
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\OneToMany(mappedBy: 'pokemon', targetEntity: Spawn::class)]
+    #[ORM\OneToMany(mappedBy: 'pokemon', targetEntity: Spawn::class, cascade:["remove"])]
     private $spawns;
     
     public function getId(): ?int
