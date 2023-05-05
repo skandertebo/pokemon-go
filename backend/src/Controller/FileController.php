@@ -13,10 +13,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 use function App\createErrorResponse;
 
-
+#[Route('public/', name: 'app_file')]
 class FileController extends AbstractController
 {
-    #[Route('image/{filename}', name: 'app_file')]
+    #[Route('image/{filename}', name: '_images')]
     public function serveImage($filename): Response
     {
     $path = '../public/files/images/'.$filename;
