@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Player;
 use App\Service\PlayerService;
+use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +17,7 @@ use FOS\RestBundle\Controller\Annotations\Patch;
 use PHPUnit\Util\Json;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use App\DTO\UpdateUserDTO;
 use function App\createValidationErrorResponse;
 use function App\createErrorResponse;
 
@@ -26,7 +28,7 @@ use function App\createErrorResponse;
 class PlayerController extends AbstractController
 {
 
-    public function __construct(private PlayerService $playerService, private ValidatorInterface $validator)
+    public function __construct(private PlayerService $playerService,private UserService $userService, private ValidatorInterface $validator)
     {
     }
     #[Get("/leaderboard", name: "GetLeaderboard")]
@@ -38,7 +40,7 @@ class PlayerController extends AbstractController
     }
 
 
-    
+
     #[Get("/{id}", name: "GetPlayer")]
     #[Security("is_granted('ROLE_USER')")]
 
@@ -78,37 +80,30 @@ class PlayerController extends AbstractController
     }
 
 
-    #[Patch("/{id}", name: "updatePlayer")]
-    #[Security("is_granted('ROLE_PLAYER')")]
+    #[Patch("/profile", name: "updatePlayer")]
+    #[Security("is_granted('ROLE_USER')")]
     public function updatePlayer(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-
         $id = $request->attributes->get('jwt_payload')['id'];
-        $player = $this->playerService->getPlayerById($id);
+        $userDTO = new UpdateUserDTO($data); 
 
-        //set image without checking
-        if (isset($data['image'])) {
-            $player->setImage($data['image']);
-        }
-
-        //set playerTag with checking
-        if (isset($data['playerTag'])) {
-            try {
-                $this->playerService->checkPlayerTag($data['playerTag']);
-                $player->setPlayerTag($data['playerTag']);
-            } catch (HttpException $e) {
-                return createErrorResponse($e->getMessage(), $e->getStatusCode());
-            }
-        }
-
-        $errors = $this->validator->validate($player, null, ['update']);
+        $errors = $this->validator->validate($userDTO);
         if (count($errors) > 0) {
-            createValidationErrorResponse($errors);
+            return createValidationErrorResponse($errors); }
+        try {
+            $this->playerService->updatePlayer($id,$data);
+            $user = $this->userService->updateUser($id, $data);
+    
+        } catch (\InvalidArgumentException $e) {
+            return createErrorResponse($e->getMessage(), 400);
+        }
+        catch (HttpException $e) {
+            return createErrorResponse($e->getMessage(), $e->getStatusCode());
         }
 
-        $this->playerService->updatePlayer($player);
-
+        $player = $this->playerService->getPlayerById($id);
+    
         return new JsonResponse([
             "message" => "player updated successfuly",
             "player" => $player
