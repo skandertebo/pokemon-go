@@ -62,20 +62,22 @@ const MainPage: React.FC = () => {
   }, []);
   return (
     <spawnsContext.Provider value={spawns}>
-      <div className='w-screen h-screen sm:w-full flex flex-col gap-8 items-center'>
-        <div className='h-[60vh] w-full shadow-md rounde-md'>
-          <WebMap />
-        </div>
+       <div className='w-screen h-screen sm:w-full flex flex-col gap-5 items-center'>
+      <div className='relative h-full w-full shadow-md rounded-md  mb-[60px]'>
+        <WebMap />
+      </div>
         {isCapturing && (
           <CaptureCam
             spawn={isCapturing}
             captureAction={(spawn: Spawn) => handleCapture(spawn)}
           />
         )}
-        <CaptureButton
-          disabled={!nearbySpawn}
-          onClick={() => setIsCapturing(nearbySpawn)}
-        />
+        <div className='absolute bottom-20 left-1/2 transform -translate-x-1/2 z-10'>
+          <CaptureButton
+            disabled={!nearbySpawn}
+            onClick={() => setIsCapturing(nearbySpawn)}
+          />
+        </div>
       </div>
     </spawnsContext.Provider>
   );
