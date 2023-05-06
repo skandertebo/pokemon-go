@@ -14,6 +14,18 @@ class SpawnService
     {
     }
 
+
+
+    function addSpawnComm()
+    {
+        $pokemon=$this->pokemonRepository->find(14);
+        $spawn=new Spawn();
+        $spawn->setLatitude(36.860418);
+        $spawn->setLongitude(10.113047);
+        $spawn->setRadius(10000);
+        $spawn->setPokemon($pokemon);
+        $this->spawnRepository->save($spawn,true);
+    }
     function addSpawn(AddSpawnDTO $data)
     {
 
