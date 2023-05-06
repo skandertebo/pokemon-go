@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react';
 import Profile from '../components/Profile';
 import User from '../types/User';
-import avatar from '../assets/avatar-girledited.png';
 import { useAuthContext } from '../context/AuthContext';
 import { useAppContext } from '../context/AppContext';
 import axios from 'axios';
 import { apiBaseUrl } from '../config';
 import { UseLoginReturnType } from '../types';
-import Player from '../components/Player';
 import PokemonProgress from '../components/PokemonProgress';
 
 function ProfilePage() {
@@ -15,7 +13,6 @@ function ProfilePage() {
   const { makeNotification } = useAppContext();
   const [localUser, setLocalUser] = useState<User | undefined>();
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const { enableWaiting, disableWaiting } = useAppContext();
   useEffect(() => {
     async function getUser() {
       try {
@@ -59,7 +56,7 @@ function ProfilePage() {
   if (!isLoaded) return <PokemonProgress />;
   else {
     return (
-      <div>
+      <div className='bg-[url(../assets/forest.jpg)] bg-cover bg-center min-h-screen'>
         <Profile user={localUser!} updateUser={updateUser} />
       </div>
     );
