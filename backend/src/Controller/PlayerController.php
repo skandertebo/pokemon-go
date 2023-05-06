@@ -36,7 +36,7 @@ class PlayerController extends AbstractController
 
 
 
-    
+
     #[Get("/leaderboard", name: "GetLeaderboard")]
     #[Security("is_granted('ROLE_USER')")]
     public function leaderboard(): Response
@@ -49,7 +49,6 @@ class PlayerController extends AbstractController
 
     #[Get("/{id}", name: "GetPlayer")]
     #[Security("is_granted('ROLE_USER')")]
-
     public function getPlayer($id): JsonResponse
     {
         //check if player with $id exists
@@ -60,6 +59,8 @@ class PlayerController extends AbstractController
         }
         return new JsonResponse($player);
     }
+
+
 
     #[Delete("", name: "DeletePlayer")]    
     #[Security("is_granted('ROLE_USER')")]
@@ -85,6 +86,9 @@ class PlayerController extends AbstractController
         return new JsonResponse("player deleted successfuly");
     }
 
+
+
+
 // this is a POST method because of a limitation of PHP in reading form-data for PATCH and PUT requests
     #[Post("", name: "updatePlayer")]
     #[Security("is_granted('ROLE_USER')")]
@@ -100,7 +104,6 @@ class PlayerController extends AbstractController
         ];
 
         $userDTO = new UpdateUserDTO($data); 
-        dump($userDTO);
 
         $errors = $this->validator->validate($userDTO);
         if (count($errors) > 0) {
