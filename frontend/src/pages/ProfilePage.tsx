@@ -37,9 +37,10 @@ function ProfilePage() {
 
   async function updateUser(formData: FormData) {
     try {
-      const res = await axios.post(apiBaseUrl + `/player/profile`, formData, {
+      const res = await axios.post(apiBaseUrl + `/player`, formData, {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
         }
       });
       setLocalUser(res.data);

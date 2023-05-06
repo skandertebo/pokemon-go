@@ -3,6 +3,7 @@ import avatar from '../assets/avatar-girl2.png';
 import { Card, Button, Typography } from '@material-tailwind/react';
 import { AiFillEdit } from 'react-icons/ai';
 import User from '../types/User';
+import { apiBaseUrl } from '../config';
 
 interface ProfileProps {
   user: User;
@@ -18,23 +19,23 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
   );
   const [password, setPassword] = useState<string>('');
   const [modify, setModify] = useState<boolean>(false);
+  const formData = new FormData();
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     setImagePreview(selectedFile ? URL.createObjectURL(selectedFile) : '_');
+    if (imageInput.current?.files?.[0]) {
+      const file = imageInput.current?.files?.[0] as File;
+      formData.append('image', file);
+    }
   };
 
   function lockForm() {
     setModify((prev) => !prev);
   }
 
-  const handleSave = () => {
-    const formData = new FormData();
-    formData.append('image', imagePreview);
-    formData.append('playerTag', playerTag);
-    formData.append('email', email);
-    formData.append('password', password);
-
+  const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     updateUser(formData);
   };
 
@@ -59,11 +60,17 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
         <div>
           <form
             className=' mb-2 mx-auto w-80 maw-h-screen '
-            onSubmit={handleSave}
+            onSubmit={(e) => {
+              handleSave(e);
+            }}
           >
             <div>
               <img
-                src={imagePreview}
+                src={
+                  imagePreview !== avatar && imagePreview !== user.image
+                    ? `${apiBaseUrl}/public/image/${user.image}`
+                    : imagePreview
+                }
                 alt='image avatar'
                 className='mx-auto mb-4 w-[200px] h-[200px] rounded-full border-8 border-third p-3 justify-self-center flex '
               />
@@ -95,6 +102,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                   value={playerTag}
                   onChange={(e) => {
                     setPlayerTag(e.target.value);
+                    formData.append('playerTag', playerTag);
                   }}
                   disabled={!modify}
                 />
@@ -108,6 +116,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
+                    formData.append('email', email);
                   }}
                   disabled={!modify}
                 />
@@ -123,6 +132,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                   value={password}
                   onChange={(e) => {
                     setPassword(e.target.value);
+                    formData.append('password', password);
                   }}
                   disabled={!modify}
                 />
@@ -130,11 +140,11 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
             </div>
             <div className='mb-4'>
               <Button
-                className=' save mt-2 w-1/2 mx-auto bg-primary disabled:hidden '
+                className=' save mt-2 w-1/2 mx-auto bg-primary '
                 fullWidth
                 type='submit'
-                disabled={!modify}
                 onClick={lockForm}
+                // disabled={!modify}
               >
                 Save Profile
               </Button>
