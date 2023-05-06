@@ -14,9 +14,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
   const [playerTag, setPlayerTag] = useState<string>(user.playerTag);
   const [email, setEmail] = useState<string>(user.email);
   const imageInput = useRef<HTMLInputElement>(null);
-  const [imagePreview, setImagePreview] = useState<string>(
-    user.image && user.image !== '_' ? user.image : avatar
-  );
+  const [imagePreview, setImagePreview] = useState<string>(user.image);
   const [password, setPassword] = useState<string>('');
   const [modify, setModify] = useState<boolean>(false);
   const formData = new FormData();
@@ -24,10 +22,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     setImagePreview(selectedFile ? URL.createObjectURL(selectedFile) : '_');
-    if (imageInput.current?.files?.[0]) {
-      const file = imageInput.current?.files?.[0] as File;
-      formData.append('image', file);
-    }
+    formData.append('image', selectedFile);
   };
 
   function lockForm() {
@@ -66,11 +61,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
           >
             <div>
               <img
-                src={
-                  imagePreview !== avatar && imagePreview !== user.image
-                    ? `${apiBaseUrl}/public/image/${user.image}`
-                    : imagePreview
-                }
+                src={`${apiBaseUrl}/public/image/${imagePreview}`}
                 alt='image avatar'
                 className='mx-auto mb-4 w-[200px] h-[200px] rounded-full border-8 border-third p-3 justify-self-center flex '
               />
