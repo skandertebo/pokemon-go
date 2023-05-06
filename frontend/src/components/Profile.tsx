@@ -14,15 +14,17 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
   const [playerTag, setPlayerTag] = useState<string>(user.playerTag);
   const [email, setEmail] = useState<string>(user.email);
   const imageInput = useRef<HTMLInputElement>(null);
-  const [imagePreview, setImagePreview] = useState<string>(user.image);
+  const [imagePreview, setImagePreview] = useState<string>(
+    `${apiBaseUrl}/public/image/${user.image}`
+  );
   const [password, setPassword] = useState<string>('');
   const [modify, setModify] = useState<boolean>(false);
-  const formData = new FormData();
+  const formData = useRef<FormData>(new FormData());
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     setImagePreview(selectedFile ? URL.createObjectURL(selectedFile) : '_');
-    formData.append('image', selectedFile);
+    formData.current.append('image', selectedFile);
   };
 
   function lockForm() {
@@ -31,7 +33,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
 
   const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    updateUser(formData);
+    updateUser(formData.current);
   };
 
   return (
@@ -61,7 +63,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
           >
             <div>
               <img
-                src={`${apiBaseUrl}/public/image/${imagePreview}`}
+                src={imagePreview}
                 alt='image avatar'
                 className='mx-auto mb-4 w-[200px] h-[200px] rounded-full border-8 border-third p-3 justify-self-center flex '
               />
@@ -93,7 +95,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                   value={playerTag}
                   onChange={(e) => {
                     setPlayerTag(e.target.value);
-                    formData.append('playerTag', playerTag);
+                    formData.current.append('playerTag', playerTag);
                   }}
                   disabled={!modify}
                 />
@@ -107,7 +109,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
-                    formData.append('email', email);
+                    formData.current.append('email', email);
                   }}
                   disabled={!modify}
                 />
@@ -123,7 +125,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                   value={password}
                   onChange={(e) => {
                     setPassword(e.target.value);
-                    formData.append('password', password);
+                    formData.current.append('password', password);
                   }}
                   disabled={!modify}
                 />
