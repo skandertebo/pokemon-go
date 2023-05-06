@@ -10,6 +10,7 @@ import MainPage from './pages/MainPage';
 import DashboardPage from './pages/DashboardPage';
 import PokemonPage from './pages/PokemonPage';
 import StatPage from './pages/StatPage';
+import ErrorPage from './pages/ErrorPage';
 
 const routes = createBrowserRouter([
   {
@@ -25,8 +26,8 @@ const routes = createBrowserRouter([
         element: <ProfilePage />
       },
       {
-        path: '/insights',
-        element: <CapturePage />
+        path: '/pokedex',
+        element: <CapturePage /> // should be renamed to PokedexPage!
       },
       {
         path: '/leaderboard',
@@ -37,7 +38,7 @@ const routes = createBrowserRouter([
         element: <PokemonPage />
       },
       {
-        path: '/stat',
+        path: '/insights',
         element: <StatPage />
       }
     ]
@@ -56,8 +57,12 @@ const routes = createBrowserRouter([
     ]
   },
   {
-    path:'dashboard',
+    path: 'dashboard',
     element: <DashboardPage />
+  },
+  {
+    path: '*',
+    element: <ErrorPage />
   }
 ]);
 

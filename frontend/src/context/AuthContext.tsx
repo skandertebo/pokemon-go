@@ -3,6 +3,7 @@ import useLogin from '../hooks/useLogin';
 import { AuthContextType, AuthenticationStates } from '../types';
 import React from 'react';
 import { Backdrop, CircularProgress } from '@mui/material';
+import PokemonProgress from '../components/PokemonProgress';
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -15,7 +16,7 @@ export const AuthContextProvider: React.FC<PropsWithChildren> = ({
   if (authentication === AuthenticationStates.VERIFYING_AUTH) {
     return (
       <Backdrop open={true}>
-        <CircularProgress />
+        <PokemonProgress />
       </Backdrop>
     );
   }
