@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import { Button } from '@material-tailwind/react';
-import './Register.css';
 import { registerUser } from '../apiCalls/register';
 import { useAuthContext } from '../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';

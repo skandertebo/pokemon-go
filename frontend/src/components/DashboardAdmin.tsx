@@ -62,16 +62,18 @@ function Dashboard(){
             console.error(error);
         }
     };
-
-    if (user.role!='admin'){
-        <Navigate
-        to={'/'}
-       />
-    }
     if (!token){
+        return(
         <Navigate
         to={'/login'}
-        />
+        />)
+    }
+
+    if (user.role!='admin'){
+        return(
+        <Navigate
+        to={'/'}
+       />)
     }
     if(!pokemons){
         return <div>Loading...</div>
