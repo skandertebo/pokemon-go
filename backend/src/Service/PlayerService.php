@@ -40,6 +40,7 @@ class PlayerService
 
     public function updatePlayer(int $id, $data): Player
     {   
+        dump($data);
         $player = $this->getPlayerById($id);
         
         if ($data->playerTag) {
