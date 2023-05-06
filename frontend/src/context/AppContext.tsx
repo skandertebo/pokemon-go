@@ -9,6 +9,7 @@ import React, {
 } from 'react';
 import { Alert } from '@material-tailwind/react';
 import { Backdrop, CircularProgress } from '@mui/material';
+import PokemonProgress from '../components/PokemonProgress';
 type AppContextType = {
   makeNotification: (props: NotificationType) => void;
   enableWaiting: () => void;
@@ -90,7 +91,7 @@ export const AppContextProvider: React.FC<React.PropsWithChildren> = ({
         children
       ) : (
         <Backdrop open={true}>
-          <CircularProgress />
+          <PokemonProgress />
         </Backdrop>
       )}
     </AppContext.Provider>
