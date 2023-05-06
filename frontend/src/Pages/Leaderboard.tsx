@@ -17,7 +17,7 @@ function Leaderboard () {
   }
 
   return (
-    <div className='flex h-screen w-screen bg-background flex-col  '>
+    <div className='flex h-screen w-screen bg-background flex-col mb-16 '>
       <div className='flex h-96 flex-none flex-col items-center justify-between text-fourth bg-third md:h-[450px]'>
         <div className='h-1/5 text-white font-black text-3xl mt-3'>
           Leaderboard
