@@ -39,7 +39,7 @@ class Spawn implements JsonSerializable
     private ?Player $owner=null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $captureDate = null;
+    private $captureDate = null;
 
 
     public function __construct()
@@ -135,6 +135,7 @@ class Spawn implements JsonSerializable
             'spawnDate' => $this->getSpawnDate(),
             'pokemon' => $this->getPokemon(),
             'owner' => $this->getOwner(),
+            'captureDate' => $this -> getCaptureDate()
         ];
     }
 
