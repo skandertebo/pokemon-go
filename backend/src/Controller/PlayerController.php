@@ -35,9 +35,11 @@ class PlayerController extends AbstractController
     }
     #[Get("/leaderboard", name: "GetLeaderboard")]
     #[Security("is_granted('ROLE_USER')")]
-    public function leaderboard(): Response
+    public function leaderboard( Request $request ): Response
     {
-        $players = $this->playerService->getOrderedPlayers();
+        $page = $request->query->getInt('page', 1);
+        $limit = $request->query->getInt('limit', 40);
+        $players = $this->playerService->getOrderedPlayers($page,$limit);
         return $this->json($players);
     }
 
@@ -56,6 +58,7 @@ class PlayerController extends AbstractController
         }
         return new JsonResponse($player);
     }
+
 
     #[Delete("", name: "DeletePlayer")]    
     #[Security("is_granted('ROLE_USER')")]

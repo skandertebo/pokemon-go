@@ -58,7 +58,7 @@ class SpawnController extends AbstractController
         
     }
     #[Route('/catch', name: 'catchSpawn',methods:['POST'])]
-                    /**
+     /**
      * @Security("is_granted('ROLE_USER')")
      */
     public function catchSpawn(HttpFoundationRequest $request)

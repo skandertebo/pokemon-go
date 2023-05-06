@@ -30,7 +30,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
 
   const handleSave = () => {
     const formData = new FormData();
-    formData.append('image', imageInput.current?.files?.[0] as Blob);
+    formData.append('image', imagePreview);
     formData.append('playerTag', playerTag);
     formData.append('email', email);
     formData.append('password', password);

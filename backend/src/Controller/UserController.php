@@ -163,4 +163,17 @@ class UserController extends AbstractController
 
 
 
+
+    
+    /**
+     * @Route("/logout", name="logout")
+     */
+    public function logout(): Response
+    {
+        localStorage.removeItem('token');
+        return $this->redirectToRoute('api_login');
+    }
+
+
+
 }
