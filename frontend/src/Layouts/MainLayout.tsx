@@ -23,7 +23,7 @@ const MainLayout: React.FC = () => {
         toggleIsShowing: () => setIsShowingMenu((prev) => !prev)
       }}
     >
-      <div className='bg-white w-screen'>
+      <div className='bg-white w-screen overflow-hidden'>
         {isShowingMenu && <MenuPage />}
         {outlet}
         <BottomNav />

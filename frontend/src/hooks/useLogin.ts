@@ -51,6 +51,7 @@ export default function useLogin(): UseLoginReturnType {
         })
         .catch((error) => {
           if (error.response.status === 401) {
+            console.error(error.response.data);
             setAuthentication(AuthenticationStates.NOT_LOGGED_IN);
             setToken(null);
           }

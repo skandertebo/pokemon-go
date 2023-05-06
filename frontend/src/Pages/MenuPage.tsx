@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 
 export default function MenuPage(): JSX.Element {
   const { isShowing, toggleIsShowing } = useIsShowingMenu()!;
-  const iconClassName = 'h-8 w-8 text-primary';
+  const iconClassName = 'h-8 w-8 cursor-pointer text-primary';
   const pageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -41,11 +41,11 @@ export default function MenuPage(): JSX.Element {
   return (
     <div
       ref={pageRef}
-      className='absolute flex flex-col items-center z-10 bg-white w-screen h-screen scroll-up-animation'
+      className='absolute overflow-hidden flex flex-col items-center z-10 bg-white w-screen h-screen scroll-up-animation'
     >
       <header className='fixed flex justify-between items-center w-full p-4 bg-primary'>
         <ArrowLeftIcon
-          className='h-8 w-8 text-white'
+          className='h-8 w-8 text-white cursor-pointer'
           onClick={() => {
             pageRef.current?.classList.add('scroll-down-animation');
             setTimeout(() => {
