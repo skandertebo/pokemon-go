@@ -3,7 +3,7 @@ import { Button } from '@material-tailwind/react';
 import './Register.css';
 import { registerUser } from '../apiCalls/register';
 import { useAuthContext } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { RegisterBody } from '../types/RegisterBody';
 
 function RegisterComp() {
@@ -39,7 +39,7 @@ function RegisterComp() {
         throw new Error(userData.error.message);
       }
       setToken(userData.token);
-      window.location.reload();
+      navigate('/');
     } catch (error) {
       //@ts-ignore
       setError(error.message);
@@ -48,7 +48,7 @@ function RegisterComp() {
 
   return (
     <form
-      className='text-center max-w-screen-md w-full m-auto p-5 mb-[190px]
+      className='text-center max-w-screen-md w-full m-auto p-5 mb-[210px]
     md:p-1/5 md:mb-[100px] md:mr-[100px] md:w-[400px] 
     lg:mr-[100px] lg:mb-[350px] lg:w-[600px]'
       onSubmit={handleSubmit}
@@ -86,18 +86,7 @@ function RegisterComp() {
           placeholder='Enter Your Password'
         />
       </div>
-      <div className='lg:m-3.5'>
-        <input
-          className='image w-fill text-right h-12 px-2.5 rounded-md lg:w-[400px]  text-primary'
-          type='file'
-          id='image'
-          name='image'
-          onChange={handleChange}
-          value={registerData.image}
-          accept='image/*'
-        />
-      </div>
-      <div>
+      <div className='mb-3'>
         <Button
           className='bg-primary  w-3/4 h-12 rounded-md font-bold text-secondary md:w-[300px] lg:w-[300px] disabled:bg-secondary disabled:text-primary'
           type='submit'
@@ -105,6 +94,16 @@ function RegisterComp() {
           Register
         </Button>
       </div>
+      <h2 className='text-primary text-base'>
+          Already have an account?
+          <Link
+            className='text-base font-bold text-primary italic hover:not-italic md:text-secondary lg:text-primary'
+            to='/login'
+          >
+            {' '}
+            Login
+          </Link>
+        </h2>
       {error && (
         <div
           className='p-2 rounded-md mt-4 bg-red-500 text-white text-center mx-auto'

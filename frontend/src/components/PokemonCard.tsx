@@ -7,6 +7,7 @@ import { MdCatchingPokemon } from 'react-icons/md';
 import Pokemon from '../types/Pokemon';
 import { useNavigate } from 'react-router-dom';
 import getBackground from '../utils/getBackground';
+import { apiBaseUrl } from '../config';
 
 export default function PokemonCard({ pokemon }: { pokemon: Pokemon }) {
   const background = getBackground({ pokemon });
@@ -41,7 +42,7 @@ export default function PokemonCard({ pokemon }: { pokemon: Pokemon }) {
   return (
     <div
       className={
-        'w-44 relative shrink-0 flex-item flex-1 sm:flex-none ' + rotate
+        'w-44 relative block shrink-0 flex-item flex-1 sm:flex-none ' + rotate
       }
       onClick={handelRotation}
     >
@@ -53,7 +54,7 @@ export default function PokemonCard({ pokemon }: { pokemon: Pokemon }) {
       />
       <img src={image} alt='card background' className='w-full z-1 absolute' />
       <img
-        src={pokemon.image}
+        src={apiBaseUrl + '/public/image/' + pokemon.image}
         alt='eevee'
         id='pokemon'
         className={'w-32 absolute top-8 right-6 z-20 rotate-data' + showPokemon}
