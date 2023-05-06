@@ -33,6 +33,10 @@ class PlayerController extends AbstractController
     public function __construct(private PlayerService $playerService,private UserService $userService, private ValidatorInterface $validator)
     {
     }
+
+
+
+    
     #[Get("/leaderboard", name: "GetLeaderboard")]
     #[Security("is_granted('ROLE_USER')")]
     public function leaderboard(): Response
