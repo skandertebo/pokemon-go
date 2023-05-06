@@ -95,7 +95,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                   value={playerTag}
                   onChange={(e) => {
                     setPlayerTag(e.target.value);
-                    formData.current.append('playerTag', playerTag);
+                    formData.current.append('playerTag', e.target.value);
                   }}
                   disabled={!modify}
                 />
@@ -109,7 +109,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
-                    formData.current.append('email', email);
+                    formData.current.append('email', e.target.value);
                   }}
                   disabled={!modify}
                 />
@@ -125,7 +125,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                   value={password}
                   onChange={(e) => {
                     setPassword(e.target.value);
-                    formData.current.append('password', password);
+                    formData.current.append('password', e.target.value);
                   }}
                   disabled={!modify}
                 />

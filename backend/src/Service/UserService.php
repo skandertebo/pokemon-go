@@ -89,7 +89,7 @@ class UserService
                 throw new \InvalidArgumentException('User email already exists');
             }
             $user->setEmail($email);
-            dump($user);
+            
             $this->userRepository->save($user,true);
         }
         
