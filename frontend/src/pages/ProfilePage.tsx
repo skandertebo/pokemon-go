@@ -9,9 +9,13 @@ import { apiBaseUrl } from '../config';
 import { UseLoginReturnType } from '../types';
 import Player from '../components/Player';
 import PokemonProgress from '../components/PokemonProgress';
+import { Navigate } from 'react-router-dom';
 
 function ProfilePage() {
-  const { user, token } = useAuthContext() as UseLoginReturnType;
+  const { user, token } = useAuthContext() as {
+    user: User;
+    token: string;
+  }
   const { makeNotification } = useAppContext();
   const [localUser, setLocalUser] = useState<User | undefined>();
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
@@ -55,7 +59,12 @@ function ProfilePage() {
       });
     }
   }
-
+  if (!token) {
+    return <Navigate to='/login' />;
+  }
+  if (!user.playerTag){
+    return <Navigate to='/dashboard'/>;
+  }
   if (!isLoaded) return <PokemonProgress />;
   else {
     return (

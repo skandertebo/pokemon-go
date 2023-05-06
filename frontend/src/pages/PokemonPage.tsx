@@ -1,20 +1,23 @@
 import React from "react";
 import PokemonComponent from "../components/PokemonComponent";
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useEffect,useState } from "react";
 import axios from "axios";
 import { apiBaseUrl } from "../config";
 import { useAppContext } from '../context/AppContext';
 import { useAuthContext } from '../context/AuthContext';
 import { UseLoginReturnType } from '../types';
+import User from "../types/User";
 
 export default function PokemonPage() {
   const { id } = useParams();
   const [pokemon, setPokemon] = useState(null);
-  const { token, user } = useAuthContext() as UseLoginReturnType;
+  const { token, user } = useAuthContext() as {
+    token: string;
+    user : User;
+  }
   const { makeNotification } = useAppContext();
   const { enableWaiting, disableWaiting } = useAppContext();
-  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchData() {
@@ -40,12 +43,12 @@ export default function PokemonPage() {
     fetchData();
   }, []);
 
-    useEffect(
-      ()=>{
-        if (!token){
-          navigate('/login');
-        }
-    },[])
+  if (!token) {
+    return <Navigate to='/login' />;
+  }
+  if (!user.playerTag) {
+    return <Navigate to='/dashboard' />;
+  }
 
   return (
     <div>

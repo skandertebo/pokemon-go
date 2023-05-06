@@ -7,17 +7,20 @@ import { apiBaseUrl } from '../config';
 import { useAppContext } from '../context/AppContext';
 import { useAuthContext } from '../context/AuthContext';
 import { UseLoginReturnType } from "../types";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import User from '../types/User';
 
 
 
 
 export default function CapturePage() {
   const [pokemons, setPokemons] = useState([]);
-  const { token, user } = useAuthContext() as UseLoginReturnType;
+  const { token, user } = useAuthContext() as {
+    token: string;
+    user: User;
+  }
   const { makeNotification } = useAppContext();
   const { enableWaiting, disableWaiting } = useAppContext();
-    const navigate = useNavigate();
   useEffect(() => {
     async function fetchData() {
       enableWaiting();
@@ -42,12 +45,12 @@ export default function CapturePage() {
     fetchData();
   }, []);
 
-    useEffect(
-        ()=>{
-            if (!token){
-                navigate('/login');
-            }
-    },[]);
+    if (!token){
+      return <Navigate to='/login'/>;
+    }
+    if (!user.playerTag){
+    return <Navigate to='/dashboard'/>;
+  }
       return (
     <>
       <div className='bg-secondary pt-4 w-screen min-h-screen overflow-y-auto overflow-x-hidden pb-32'>

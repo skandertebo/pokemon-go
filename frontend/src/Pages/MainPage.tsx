@@ -10,7 +10,8 @@ import useSpawns from '../hooks/useSpawns';
 import { spawnsContext } from '../context/SpawnsContext';
 import axios from 'axios';
 import { apiBaseUrl } from '../config';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
+import User from '../types/User';
 declare global {
   interface Window {
     initMap: () => void;
@@ -19,16 +20,12 @@ declare global {
 
 const MainPage: React.FC = () => {
   const [isCapturing, setIsCapturing] = useState<Spawn | null>(null);
-  const { token, user } = useAuthContext() as UseLoginReturnType;
+  const { token, user } = useAuthContext() as{
+    token: string;
+    user: User;
+  }
   const [spawns, nearbySpawn] = useSpawns(token);
   const { makeNotification } = useAppContext();
-  const navigate = useNavigate();
-  useEffect(
-    ()=>{
-      if (!token){
-        navigate('/login');
-      }
-  },[])
   
   const handleCapture = useCallback(async (spawn: Spawn) => {
     try {
@@ -43,12 +40,12 @@ const MainPage: React.FC = () => {
             Authorization: `Bearer ${token}`
           }
         }
-      );
-      makeNotification({
-        message: 'Pokemon Captured!',
-        type: 'success',
-        duration: 4000
-      });
+        );
+        makeNotification({
+          message: 'Pokemon Captured!',
+          type: 'success',
+          duration: 4000
+        });
     } catch (e) {
       console.error(e);
       makeNotification({
@@ -60,6 +57,12 @@ const MainPage: React.FC = () => {
       setIsCapturing(null);
     }
   }, []);
+  if (!token) {
+    return <Navigate to='/login'/>;
+  }
+  if (!user.playerTag){
+    return <Navigate to='/dashboard'/>;
+  }
   return (
     <spawnsContext.Provider value={spawns}>
        <div className='w-screen h-screen sm:w-full flex flex-col gap-5 items-center'>

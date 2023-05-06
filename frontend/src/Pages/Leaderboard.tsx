@@ -5,32 +5,22 @@ import { FaCrown } from 'react-icons/fa';
 import { useAppContext } from '../context/AppContext';
 import useLeaderboard from '../hooks/useLeaderboard';
 import { useAuthContext } from '../context/AuthContext';
-<<<<<<< HEAD
-import { useNavigate } from 'react-router-dom';
-
-
-
-function Leaderboard () {
-  const {token} = useAuthContext()!;
-  const players = useLeaderboard(token);  
-  const navigate = useNavigate();
-  
-  useEffect(
-    ()=>{
-      if (!token){
-        navigate('/login');
-      }
-    },[])
-
-  
-=======
 import { apiBaseUrl } from '../config';
+import { Navigate } from 'react-router-dom';
 
 function Leaderboard() {
-  const { token } = useAuthContext()!;
+  const { token,user } = useAuthContext() as{
+    token: string;
+    user: User;
+  }
   const players = useLeaderboard(token);
->>>>>>> 03e8864967c951e26e4e7a7ba7533d3ab58669ce
 
+  if (!user.playerTag){
+    return <Navigate to='/dashboard'/>;
+  }
+  if (!token) {
+    return <Navigate to='/login' />;
+  }
   if (!players) {
     return <></>;
   }

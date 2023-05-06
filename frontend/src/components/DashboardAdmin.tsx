@@ -68,7 +68,7 @@ function Dashboard(){
         />)
     }
 
-    if (user.role=='player'){
+    if (user.playerTag){
         return(
         <Navigate
         to={'/'}
