@@ -8,6 +8,7 @@ import axios from 'axios';
 import { apiBaseUrl } from '../config';
 import { UseLoginReturnType } from '../types';
 import Player from '../components/Player';
+import PokemonProgress from '../components/PokemonProgress';
 
 function ProfilePage() {
   const { user, token } = useAuthContext() as UseLoginReturnType;
@@ -55,11 +56,11 @@ function ProfilePage() {
     }
   }
 
-  if (!isLoaded) return <div>Loading...</div>;
+  if (!isLoaded) return <PokemonProgress />;
   else {
     return (
       <div>
-        <Profile user={localUser} updateUser={updateUser} />
+        <Profile user={localUser!} updateUser={updateUser} />
       </div>
     );
   }
