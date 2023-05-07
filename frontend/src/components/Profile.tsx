@@ -1,5 +1,4 @@
 import { useRef, useState } from 'react';
-import avatar from '../assets/avatar-girl2.png';
 import { Card, Button, Typography } from '@material-tailwind/react';
 import { AiFillEdit } from 'react-icons/ai';
 import User from '../types/User';
@@ -63,7 +62,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
           >
             <div>
               <img
-                src={apiBaseUrl + '/public/image/' + user.image}
+                src={imagePreview}
                 alt='image avatar'
                 className='mx-auto mb-4 w-[200px] h-[200px] rounded-full border-8 border-third p-3 justify-self-center flex '
               />
@@ -133,11 +132,11 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
             </div>
             <div className='mb-4'>
               <Button
-                className=' save mt-2 w-1/2 mx-auto bg-primary '
+                className=' save mt-2 w-1/2 mx-auto bg-primary disabled:hidden focus:opacity-50 '
                 fullWidth
                 type='submit'
-                onClick={lockForm}
-                // disabled={!modify}
+                // onClick={lockForm}
+                disabled={!modify}
               >
                 Save Profile
               </Button>

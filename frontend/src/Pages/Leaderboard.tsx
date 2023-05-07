@@ -60,26 +60,12 @@ function Leaderboard() {
         <div className='bg-secondary h-6 w-full  rounded-t-3xl'></div>
       </div>
 
-        <div className=' bg-secondary flex flex-col flex-grow  items-center text-black '>
-          {players?.slice(3).map((player, index) => {
-            return (
-              <Player key={index} index={index + 4} player={player}></Player>
-            );
-          })}
-          <div className='my-8 text-center'>
-            <button
-              disabled={hasReachedLimit}
-              onClick={() => getPlayers(Page + 1, limit)}
-              className={
-                hasReachedLimit
-                  ? 'text-primary text-lg opacity-50 '
-                  : 'text-primary hover:underline text-lg  '
-              }
-            >
-              Load more
-            </button>
-          </div>
-        </div>
+      <div className=' bg-secondary flex flex-col flex-grow  items-center text-black '>
+        {players?.slice(3).map((player, index) => {
+          return (
+            <Player key={index} index={index + 4} player={player}></Player>
+          );
+        })}
       </div>
     </div>
   );

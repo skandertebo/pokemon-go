@@ -56,11 +56,7 @@ function ProfilePage() {
 
   if (!isLoaded) return <PokemonProgress />;
   else {
-    return (
-      <div className='bg-[url(../assets/forest.jpg)] bg-cover bg-center min-h-screen'>
-        <Profile user={localUser!} updateUser={updateUser} />
-      </div>
-    );
+    return <Profile user={localUser!} updateUser={updateUser} />;
   }
 }
 
