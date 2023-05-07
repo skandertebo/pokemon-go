@@ -3,15 +3,15 @@ namespace App\Service;
 
 use App\DTO\AddSpawnDTO;
 use App\Entity\Spawn;
-use App\Repository\PlayerRepository;
 use App\Repository\PokemonRepository;
 use App\Repository\SpawnRepository;
+use App\Service\PlayerService;
 use DateTime;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class SpawnService
 {
-    public function __construct(private SpawnRepository $spawnRepository, private PokemonRepository $pokemonRepository, private PlayerRepository $playerRepository)
+    public function __construct(private PLayerService $playerService, private SpawnRepository $spawnRepository, private PokemonRepository $pokemonRepository)
     {
     }
 
@@ -46,14 +46,10 @@ class SpawnService
     function catchSpawn($playerId,$spawnId)
     {
         $spawn=$this->spawnRepository->find($spawnId);
-        $player=$this->playerRepository->find($playerId);
+        $player=$this->playerService->getPlayerById($playerId);
         if($spawn==null)
         {
             throw new HttpException(404,"Spawn of id {$spawnId} not found");
-        }
-        if($player==null)
-        {
-            throw new HttpException(404,"Player of id {$playerId} not found");
         }
         if($spawn->getOwner()!=null)
         {
@@ -61,6 +57,7 @@ class SpawnService
         }
         $spawn->setOwner($player);
         $spawn->setCaptureDate(new \DateTime());
+        $this->playerService->addScore($player,$spawn);
         return $this->spawnRepository->save($spawn,true);
     }
 

@@ -3,6 +3,8 @@
 namespace App\Service;
 
 use App\Entity\Player;
+use App\Entity\Spawn;
+use App\Entity\Pokemon;
 use App\Repository\PlayerRepository;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -38,11 +40,13 @@ class PlayerService
 
     public function updatePlayer(int $id, $data): Player
     {   
+        dump($data);
         $player = $this->getPlayerById($id);
         
         if ($data->playerTag) {
-        
-            $this->checkPlayerTag($data->playerTag);
+            if($this->getPlayerByPlayerTag($data->playerTag)){
+            throw new \InvalidArgumentException( 'PlayerTag ' . $data->playerTag . ' already exists!. Please choose another one.');
+        }
             $player->setPlayerTag($data->playerTag);
                 
         }
@@ -63,16 +67,17 @@ class PlayerService
     }
 
     // get all players ordered by score
-    public function getOrderedPlayers(): array
+    public function getOrderedPlayers($page,$limit): array
     {
-        return $this->playerRepository->findBy([], ['score' => 'DESC']);
+        $offset = ($page - 1) * $limit;
+        return $this->playerRepository->findBy([], ['score' => 'DESC'], $limit, $offset);
     }
 
-    //check unique playerTag
-    public function checkPlayerTag(string $playerTag){
-        $player = $this->getPlayerByPlayerTag($playerTag);
-        if($player){
-            throw new HttpException(400, 'PlayerTag ' . $playerTag . ' already exists!. Please choose another one.');
-        }
+   
+
+    public function addScore(Player $player,Spawn $spawn): void
+    {   $score=$spawn->getPokemon()->getBaseScore();
+        $player->setScore($player->getScore() + $score);
+        $this->playerRepository->save($player,true);
     }
 }
