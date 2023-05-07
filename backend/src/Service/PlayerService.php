@@ -44,8 +44,9 @@ class PlayerService
         $player = $this->getPlayerById($id);
         
         if ($data->playerTag) {
-        
-            $this->checkPlayerTag($data->playerTag);
+            if($this->getPlayerByPlayerTag($playerTag)){
+            throw new \InvalidArgumentException( 'PlayerTag ' . $playerTag . ' already exists!. Please choose another one.');
+        }
             $player->setPlayerTag($data->playerTag);
                 
         }
@@ -72,13 +73,7 @@ class PlayerService
         return $this->playerRepository->findBy([], ['score' => 'DESC'], $limit, $offset);
     }
 
-    //check unique playerTag
-    public function checkPlayerTag(string $playerTag){
-        $player = $this->getPlayerByPlayerTag($playerTag);
-        if($player){
-            throw new HttpException(400, 'PlayerTag ' . $playerTag . ' already exists!. Please choose another one.');
-        }
-    }
+   
 
     public function addScore(Player $player,Spawn $spawn): void
     {   $score=$spawn->getPokemon()->getBaseScore();

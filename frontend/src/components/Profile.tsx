@@ -21,6 +21,9 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
   const formData = useRef<FormData>(new FormData());
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files?.length) {
+      return;
+    }
     const selectedFile = event.target.files?.[0];
     setImagePreview(selectedFile ? URL.createObjectURL(selectedFile) : '_');
     formData.current.append('image', selectedFile);
