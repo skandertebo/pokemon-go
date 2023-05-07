@@ -45,25 +45,24 @@ function ProfilePage() {
         }
       });
       setLocalUser(res.data);
+      makeNotification({
+        message: res.data.message,
+        type: 'success',
+        duration: 4000
+      });
     } catch (e: AxiosError) {
       if (e.response) {
         // Error with response from the server
         console.error(e.response);
-        let errorMessage = 'Unknown error';
-        let errorDetailsMessages = 'Unknown errors';
-        if (e.response.data && e.response.data.error) {
-          if (e.response.data.error.message) {
-            errorMessage = e.response.data.error.message;
-          }
-          if (e.response.data.error.details) {
-            const errorDetails = e.response.data.error.details;
-            errorDetailsMessages = errorDetails
-              .map((detail) => detail.message)
-              .join('/ ');
-          }
-        }
+        let errorMessage = e.response.data?.error?.message || 'Unknown error';
+        let errorDetailsMessages = e.response.data?.error?.details
+          ?.map((detail: any) => detail.message)
+          .join('\n');
+
         makeNotification({
-          message: `Error updating information :${errorMessage} ${errorDetailsMessages}`,
+          message: `Error updating information:\n${errorMessage}\n${
+            errorDetailsMessages || ''
+          }`,
           type: 'error',
           duration: 4000
         });

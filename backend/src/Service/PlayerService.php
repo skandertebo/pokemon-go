@@ -44,8 +44,8 @@ class PlayerService
         $player = $this->getPlayerById($id);
         
         if ($data->playerTag) {
-            if($this->getPlayerByPlayerTag($playerTag)){
-            throw new \InvalidArgumentException( 'PlayerTag ' . $playerTag . ' already exists!. Please choose another one.');
+            if($this->getPlayerByPlayerTag($data->playerTag)){
+            throw new \InvalidArgumentException( 'PlayerTag ' . $data->playerTag . ' already exists!. Please choose another one.');
         }
             $player->setPlayerTag($data->playerTag);
                 

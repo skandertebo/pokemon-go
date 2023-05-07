@@ -124,7 +124,7 @@ class PlayerController extends AbstractController
         $player = $this->playerService->getPlayerById($id);
     
         return new JsonResponse([
-            "message" => "player updated successfuly",
+            "message" => "Your profile has been updated successfuly",
             "player" => $player
         ]);
     }
