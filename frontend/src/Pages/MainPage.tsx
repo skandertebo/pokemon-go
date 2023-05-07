@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import WebMap from '../components/Map';
 import CaptureButton from '../components/CaptureButton';
 import { useAppContext } from '../context/AppContext';
@@ -10,6 +10,7 @@ import useSpawns from '../hooks/useSpawns';
 import { spawnsContext } from '../context/SpawnsContext';
 import axios from 'axios';
 import { apiBaseUrl } from '../config';
+import { useNavigate } from 'react-router-dom';
 declare global {
   interface Window {
     initMap: () => void;
@@ -21,6 +22,14 @@ const MainPage: React.FC = () => {
   const { token, user } = useAuthContext() as UseLoginReturnType;
   const [spawns, nearbySpawn] = useSpawns(token);
   const { makeNotification } = useAppContext();
+  const navigate = useNavigate();
+  useEffect(
+    ()=>{
+    if (!token){
+    navigate('/login');
+  }
+},[])
+  
   const handleCapture = useCallback(async (spawn: Spawn) => {
     try {
       const res = await axios.post(

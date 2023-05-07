@@ -49,6 +49,7 @@ class UserService
 
                 $user->setPlayerTag($playerTag);
                 $user->setScore(0);
+                $user->setImage('defaultAvatar.png');
                 $user->setRoles(['ROLE_USER','IS_AUTHENTICATED_FULLY']);
                 break;
             default:

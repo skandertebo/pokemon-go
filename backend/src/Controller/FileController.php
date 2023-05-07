@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Exception;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -16,7 +17,8 @@ use function App\createErrorResponse;
 #[Route('public/', name: 'app_file')]
 class FileController extends AbstractController
 {
-    #[Route('image/{filename}', name: 'app_file')]
+    #[Route('image/{filename}', name: '_images')]
+    
     public function serveImage($filename): Response
     {
     $path = '../public/files/images/'.$filename;

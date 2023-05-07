@@ -115,7 +115,7 @@ class UserController extends AbstractController
      */
     public function getMe(Request $request)
     {
-      
+        dump("hekl");
         $id = $request->attributes->get('jwt_payload')['id'];
         $user = $this->userService->find($id);
         return new JsonResponse($user);

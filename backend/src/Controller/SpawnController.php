@@ -100,6 +100,7 @@ class SpawnController extends AbstractController
     }
     
     #[Route('/near', name: '_getNearbySpawns',methods:['GET'])]
+    #[Security("is_granted('ROLE_USER')")]
     public function getSpawns(HttpFoundationRequest $request):JsonResponse
     {
         $latitude=$request->query->get('latitude');

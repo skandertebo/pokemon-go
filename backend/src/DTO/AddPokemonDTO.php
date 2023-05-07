@@ -30,6 +30,7 @@ class AddPokemonDTO {
     #[Assert\NotNull]
     #[Assert\File(
         maxSize: '10m',
+        mimeTypes: ['application/json'],
         extensions: ['gltf','fbx','txt'],
         extensionsMessage: 'Please upload a valid 3D model: (verify size and extension)',
     )]
