@@ -2,18 +2,20 @@ import {
   ArrowLeftIcon,
   ArrowLeftOnRectangleIcon,
   LifebuoyIcon,
+  LightBulbIcon,
   UserIcon
 } from '@heroicons/react/24/solid';
 import { useIsShowingMenu } from '../Layouts/MainLayout';
 import { Typography } from '@mui/material';
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuthContext } from '../context/AuthContext';
 
 export default function MenuPage(): JSX.Element {
   const { isShowing, toggleIsShowing } = useIsShowingMenu()!;
   const iconClassName = 'h-8 w-8 cursor-pointer text-primary';
   const pageRef = useRef<HTMLDivElement>(null);
-
+  const { setToken } = useAuthContext()!;
   useEffect(() => {
     // remove animation class after the animation is done
     const timeout = setTimeout(() => {
@@ -35,6 +37,11 @@ export default function MenuPage(): JSX.Element {
       value: '/pokedex',
       label: 'Pokedex',
       icon: <LifebuoyIcon className={iconClassName} />
+    },
+    {
+      value: '/insights',
+      label: 'Insights',
+      icon: <LightBulbIcon className={iconClassName} />
     }
   ];
 
@@ -68,7 +75,14 @@ export default function MenuPage(): JSX.Element {
             </Link>
           </div>
         ))}
-        <div className='flex items-center w-full gap-6'>
+        <div
+          className='flex items-center w-full gap-6'
+          role='button'
+          onClick={() => {
+            toggleIsShowing();
+            setToken(null);
+          }}
+        >
           <ArrowLeftOnRectangleIcon className={iconClassName} />
           <Typography variant='h5' className='ml-2'>
             Logout

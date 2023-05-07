@@ -14,12 +14,15 @@ import { Spawn } from '../types/Spawn';
 import { Notification as BackendNotification } from '../types/Notification';
 import { useAppContext } from '../context/AppContext';
 import axios from 'axios';
+import PokemonProgress from '../components/PokemonProgress';
 
-type CustomMercureMessage<T extends 'notification' | 'update' | 'delete'> = {
+type CustomMercureMessage<
+  T extends 'notification' | 'spawnDelete' | 'spawn' | 'catch'
+> = {
   type: T;
   body: T extends 'notification'
     ? BackendNotification
-    : T extends 'update' | 'delete'
+    : T extends 'spawn' | 'catch' | 'spawnDelete'
     ? Spawn
     : never;
 };
@@ -29,11 +32,15 @@ const isShowingMenuContext = createContext<
 >(undefined);
 export const useIsShowingMenu = () => useContext(isShowingMenuContext);
 
+const spawnsContext = createContext<Spawn[] | undefined>(undefined);
+export const useSpawns = () => useContext(spawnsContext);
+
 const MainLayout: React.FC = () => {
   const outlet = useOutlet();
   const { token, user } = useAuthContext()!;
   const [isShowingMenu, setIsShowingMenu] = useState<boolean>(false);
   const { setBackendNotifications } = useAppContext();
+  const [spawns, setSpawns] = useState<Spawn[] | undefined>(undefined);
 
   const getNotifications = useCallback(
     async (
@@ -62,48 +69,75 @@ const MainLayout: React.FC = () => {
     []
   );
 
+  const getSpawns = useCallback(async (abort: AbortController) => {
+    const res = await axios.get(apiBaseUrl + `/spawn/near`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      signal: abort.signal
+    });
+    setSpawns(res.data);
+  }, []);
+
   useEffect(() => {
     const abort = new AbortController();
-
+    const spawnsAbort = new AbortController();
     let eventSource: EventSource;
-    getNotifications(abort).then((res) => {
-      const url = new URL('http://localhost:8080/.well-known/mercure');
-      url.searchParams.append(
-        'topic',
-        `https://mercure-updates/users/${user?.id}`
-      );
-      eventSource = new EventSource(url);
-      eventSource.onmessage = (e) => {
-        const data = JSON.parse(e.data);
-        if (data.type === 'notification') {
-          const mercureMessage = data as CustomMercureMessage<'notification'>;
-          mercureMessage.body.isRead = false;
-          setBackendNotifications((prev) => [...prev, mercureMessage.body]);
-        }
-      }; // do something with the payload
-    });
+    Promise.all([getNotifications(abort), getSpawns(spawnsAbort)]).then(
+      (res) => {
+        const url = new URL('http://localhost:8080/.well-known/mercure');
+        url.searchParams.append(
+          'topic',
+          `https://mercure-updates/users/${user?.id}`
+        );
+        url.searchParams.append('topic', `https://mercure-updates/spawn/`);
+        eventSource = new EventSource(url);
+        eventSource.onmessage = (e) => {
+          const data = JSON.parse(e.data);
+          if (data.type === 'notification') {
+            const mercureMessage = data as CustomMercureMessage<'notification'>;
+            mercureMessage.body.isRead = false;
+            setBackendNotifications((prev) => [...prev, mercureMessage.body]);
+          }
+          if (data.type === 'spawn') {
+            const mercureMessage = data as CustomMercureMessage<'spawn'>;
+            setSpawns((prev) => [...prev!, mercureMessage.body]);
+          } else if (data.type === 'capture' || data.type === 'deleteSpawn') {
+            const mercureMessage = data as CustomMercureMessage<
+              'catch' | 'spawnDelete'
+            >;
+            setSpawns((prev) =>
+              prev!.filter((el) => el.id !== mercureMessage.body.id)
+            );
+          }
+        }; // do something with the payload
+      }
+    );
 
     return () => {
-      eventSource?.close();
       abort.abort();
+      spawnsAbort.abort();
+      eventSource?.close();
     };
   }, []);
 
   if (!token) return <Navigate to='/login' />;
 
   return (
-    <isShowingMenuContext.Provider
-      value={{
-        isShowing: isShowingMenu,
-        toggleIsShowing: () => setIsShowingMenu((prev) => !prev)
-      }}
-    >
-      <div className='bg-white w-screen overflow-hidden'>
-        {isShowingMenu && <MenuPage />}
-        {outlet}
-        <BottomNav />
-      </div>
-    </isShowingMenuContext.Provider>
+    <spawnsContext.Provider value={spawns}>
+      <isShowingMenuContext.Provider
+        value={{
+          isShowing: isShowingMenu,
+          toggleIsShowing: () => setIsShowingMenu((prev) => !prev)
+        }}
+      >
+        <div className='bg-white w-screen overflow-hidden'>
+          {isShowingMenu && <MenuPage />}
+          {outlet}
+          <BottomNav />
+        </div>
+      </isShowingMenuContext.Provider>
+    </spawnsContext.Provider>
   );
 };
 

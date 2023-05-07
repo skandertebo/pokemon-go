@@ -7,6 +7,7 @@ use App\Entity\UserNotification;
 use App\Repository\NotificationRepository;
 use App\Repository\UserNotificationRepository;
 use App\Repository\UserRepository;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Mercure\HubInterface;
@@ -17,7 +18,8 @@ class NotificationService {
         private UserNotificationRepository $userNotificationRepository,
         private EntityManagerInterface $entityManager,
         private UserRepository $userRepository,
-        private HubInterface $hub
+        private HubInterface $hub,
+        private LoggerInterface $logger
     ){}
 
     public function publishNotification(User $user, Notification $notification)
@@ -28,10 +30,13 @@ class NotificationService {
             'body' => [
                 'id' => $notification->getId(),
                 'contenu' => $notification->getContenu(),
-                'date' => $notification->getDate(),
+                'date' => $notification->getDate()->getTimestamp(),
                 'user' => $user->getId()
             ]]
         ));
+
+        $this->logger->info('Publishing notification to https://mercure-updates/users/'.strval($user->getId()));
+
 
         $this->hub->publish($update);
     }
@@ -42,14 +47,14 @@ class NotificationService {
         $this->notificationRepository->save($notification, true);
         return $notification;
     }
-    public function addNotificationToUser($userid, Notification $notification): UserNotification
+    public function addNotificationToUser($user, Notification $notification): UserNotification
     {
         $userNotification = new UserNotification();
-        $user = $this->userRepository->findOneBy(['id' => $userid]);
         $userNotification->setUser($user);
         $userNotification->setNotification($notification);
         $this->userNotificationRepository->save($userNotification, true);
-        $this->publishNotification($userid, $notification);
+        $this->logger->info('Adding notification to user '.$user->getId());
+        $this->publishNotification($user, $notification);
         return $userNotification;
     }
 

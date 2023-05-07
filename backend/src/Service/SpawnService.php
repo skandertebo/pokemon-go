@@ -2,16 +2,56 @@
 namespace App\Service;
 
 use App\DTO\AddSpawnDTO;
+use App\Entity\Notification;
 use App\Entity\Spawn;
 use App\Repository\PlayerRepository;
 use App\Repository\PokemonRepository;
 use App\Repository\SpawnRepository;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Mercure\HubInterface;
+use Symfony\Component\Mercure\Update;
 
 class SpawnService
 {
-    public function __construct(private SpawnRepository $spawnRepository, private PokemonRepository $pokemonRepository, private PlayerRepository $playerRepository)
+    public function __construct(private SpawnRepository $spawnRepository, private PokemonRepository $pokemonRepository, private PlayerRepository $playerRepository, private NotificationService $notificationService, private HubInterface $hub)
     {
+    }
+
+    public function publishSpawnUpdate(String $type, Spawn $spawn)
+    {
+        $update = new Update(
+            'https://mercure-updates/spawn/',
+            json_encode(['type' => $type,
+            'body' => [
+                'id' => $spawn->getId(),
+                'latitude' => $spawn->getLatitude(),
+                'longitude' => $spawn->getlongitude(),
+                'owner' => $spawn->getOwner(),
+                'pokemon' => $spawn->getPokemon(),
+                'captureDate' => $spawn->getCaptureDate(),
+            ]]
+        ));
+        $notification = new Notification();
+        if($type === 'spawn'){
+            $notification->setContenu("A new spawn has been added!");
+            $notification = $this->notificationService->createNotification($notification);
+            $this->notificationService->addNotificationToAllUsers($notification);
+        }else if($type === 'capture'){
+            $notification->setContenu("A spawn has been caught!");
+            $notification = $this->notificationService->createNotification($notification);
+            $concernedUsers = $this->playerRepository->createQueryBuilder('p')
+                ->select('p')
+                ->where('p.id != :id')
+                ->setParameter('id', $spawn->getOwner()->getId())
+                ->getQuery()
+                ->getResult();
+            $this->notificationService->addNotificationToUsers($concernedUsers, $notification);
+        }else if($type === 'spawnDelete'){
+            $notification->setContenu("A spawn has been deleted");
+            $notification = $this->notificationService->createNotification($notification);
+            $this->notificationService->addNotificationToAllUsers($notification);
+        }
+        $this->hub->publish($update);
     }
 
     function addSpawn(AddSpawnDTO $data)
@@ -27,7 +67,9 @@ class SpawnService
         $spawn->setLongitude($data->longitude);
         $spawn->setRadius($data->radius);
         $spawn->setPokemon($pokemon);
-        return $this->spawnRepository->save($spawn,true);
+        $result = $this->spawnRepository->save($spawn,true);
+        $this->publishSpawnUpdate('spawn', $result);
+        return $result;
     }
 
     function catchSpawn($playerId,$spawnId)
@@ -48,7 +90,9 @@ class SpawnService
         }
         $spawn->setOwner($player);
         $spawn->setCaptureDate(new \DateTime());
-        return $this->spawnRepository->save($spawn,true);
+        $result = $this->spawnRepository->save($spawn,true);
+        $this->publishSpawnUpdate('capture', $result);
+        return $result;
     }
     function getCaptureHistory($playerId)
     {

@@ -1,6 +1,6 @@
 export type Notification = {
   id: number;
   contenu: string;
-  date: Date;
+  date: number; // timestamp
   isRead?: boolean;
 };
