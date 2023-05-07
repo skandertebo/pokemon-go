@@ -4,9 +4,11 @@ import { AiFillEdit } from 'react-icons/ai';
 import User from '../types/User';
 import { apiBaseUrl } from '../config';
 
+type EditedFieldsType = Map<keyof User | 'password', any>;
+
 interface ProfileProps {
   user: User;
-  updateUser: (formData: FormData) => void;
+  updateUser: (editedFields: EditedFieldsType) => Promise<unknown>;
 }
 
 const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
@@ -18,7 +20,8 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
   );
   const [password, setPassword] = useState<string>('');
   const [modify, setModify] = useState<boolean>(false);
-  const formData = useRef<FormData>(new FormData());
+
+  const [editedFields, setEditedFields] = useState<EditedFieldsType>(new Map());
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files?.length) {
@@ -26,7 +29,27 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
     }
     const selectedFile = event.target.files?.[0];
     setImagePreview(selectedFile ? URL.createObjectURL(selectedFile) : '_');
-    formData.current.append('image', selectedFile);
+    setEditedFields((prev) => {
+      const newFields = new Map(prev);
+      newFields.set('image', selectedFile);
+      return newFields;
+    });
+  };
+
+  const handleImageReset = () => {
+    setImagePreview(`${apiBaseUrl}/public/image/${user.image}`);
+    setEditedFields((prev) => {
+      const newFields = new Map(prev);
+      newFields.delete('image');
+      return newFields;
+    });
+    if (imageInput.current) {
+      imageInput.current.value = '';
+    }
+  };
+
+  const handleImageRemoval = () => {
+    // todo
   };
 
   function lockForm() {
@@ -35,7 +58,9 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
 
   const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    updateUser(formData.current);
+    updateUser(editedFields).then(() => {
+      setEditedFields(new Map());
+    });
   };
 
   return (
@@ -97,7 +122,19 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                   value={playerTag}
                   onChange={(e) => {
                     setPlayerTag(e.target.value);
-                    formData.current.append('playerTag', e.target.value);
+                    if (e.target.value !== user.playerTag) {
+                      setEditedFields((prev) => {
+                        const newFields = new Map(prev);
+                        newFields.set('playerTag', e.target.value);
+                        return newFields;
+                      });
+                    } else {
+                      setEditedFields((prev) => {
+                        const newFields = new Map(prev);
+                        newFields.delete('playerTag');
+                        return newFields;
+                      });
+                    }
                   }}
                   disabled={!modify}
                 />
@@ -111,7 +148,19 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
-                    formData.current.append('email', e.target.value);
+                    if (e.target.value !== user.email) {
+                      setEditedFields((prev) => {
+                        const newFields = new Map(prev);
+                        newFields.set('email', e.target.value);
+                        return newFields;
+                      });
+                    } else {
+                      setEditedFields((prev) => {
+                        const newFields = new Map(prev);
+                        newFields.delete('email');
+                        return newFields;
+                      });
+                    }
                   }}
                   disabled={!modify}
                 />
@@ -127,7 +176,19 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                   value={password}
                   onChange={(e) => {
                     setPassword(e.target.value);
-                    formData.current.append('password', e.target.value);
+                    if (e.target.value !== '') {
+                      setEditedFields((prev) => {
+                        const newFields = new Map(prev);
+                        newFields.set('password', e.target.value);
+                        return newFields;
+                      });
+                    } else {
+                      setEditedFields((prev) => {
+                        const newFields = new Map(prev);
+                        newFields.delete('password');
+                        return newFields;
+                      });
+                    }
                   }}
                   disabled={!modify}
                 />
@@ -135,11 +196,11 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
             </div>
             <div className='mb-4'>
               <Button
-                className=' save mt-2 w-1/2 mx-auto bg-primary disabled:hidden focus:opacity-50 '
+                className=' save mt-2 w-1/2 mx-auto bg-primary focus:opacity-50 '
                 fullWidth
                 type='submit'
                 // onClick={lockForm}
-                disabled={!modify}
+                disabled={!modify || editedFields.size === 0}
               >
                 Save Profile
               </Button>

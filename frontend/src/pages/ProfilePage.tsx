@@ -36,7 +36,11 @@ function ProfilePage() {
     getUser();
   }, []);
 
-  async function updateUser(formData: FormData) {
+  async function updateUser(editedFields: Map<keyof User | 'password', any>) {
+    const formData = new FormData();
+    for (const [key, value] of editedFields.entries()) {
+      formData.append(key, value);
+    }
     try {
       const res = await axios.post(apiBaseUrl + `/player`, formData, {
         headers: {
@@ -50,7 +54,8 @@ function ProfilePage() {
         type: 'success',
         duration: 4000
       });
-    } catch (e: AxiosError) {
+    } catch (e: unknown) {
+      if (!(e instanceof AxiosError)) throw e;
       if (e.response) {
         // Error with response from the server
         console.error(e.response);
