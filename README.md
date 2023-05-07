@@ -13,11 +13,17 @@ it also aims to have many features such as Progressive enhancement and installab
 #### Skander Tebourbi
 #### Yasmine Kharrat
 
+## Note:
+in order to get the full features of this project, you must have docker installed.
+
 ## Setup:
 head over to the frontend directory and in the src folder insert the env.ts file which contains the google maps api key.  
 run npm install.  
 run npm run dev while being in the frontend directory.  
 head over to the backend directory and insert the proper env file that creates the connection to the mysql database ( note you must have composer and symfony installed ).  
 run composer install and create a database and a database migration, do the migration then.  
-while being in the backend directory run npm run dev.  
+while being in the backend directory run these three commands:
+symfony server:ca:install
+docker-composer up
+symfony server:start
 All set, you should have a working version of this application.  
