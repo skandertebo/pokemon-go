@@ -59,7 +59,7 @@ export default function StatPage() {
         <h1 className='text-3xl text-white font-semibold font-sans text-center w-full pt-8 '>
           Statistics
         </h1>
-        {score && <ScoreComponent score={score} />}
+        <ScoreComponent score={score} />
         <div className='bg-secondary rounded-xl w-full md:w-1/2 mx-auto'>
           <h1 className='text-2xl text-primary text-center w-full py-6 '>
             Capture History
@@ -91,7 +91,11 @@ export default function StatPage() {
               {right}
             </h1>
           </div>
-          {spawns &&
+          {spawns.length === 0 ? (
+            <h1 className='text-xl text-primary text-center w-full py-6'>
+              No Pokemons Captured Yet
+            </h1>
+          ) : (
             spawns.map((spawn: any, index: number) => (
               <SpawnHistory
                 capture={{
@@ -100,7 +104,8 @@ export default function StatPage() {
                 }}
                 key={index}
               />
-            ))}
+            ))
+          )}
         </div>
       </div>
     );

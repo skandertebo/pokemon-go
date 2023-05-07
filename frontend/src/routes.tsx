@@ -2,7 +2,6 @@ import { createBrowserRouter } from 'react-router-dom';
 import React from 'react';
 import MainLayout from './Layouts/MainLayout';
 import ProfilePage from './pages/ProfilePage';
-import CapturePage from './pages/CapturePage';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Leaderboard from './pages/Leaderboard';
@@ -11,6 +10,7 @@ import DashboardPage from './pages/DashboardPage';
 import PokemonPage from './pages/PokemonPage';
 import StatPage from './pages/StatPage';
 import ErrorPage from './pages/ErrorPage';
+import PokedexPage from './pages/PokedexPage';
 
 const routes = createBrowserRouter([
   {
@@ -27,7 +27,7 @@ const routes = createBrowserRouter([
       },
       {
         path: '/pokedex',
-        element: <CapturePage /> // should be renamed to PokedexPage!
+        element: <PokedexPage />
       },
       {
         path: '/leaderboard',

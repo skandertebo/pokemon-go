@@ -7,15 +7,15 @@ import { apiBaseUrl } from '../config';
 import { useAppContext } from '../context/AppContext';
 import { useAuthContext } from '../context/AuthContext';
 import { UseLoginReturnType } from '../types';
+import PokemonProgress from '../components/PokemonProgress';
 
-export default function CapturePage() {
+export default function PokedexPage() {
   const [pokemons, setPokemons] = useState([]);
   const { token, user } = useAuthContext() as UseLoginReturnType;
   const { makeNotification } = useAppContext();
   const { enableWaiting, disableWaiting } = useAppContext();
   useEffect(() => {
     async function fetchData() {
-      enableWaiting();
       try {
         const res = await axios.get(apiBaseUrl + '/pokemon', {
           headers: {
@@ -30,13 +30,13 @@ export default function CapturePage() {
           type: 'error',
           duration: 4000
         });
-      } finally {
-        disableWaiting();
       }
     }
     fetchData();
   }, []);
-
+  if (pokemons.length === 0) {
+    return <PokemonProgress />;
+  }else{
   return (
     <>
       <div className='bg-secondary pt-4 w-screen min-h-screen overflow-y-auto overflow-x-hidden pb-32'>
@@ -51,4 +51,4 @@ export default function CapturePage() {
       </div>
     </>
   );
-}
+}}

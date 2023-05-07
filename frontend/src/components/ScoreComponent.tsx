@@ -6,7 +6,10 @@ import {RiCopperCoinLine} from 'react-icons/ri';
 
 
 
-export default function ScoreComponent({score}: {score: number}) {
+export default function ScoreComponent({score}: {score: number | undefined}) {
+    if(score === undefined) {
+        score = 0;
+    }
     const [score1,setScore1] = useState('');
     const [rotate1,setRotate1] = useState('');
     const [rotate2,setRotate2] = useState('');
