@@ -5,11 +5,10 @@ import { FaCrown } from 'react-icons/fa';
 import { useAppContext } from '../context/AppContext';
 import useLeaderboard from '../hooks/useLeaderboard';
 import { useAuthContext } from '../context/AuthContext';
+import { apiBaseUrl } from '../config';
 
-
-
-function Leaderboard () {
-  const {token} = useAuthContext()!;
+function Leaderboard() {
+  const { token } = useAuthContext()!;
   const players = useLeaderboard(token);
 
   if (!players) {
@@ -25,7 +24,7 @@ function Leaderboard () {
         <div className='flex flex-row content-center items-end  text-first'>
           <div className='relative overflow-visible flex h-40 w-24 flex-col items-center rounded-tl-2xl rounded-bl-2xl bg-primary md:w-32'>
             <img
-              src='https://127.0.0.1:8000/api/file/forWeb_6454ffcb54324.jpg'
+              src={apiBaseUrl + '/public/image/' + players[1].image}
               className=' relative bottom-7 h-16 w-16 rounded-full border-4 border-[#C0C0C0] bg-white '
             />
             <p className='break-all  pl-1 pr-1  relative bottom-3 text-[#C0C0C0] font-black'>
@@ -39,7 +38,7 @@ function Leaderboard () {
               fill='#FFD700'
             />
             <img
-              src={players[0].image}
+              src={apiBaseUrl + '/public/image/' + players[0].image}
               className='relative bottom-20 h-20 w-20 rounded-full bg-black border-4 border-[#FFD700] '
             ></img>
             <p className=' break-all  pl-1 pr-1 relative bottom-16 font-black text-lg text-[#FFD700] '>
@@ -49,7 +48,7 @@ function Leaderboard () {
           </div>
           <div className='overflow-visible flex h-32 w-24 flex-col items-center rounded-tr-2xl rounded-br-2xl  bg-primary md:w-32 '>
             <img
-              src={players[2].image}
+              src={apiBaseUrl + '/public/image/' + players[2].image}
               className='relative bottom-7 h-16 w-16 rounded-full bg-white border-4 border-[#CD7F32]'
             ></img>
             <p className=' break-all  pl-1 pr-1  relative bottom-5 font-black text-sm text-[#CD7F32]'>
@@ -71,6 +70,5 @@ function Leaderboard () {
     </div>
   );
 }
-
 
 export default Leaderboard;

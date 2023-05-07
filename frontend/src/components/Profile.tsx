@@ -3,6 +3,7 @@ import avatar from '../assets/avatar-girl2.png';
 import { Card, Button, Typography } from '@material-tailwind/react';
 import { AiFillEdit } from 'react-icons/ai';
 import User from '../types/User';
+import { apiBaseUrl } from '../config';
 
 interface ProfileProps {
   user: User;
@@ -63,7 +64,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
           >
             <div>
               <img
-                src={imagePreview}
+                src={apiBaseUrl + '/public/image/' + user.image}
                 alt='image avatar'
                 className='mx-auto mb-4 w-[200px] h-[200px] rounded-full border-8 border-third p-3 justify-self-center flex '
               />

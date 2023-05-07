@@ -13,6 +13,7 @@ use App\Entity\Pokemon;
 use App\DTO\AddPokemonDTO;
 use App\DTO\UpdatePokemonDTO;
 use App\UtilityClasses\FormData;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -29,6 +30,7 @@ class PokemonController extends AbstractController
     }
     
     #[Route('', name: 'app_pokemon_list' , methods: ['GET'])]
+    #[Security("is_granted('ROLE_USER')")]
     public function getPokemonList(): JsonResponse
     {
         return new JsonResponse([
@@ -37,6 +39,7 @@ class PokemonController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_pokemon_id' , methods: ['GET'])]
+    #[Security("is_granted('ROLE_USER')")]
     public function getPokemonById(int $id): JsonResponse
     {
         try {
@@ -48,6 +51,7 @@ class PokemonController extends AbstractController
     }
 
     #[Route('', name: 'app_pokemon_create' , methods: ['POST'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function createPokemon(Request $request)
     {
         $data= [
@@ -72,6 +76,7 @@ class PokemonController extends AbstractController
 
 //This is a post request due to a bug in php for parsing form-data of patch requests
     #[Route('/{id}', name: 'app_pokemon_update' , methods: ['POST'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function updatePokemon(Request $request,$id ): JsonResponse
     {
         $fd = new FormData($request->getContent());
@@ -100,6 +105,7 @@ class PokemonController extends AbstractController
     }
    
     #[Route('/{id}', name: 'app_pokemon_delete' , methods: ['DELETE'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function deletePokemon(int $id): JsonResponse
     {
         try{

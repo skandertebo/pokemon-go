@@ -6,6 +6,7 @@ use App\Entity\Spawn;
 use App\Repository\PlayerRepository;
 use App\Repository\PokemonRepository;
 use App\Repository\SpawnRepository;
+use DateTime;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class SpawnService
@@ -14,6 +15,18 @@ class SpawnService
     {
     }
 
+
+
+    function addSpawnComm()
+    {
+        $pokemon=$this->pokemonRepository->find(14);
+        $spawn=new Spawn();
+        $spawn->setLatitude(36.860418);
+        $spawn->setLongitude(10.113047);
+        $spawn->setRadius(10000);
+        $spawn->setPokemon($pokemon);
+        $this->spawnRepository->save($spawn,true);
+    }
     function addSpawn(AddSpawnDTO $data)
     {
 
@@ -50,16 +63,31 @@ class SpawnService
         $spawn->setCaptureDate(new \DateTime());
         return $this->spawnRepository->save($spawn,true);
     }
-    function getCaptureHistory($playerId)
+
+
+
+    function getCaptureHistory($playerId,$dateParam)
     {
-        
-        $player=$this->playerRepository->find($playerId);
-        if($player==null)
+        if($dateParam!='all')
         {
-            throw new HttpException(404,"Player of id {$playerId} not found");
+            try
+            {
+                $newDate = new DateTime();
+                $newDate->modify('-1 ' . $dateParam);
+                return $this->spawnRepository->findCapturedSinceDateByPlayer($playerId,$newDate);
+           }
+            catch(\Exception $e)
+            {
+                throw new HttpException(400,"Invalid date parameter");
+            }    
         }
-        return $this->spawnRepository->findBy(['owner'=>$player]);
+        //automatically generated method findByOwner
+        return $this->spawnRepository->findByOwner($playerId);
     }
+
+
+
+
     function getNearbySpawns($latitude,$longitude)
     {
         $spawns=$this->spawnRepository->findBy(['owner'=>null]);

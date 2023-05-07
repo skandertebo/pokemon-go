@@ -17,7 +17,6 @@ class JwtRequestSubscriber implements EventSubscriberInterface
     public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
-
         // Check if the Authorization header exists and starts with 'Bearer '
         $authorizationHeader = $request->headers->get('Authorization');
         if ($authorizationHeader && preg_match('/Bearer\s+(.*)$/i', $authorizationHeader, $matches)) {

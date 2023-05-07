@@ -90,7 +90,8 @@ class SpawnController extends AbstractController
         try
         {
             $id = $request->attributes->get('jwt_payload')['id'];
-            $newPokemon=$this->spawnService->getCaptureHistory($id);
+            $dateParam=$request->query->get('date','all');
+            $newPokemon=$this->spawnService->getCaptureHistory($id,$dateParam);
         }
         catch(HttpException $e)
         {
@@ -100,6 +101,7 @@ class SpawnController extends AbstractController
     }
     
     #[Route('/near', name: '_getNearbySpawns',methods:['GET'])]
+    #[Security("is_granted('ROLE_USER')")]
     public function getSpawns(HttpFoundationRequest $request):JsonResponse
     {
         $latitude=$request->query->get('latitude');
@@ -124,6 +126,7 @@ class SpawnController extends AbstractController
     }
 
     #[Route('/updates', name: '_getUpdates', methods: ['GET'])]
+    #[Security("is_granted('ROLE_USER')")]
     public function getUpdates(HttpFoundationRequest $request): JsonResponse
     {
         $dateTimeString = $request->query->get('datetime');
