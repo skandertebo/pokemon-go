@@ -13,6 +13,8 @@ import {
 } from '@heroicons/react/24/solid';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useIsShowingMenu } from '../Layouts/MainLayout';
+import { useAppContext } from '../context/AppContext';
+import NotificationIcon from './NotificationIcon';
 
 const BottomNav: React.FC = () => {
   const route = useLocation().pathname;
@@ -21,7 +23,7 @@ const BottomNav: React.FC = () => {
   const iconClassName = 'h-6 w-6 text-white';
   const { palette } = useTheme();
   const { isShowing, toggleIsShowing } = useIsShowingMenu()!;
-
+  const { backendNotifications } = useAppContext();
   const bottomNavigationRoutes = [
     { value: '/', label: 'Home', icon: <HomeIcon className={iconClassName} /> },
     {
@@ -33,6 +35,18 @@ const BottomNav: React.FC = () => {
       value: '/leaderboard',
       label: 'Leaderboard',
       icon: <TrophyIcon className={iconClassName} />
+    },
+    {
+      value: '/notifications',
+      label: 'Notifications',
+      icon: (
+        <NotificationIcon
+          notificationCount={
+            backendNotifications.filter((e) => e.isRead === false).length
+          }
+          className={iconClassName}
+        />
+      )
     }
   ];
 

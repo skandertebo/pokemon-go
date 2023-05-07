@@ -7,16 +7,34 @@ use App\Entity\UserNotification;
 use App\Repository\NotificationRepository;
 use App\Repository\UserNotificationRepository;
 use App\Repository\UserRepository;
-use App\UtilityClasses\Observable;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Mercure\HubInterface;
+use Symfony\Component\Mercure\Update;
 class NotificationService {
     public function __construct(
         private NotificationRepository $notificationRepository,
         private UserNotificationRepository $userNotificationRepository,
         private EntityManagerInterface $entityManager,
         private UserRepository $userRepository,
+        private HubInterface $hub
     ){}
+
+    public function publishNotification(User $user, Notification $notification)
+    {
+        $update = new Update(
+            'https://mercure-updates/users/'.strval($user->getId()),
+            json_encode(['type' => 'notification',
+            'body' => [
+                'id' => $notification->getId(),
+                'contenu' => $notification->getContenu(),
+                'date' => $notification->getDate(),
+                'user' => $user->getId()
+            ]]
+        ));
+
+        $this->hub->publish($update);
+    }
 
     public function createNotification(Notification $notification): Notification
     {
@@ -24,12 +42,14 @@ class NotificationService {
         $this->notificationRepository->save($notification, true);
         return $notification;
     }
-    public function addNotificationToUser(User $user, Notification $notification): UserNotification
+    public function addNotificationToUser($userid, Notification $notification): UserNotification
     {
         $userNotification = new UserNotification();
+        $user = $this->userRepository->findOneBy(['id' => $userid]);
         $userNotification->setUser($user);
         $userNotification->setNotification($notification);
         $this->userNotificationRepository->save($userNotification, true);
+        $this->publishNotification($userid, $notification);
         return $userNotification;
     }
 
@@ -91,9 +111,12 @@ class NotificationService {
         return $notification;
     }
 
-    public function getNotificationsByUser(User $user): array
+    public function getNotificationsByUser(User $user, $page=null, $limit=null): array
     {
-        return $this->userNotificationRepository->findBy(['user' => $user]);
+        if(is_null($page) || is_null($limit)){
+            return $this->userNotificationRepository->findBy(['user' => $user]);
+        }
+        return $this->userNotificationRepository->findBy(['user' => $user], null, $limit, ($page-1)*$limit);
     }
 
     public function getUnreadNotificationsByUser(User $user): array

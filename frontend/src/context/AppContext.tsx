@@ -1,5 +1,6 @@
 import { createPortal } from 'react-dom';
 import { Notification as NotificationType } from '../types';
+import { Notification as BackendNotification } from '../types/Notification';
 import React, {
   createContext,
   useCallback,
@@ -10,11 +11,18 @@ import React, {
 import { Alert } from '@material-tailwind/react';
 import { Backdrop, CircularProgress } from '@mui/material';
 import PokemonProgress from '../components/PokemonProgress';
+import useLastNotificationCheck from '../hooks/useLastNotificationCheck';
+import { apiBaseUrl } from '../config';
+import { useAuthContext } from './AuthContext';
 type AppContextType = {
   makeNotification: (props: NotificationType) => void;
   enableWaiting: () => void;
   disableWaiting: () => void;
   geoLocationPosition: GeolocationPosition | undefined | null;
+  backendNotifications: BackendNotification[];
+  setBackendNotifications: React.Dispatch<
+    React.SetStateAction<BackendNotification[]>
+  >;
 };
 
 export const AppContext = createContext<AppContextType>({} as AppContextType);
@@ -48,6 +56,10 @@ export const AppContextProvider: React.FC<React.PropsWithChildren> = ({
     [setNotification]
   );
 
+  const [backendNotifications, setBackendNotifications] = useState<
+    BackendNotification[]
+  >([]);
+
   useEffect(() => {
     if ('geolocation' in navigator) {
       navigator.geolocation.watchPosition(
@@ -72,7 +84,9 @@ export const AppContextProvider: React.FC<React.PropsWithChildren> = ({
         makeNotification,
         enableWaiting,
         disableWaiting,
-        geoLocationPosition
+        geoLocationPosition,
+        backendNotifications: backendNotifications,
+        setBackendNotifications
       }}
     >
       {notification &&
