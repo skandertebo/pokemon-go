@@ -3,12 +3,18 @@ import { RiCopperCoinLine } from 'react-icons/ri';
 import { MdCatchingPokemon } from 'react-icons/md';
 import CaptureBody from '../types/CaptureBody';
 import { apiBaseUrl } from '../config';
+import defaultPokemonImage from '../assets/images/eevee.png';
+import shoudDisplayDefaultImage from '../utils/shouldDisplayDefaultImage';
 
 export default function SpawnHistory({ capture }: { capture: CaptureBody }) {
   return (
     <div className='w-[calc(100%-25px)] sm:w-fit h-fit px-2 py-1 relative border-b-[1px] border-primary mx-auto  '>
       <img
-        src={apiBaseUrl + '/public/image/' + capture.pokemon.image}
+        src={
+          shoudDisplayDefaultImage(capture.pokemon.image)
+            ? defaultPokemonImage
+            : apiBaseUrl + '/public/image/' + capture.pokemon.image
+        }
         alt='pokemon'
         className='w-1/3 h-auto sm:w-36 inline-block'
       />

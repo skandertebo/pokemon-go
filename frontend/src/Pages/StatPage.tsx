@@ -8,7 +8,6 @@ import { useAppContext } from '../context/AppContext';
 import { useAuthContext } from '../context/AuthContext';
 import { UseLoginReturnType } from '../types';
 import PokemonProgress from '../components/PokemonProgress';
-import CaptureBody from '../types/CaptureBody';
 import { Spawn } from '../types/Spawn';
 
 export default function StatPage() {
@@ -16,8 +15,9 @@ export default function StatPage() {
   const [right, setRight] = useState('month');
   const [middle, setMiddle] = useState('week');
   const { token, user } = useAuthContext() as UseLoginReturnType;
-  const { makeNotification } = useAppContext();
-  const [spawns, setSpawns] = useState(null); //this is the data you need to fetch from the backend
+  const { makeNotification, enableWaiting, disableWaiting } = useAppContext();
+
+  const [spawns, setSpawns] = useState<Spawn[] | null>(null); //this is the data you need to fetch from the backend
   let score = user?.score;
   async function fetchData(pagination: string) {
     try {
@@ -33,7 +33,6 @@ export default function StatPage() {
         }
       );
       setSpawns(res.data); //set the data you fetched from the backend here
-      console.log(spawns);
     } catch (e) {
       console.error(e);
       makeNotification({
@@ -44,8 +43,10 @@ export default function StatPage() {
     }
   }
   async function changePagination(pag: string) {
-    setSpawns(null);
-    fetchData(pag);
+    enableWaiting();
+    fetchData(pag).finally(() => {
+      disableWaiting();
+    });
   }
   useEffect(() => {
     fetchData('week');
