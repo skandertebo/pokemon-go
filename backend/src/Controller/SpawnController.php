@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\DTO\AddSpawnDTO;
+use App\DTO\LocationDTO;
 use App\Entity\CatchSpawnDTO;
 use App\Entity\Spawn;
 use App\Service\SpawnService;
@@ -31,6 +32,27 @@ class SpawnController extends AbstractController
     
     public function __construct(private SpawnService $spawnService, private ValidatorInterface $validator)
     {
+    }
+
+
+
+
+    #[Route('/auto', name: 'autoSpawn',methods:['POST'])]
+            /**
+     * @Security("is_granted('ROLE_USER')")
+     */
+    public function autoSpawn(HttpFoundationRequest $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $dto=new LocationDTO($data);
+        $errors=$this->validator->validate($dto,null);
+        if(count($errors)>0)
+        {
+            return createValidationErrorResponse($errors);
+        }
+        $newPokemon=$this->spawnService->autoSpawn($dto->latitude,$dto->longitude);
+        return new JsonResponse() ;
+        
     }
 
     #[Route('', name: 'addSpawn',methods:['POST'])]
