@@ -2,13 +2,11 @@ import React, { useRef, useState } from 'react';
 import { Button } from '@material-tailwind/react';
 import { registerUser } from '../apiCalls/register';
 import { useAuthContext } from '../context/AuthContext';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { RegisterBody } from '../types/RegisterBody';
 
 function RegisterComp() {
-  const { setToken } = useAuthContext() as {
-    setToken: React.Dispatch<React.SetStateAction<string>>;
-  };
+  const { setToken, token } = useAuthContext()!;
 
   const [error, setError] = useState();
 
@@ -38,12 +36,16 @@ function RegisterComp() {
         throw new Error(userData.error.message);
       }
       setToken(userData.token);
-      navigate('/');
+      window.location.reload();
     } catch (error) {
       //@ts-ignore
       setError(error.message);
     }
   };
+
+  if (token) {
+    return <Navigate to={'/'} />;
+  }
 
   return (
     <form
@@ -94,15 +96,15 @@ function RegisterComp() {
         </Button>
       </div>
       <h2 className='text-primary text-base'>
-          Already have an account?
-          <Link
-            className='text-base font-bold text-primary italic hover:not-italic md:text-secondary lg:text-primary'
-            to='/login'
-          >
-            {' '}
-            Login
-          </Link>
-        </h2>
+        Already have an account?
+        <Link
+          className='text-base font-bold text-primary italic hover:not-italic md:text-secondary lg:text-primary'
+          to='/login'
+        >
+          {' '}
+          Login
+        </Link>
+      </h2>
       {error && (
         <div
           className='p-2 rounded-md mt-4 bg-red-500 text-white text-center mx-auto'

@@ -6,12 +6,11 @@ import CaptureCam from '../components/CaptureCam';
 import { Spawn } from '../types/Spawn';
 import { useAuthContext } from '../context/AuthContext';
 import { UseLoginReturnType } from '../types';
-import useSpawns from '../hooks/useSpawns';
+import { useSpawns } from '../Layouts/MainLayout';
 import { spawnsContext } from '../context/SpawnsContext';
 import axios from 'axios';
 import { apiBaseUrl } from '../config';
-import { Navigate, useNavigate } from 'react-router-dom';
-import User from '../types/User';
+import useNearbySpawn from '../hooks/useNearbySpawn';
 declare global {
   interface Window {
     initMap: () => void;
@@ -20,10 +19,12 @@ declare global {
 
 const MainPage: React.FC = () => {
   const [isCapturing, setIsCapturing] = useState<Spawn | null>(null);
-  const { token ,user} = useAuthContext() as UseLoginReturnType;
-  const [spawns, nearbySpawn] = useSpawns(token);
+  const { token, user } = useAuthContext() as UseLoginReturnType;
+  //const [spawns, nearbySpawn] = useSpawns(token);
+  const spawns = useSpawns();
+  const nearbySpawn = useNearbySpawn(spawns);
   const { makeNotification } = useAppContext();
-  
+
   const handleCapture = useCallback(async (spawn: Spawn) => {
     try {
       const res = await axios.post(
@@ -37,12 +38,12 @@ const MainPage: React.FC = () => {
             Authorization: `Bearer ${token}`
           }
         }
-        );
-        makeNotification({
-          message: 'Pokemon Captured!',
-          type: 'success',
-          duration: 4000
-        });
+      );
+      makeNotification({
+        message: 'Pokemon Captured!',
+        type: 'success',
+        duration: 4000
+      });
     } catch (e) {
       console.error(e);
       makeNotification({
@@ -55,25 +56,23 @@ const MainPage: React.FC = () => {
     }
   }, []);
   return (
-    <spawnsContext.Provider value={spawns}>
-       <div className='w-screen h-screen sm:w-full flex flex-col gap-5 items-center'>
-      <div className='relative h-full w-full shadow-md rounded-md  mb-[60px]'>
+    <div className='w-screen  h-screen sm:w-full flex flex-col gap-8 items-center'>
+      <div className='relative h-full w-full shadow-md rounde-md'>
         <WebMap />
       </div>
-        {isCapturing && (
-          <CaptureCam
-            spawn={isCapturing}
-            captureAction={(spawn: Spawn) => handleCapture(spawn)}
-          />
-        )}
-        <div className='absolute bottom-20 left-1/2 transform -translate-x-1/2 z-10'>
-          <CaptureButton
-            disabled={!nearbySpawn}
-            onClick={() => setIsCapturing(nearbySpawn)}
-          />
-        </div>
+      {isCapturing && (
+        <CaptureCam
+          spawn={isCapturing}
+          captureAction={(spawn: Spawn) => handleCapture(spawn)}
+        />
+      )}
+      <div className='absolute bottom-20 left-1/2 transform -translate-x-1/2 z-10'>
+        <CaptureButton
+          disabled={!nearbySpawn}
+          onClick={() => setIsCapturing(nearbySpawn)}
+        />
       </div>
-    </spawnsContext.Provider>
+    </div>
   );
 };
 

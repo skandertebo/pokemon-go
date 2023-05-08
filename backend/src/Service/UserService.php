@@ -78,6 +78,7 @@ class UserService
 
     public function updateUser(int $id, array $data): User
     {
+        
         $user = $this->userRepository->find($id);
         if (!$user) {
             throw new \InvalidArgumentException('User does not exist');
@@ -89,7 +90,8 @@ class UserService
                 throw new \InvalidArgumentException('User email already exists');
             }
             $user->setEmail($email);
-            $this->userRepository->save($user);
+            
+            $this->userRepository->save($user,true);
         }
         
         if (isset($data['password']))
@@ -103,7 +105,7 @@ class UserService
         }
 
         
-        
+      
 
         return $user;
     }

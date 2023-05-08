@@ -1,22 +1,22 @@
 import { useEffect, useState } from 'react';
 import Profile from '../components/Profile';
 import User from '../types/User';
-import avatar from '../assets/avatar-girledited.png';
 import { useAuthContext } from '../context/AuthContext';
 import { useAppContext } from '../context/AppContext';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { apiBaseUrl } from '../config';
 import { UseLoginReturnType } from '../types';
-import Player from '../components/Player';
 import PokemonProgress from '../components/PokemonProgress';
-import { Navigate } from 'react-router-dom';
+import { error } from '@material-tailwind/react/types/components/input';
 
 function ProfilePage() {
-  const { user, token } = useAuthContext() as UseLoginReturnType;
+  const { user, token } = useAuthContext() as {
+    user: User;
+    token: string;
+  };
   const { makeNotification } = useAppContext();
   const [localUser, setLocalUser] = useState<User | undefined>();
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const { enableWaiting, disableWaiting } = useAppContext();
   useEffect(() => {
     async function getUser() {
       try {
@@ -39,30 +39,63 @@ function ProfilePage() {
     getUser();
   }, []);
 
-  async function updateUser(formData: FormData) {
+  async function updateUser(editedFields: Map<keyof User | 'password', any>) {
+    const formData = new FormData();
+    for (const [key, value] of editedFields.entries()) {
+      formData.append(key, value);
+    }
     try {
-      const res = await axios.post(apiBaseUrl + `/player/profile`, formData, {
+      const res = await axios.post(apiBaseUrl + `/player`, formData, {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
         }
       });
       setLocalUser(res.data);
-    } catch (e) {
-      console.error(e);
       makeNotification({
-        message: 'Error updating information',
-        type: 'error',
+        message: res.data.message,
+        type: 'success',
         duration: 4000
       });
+    } catch (e: unknown) {
+      if (!(e instanceof AxiosError)) throw e;
+      if (e.response) {
+        // Error with response from the server
+        console.error(e.response);
+        let errorMessage = e.response.data?.error?.message || 'Unknown error';
+        let errorDetailsMessages = e.response.data?.error?.details
+          ?.map((detail: any) => detail.message)
+          .join('\n');
+
+        makeNotification({
+          message: `Error updating information:\n${errorMessage}\n${
+            errorDetailsMessages || ''
+          }`,
+          type: 'error',
+          duration: 4000
+        });
+      } else if (e.request) {
+        // Error making the request
+        console.error(e.request);
+        makeNotification({
+          message: 'Error making the request',
+          type: 'error',
+          duration: 4000
+        });
+      } else {
+        // Other errors
+        console.error(e);
+        makeNotification({
+          message: 'An error occurred updating the profile',
+          type: 'error',
+          duration: 4000
+        });
+      }
     }
   }
   if (!isLoaded) return <PokemonProgress />;
   else {
-    return (
-      <div>
-        <Profile user={localUser!} updateUser={updateUser} />
-      </div>
-    );
+    return <Profile user={localUser!} updateUser={updateUser} />;
   }
 }
 

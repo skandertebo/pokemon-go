@@ -5,13 +5,19 @@ import { MdCatchingPokemon } from 'react-icons/md';
 import { useState } from 'react';
 import Pokemon from '../types/Pokemon';
 import { apiBaseUrl } from '../config';
+import defaultPokemonImage from '../assets/images/eevee.png';
+import shoudDisplayDefaultImage from '../utils/shouldDisplayDefaultImage';
 
 export default function PokemonComponent({ pokemon }: { pokemon: Pokemon }) {
   return (
     <div className='bg-third w-full h-screen'>
       <div className='w-full h-60 relative'>
         <img
-          src={apiBaseUrl + '/public/image/' + pokemon.image}
+          src={
+            shoudDisplayDefaultImage(pokemon.image)
+              ? defaultPokemonImage
+              : apiBaseUrl + '/public/image/' + pokemon.image
+          }
           alt='pokemon'
           className='w-40 m-auto absolute  bottom-0 left-[calc((100%-160px)/2)] animate-[bounce_4s_ease-in-out_infinite]'
         />

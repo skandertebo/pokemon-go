@@ -1,13 +1,16 @@
 import { useRef, useState } from 'react';
-import avatar from '../assets/avatar-girl2.png';
 import { Card, Button, Typography } from '@material-tailwind/react';
 import { AiFillEdit } from 'react-icons/ai';
 import User from '../types/User';
 import { apiBaseUrl } from '../config';
+import avatarGirl2 from '../assets/avatar-girl2.png';
+import shoudDisplayDefaultImage from '../utils/shouldDisplayDefaultImage';
+
+type EditedFieldsType = Map<keyof User | 'password', any>;
 
 interface ProfileProps {
   user: User;
-  updateUser: (formData: FormData) => void;
+  updateUser: (editedFields: EditedFieldsType) => Promise<unknown>;
 }
 
 const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
@@ -15,34 +18,57 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
   const [email, setEmail] = useState<string>(user.email);
   const imageInput = useRef<HTMLInputElement>(null);
   const [imagePreview, setImagePreview] = useState<string>(
-    user.image && user.image !== '_' ? user.image : avatar
+    `${apiBaseUrl}/public/image/${user.image}`
   );
   const [password, setPassword] = useState<string>('');
   const [modify, setModify] = useState<boolean>(false);
 
+  const [editedFields, setEditedFields] = useState<EditedFieldsType>(new Map());
+
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files?.length) {
+      return;
+    }
     const selectedFile = event.target.files?.[0];
     setImagePreview(selectedFile ? URL.createObjectURL(selectedFile) : '_');
+    setEditedFields((prev) => {
+      const newFields = new Map(prev);
+      newFields.set('image', selectedFile);
+      return newFields;
+    });
+  };
+
+  const handleImageReset = () => {
+    setImagePreview(`${apiBaseUrl}/public/image/${user.image}`);
+    setEditedFields((prev) => {
+      const newFields = new Map(prev);
+      newFields.delete('image');
+      return newFields;
+    });
+    if (imageInput.current) {
+      imageInput.current.value = '';
+    }
+  };
+
+  const handleImageRemoval = () => {
+    // todo
   };
 
   function lockForm() {
     setModify((prev) => !prev);
   }
 
-  const handleSave = () => {
-    const formData = new FormData();
-    formData.append('image', imageInput.current?.files?.[0] as Blob);
-    formData.append('playerTag', playerTag);
-    formData.append('email', email);
-    formData.append('password', password);
-
-    updateUser(formData);
+  const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    updateUser(editedFields).then(() => {
+      setEditedFields(new Map());
+    });
   };
 
   return (
     <div
       className='w-full sm:absolute sm:top-1/3 sm:mt-20 sm:left-1/2  sm:transform sm:-translate-x-1/2 sm:-translate-y-1/2 
-             md:w-2/3 lg:w-1/2 xl:w-1/3 2xl:w-1/4 2xl:h-max p-3'
+              lg:w-2/3 p-3'
     >
       <Card className=' bg-secondary shadow-2xl mx-auto mb-16 rounded-2xl xl:mt-32'>
         <Button
@@ -60,11 +86,17 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
         <div>
           <form
             className=' mb-2 mx-auto w-80 maw-h-screen '
-            onSubmit={handleSave}
+            onSubmit={(e) => {
+              handleSave(e);
+            }}
           >
             <div>
               <img
-                src={apiBaseUrl + '/public/image/' + user.image}
+                src={
+                  shoudDisplayDefaultImage(imagePreview)
+                    ? avatarGirl2
+                    : imagePreview
+                }
                 alt='image avatar'
                 className='mx-auto mb-4 w-[200px] h-[200px] rounded-full border-8 border-third p-3 justify-self-center flex '
               />
@@ -96,6 +128,19 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                   value={playerTag}
                   onChange={(e) => {
                     setPlayerTag(e.target.value);
+                    if (e.target.value !== user.playerTag) {
+                      setEditedFields((prev) => {
+                        const newFields = new Map(prev);
+                        newFields.set('playerTag', e.target.value);
+                        return newFields;
+                      });
+                    } else {
+                      setEditedFields((prev) => {
+                        const newFields = new Map(prev);
+                        newFields.delete('playerTag');
+                        return newFields;
+                      });
+                    }
                   }}
                   disabled={!modify}
                 />
@@ -109,6 +154,19 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
+                    if (e.target.value !== user.email) {
+                      setEditedFields((prev) => {
+                        const newFields = new Map(prev);
+                        newFields.set('email', e.target.value);
+                        return newFields;
+                      });
+                    } else {
+                      setEditedFields((prev) => {
+                        const newFields = new Map(prev);
+                        newFields.delete('email');
+                        return newFields;
+                      });
+                    }
                   }}
                   disabled={!modify}
                 />
@@ -124,6 +182,19 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                   value={password}
                   onChange={(e) => {
                     setPassword(e.target.value);
+                    if (e.target.value !== '') {
+                      setEditedFields((prev) => {
+                        const newFields = new Map(prev);
+                        newFields.set('password', e.target.value);
+                        return newFields;
+                      });
+                    } else {
+                      setEditedFields((prev) => {
+                        const newFields = new Map(prev);
+                        newFields.delete('password');
+                        return newFields;
+                      });
+                    }
                   }}
                   disabled={!modify}
                 />
@@ -131,11 +202,11 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
             </div>
             <div className='mb-4'>
               <Button
-                className=' save mt-2 w-1/2 mx-auto bg-primary disabled:hidden '
+                className=' save mt-2 w-1/2 mx-auto bg-primary focus:opacity-50 '
                 fullWidth
                 type='submit'
-                disabled={!modify}
-                onClick={lockForm}
+                // onClick={lockForm}
+                disabled={!modify || editedFields.size === 0}
               >
                 Save Profile
               </Button>

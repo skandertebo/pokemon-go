@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\DTO\AddSpawnDTO;
+use App\DTO\LocationDTO;
 use App\Entity\CatchSpawnDTO;
 use App\Entity\Spawn;
 use App\Service\SpawnService;
@@ -33,6 +34,27 @@ class SpawnController extends AbstractController
     {
     }
 
+
+
+
+    #[Route('/auto', name: 'autoSpawn',methods:['POST'])]
+            /**
+     * @Security("is_granted('ROLE_USER')")
+     */
+    public function autoSpawn(HttpFoundationRequest $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $dto=new LocationDTO($data);
+        $errors=$this->validator->validate($dto,null);
+        if(count($errors)>0)
+        {
+            return createValidationErrorResponse($errors);
+        }
+        $newPokemon=$this->spawnService->autoSpawn($dto->latitude,$dto->longitude);
+        return new JsonResponse() ;
+        
+    }
+
     #[Route('', name: 'addSpawn',methods:['POST'])]
         /**
      * @Security("is_granted('ROLE_ADMIN')")
@@ -58,7 +80,7 @@ class SpawnController extends AbstractController
         
     }
     #[Route('/catch', name: 'catchSpawn',methods:['POST'])]
-                    /**
+     /**
      * @Security("is_granted('ROLE_USER')")
      */
     public function catchSpawn(HttpFoundationRequest $request)
@@ -90,7 +112,8 @@ class SpawnController extends AbstractController
         try
         {
             $id = $request->attributes->get('jwt_payload')['id'];
-            $newPokemon=$this->spawnService->getCaptureHistory($id);
+            $dateParam=$request->query->get('date','all');
+            $newPokemon=$this->spawnService->getCaptureHistory($id,$dateParam);
         }
         catch(HttpException $e)
         {
@@ -125,6 +148,7 @@ class SpawnController extends AbstractController
     }
 
     #[Route('/updates', name: '_getUpdates', methods: ['GET'])]
+    #[Security("is_granted('ROLE_USER')")]
     public function getUpdates(HttpFoundationRequest $request): JsonResponse
     {
         $dateTimeString = $request->query->get('datetime');

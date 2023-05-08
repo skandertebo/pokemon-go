@@ -6,21 +6,16 @@ import axios from 'axios';
 import { apiBaseUrl } from '../config';
 import { useAppContext } from '../context/AppContext';
 import { useAuthContext } from '../context/AuthContext';
-import { UseLoginReturnType } from "../types";
-import { Navigate, useNavigate } from "react-router-dom";
-import User from '../types/User';
+import { UseLoginReturnType } from '../types';
+import PokemonProgress from '../components/PokemonProgress';
 
-
-
-
-export default function CapturePage() {
+export default function PokedexPage() {
   const [pokemons, setPokemons] = useState([]);
-  const { token } = useAuthContext()!;
+  const { token, user } = useAuthContext() as UseLoginReturnType;
   const { makeNotification } = useAppContext();
   const { enableWaiting, disableWaiting } = useAppContext();
   useEffect(() => {
     async function fetchData() {
-      enableWaiting();
       try {
         const res = await axios.get(apiBaseUrl + '/pokemon', {
           headers: {
@@ -35,25 +30,26 @@ export default function CapturePage() {
           type: 'error',
           duration: 4000
         });
-      } finally {
-        disableWaiting();
       }
     }
     fetchData();
   }, []);
-
-      return (
-    <>
-      <div className='bg-secondary pt-4 w-screen min-h-screen overflow-y-auto overflow-x-hidden pb-32'>
-        <h1 className='text-center w-full text-4xl text-primary mb-12 font-sans'>
-          Pokedex
-        </h1>
-        <div className='flex overflow-hidden flex-col gap-[400px] items-center mt-16 pb-[300px]'>
-          {pokemons.map((pokemon, index) => (
-            <PokemonCard pokemon={pokemon} key={index} />
-          ))}
+  if (pokemons.length === 0) {
+    return <PokemonProgress />;
+  } else {
+    return (
+      <>
+        <div className='bg-secondary pt-4 w-screen min-h-screen overflow-y-auto overflow-x-hidden pb-32'>
+          <h1 className='text-center w-full text-4xl text-primary mb-12 font-sans'>
+            Pokedex
+          </h1>
+          <div className='flex overflow-hidden flex-col gap-[400px] items-center mt-16 pb-[300px]'>
+            {pokemons.map((pokemon, index) => (
+              <PokemonCard pokemon={pokemon} key={index} />
+            ))}
+          </div>
         </div>
-      </div>
-    </>
-  );}
-
+      </>
+    );
+  }
+}

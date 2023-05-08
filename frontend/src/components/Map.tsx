@@ -4,8 +4,9 @@ import { useAppContext } from '../context/AppContext';
 import { IoMdLocate } from 'react-icons/io';
 import { Spawn } from '../types/Spawn';
 import { useSpawnsContext } from '../context/SpawnsContext';
+import { useSpawns } from '../Layouts/MainLayout';
 const WebMap: React.FC = () => {
-  const spawns = useSpawnsContext();
+  const spawns = useSpawns();
   const googleMapsRef = useRef<typeof google.maps>();
   const mapRef = useRef<google.maps.Map>();
   const loader = useGoogleMapsLoader();
@@ -21,7 +22,10 @@ const WebMap: React.FC = () => {
     zoom: 16,
     streetViewControl: false,
     mapTypeControl: false,
-    fullscreenControl: false
+    fullscreenControl: false,
+    zoomControlOptions: {
+      position: google.maps.ControlPosition.TOP_LEFT
+    }
   };
   const handleLocateClick = useCallback(() => {
     if (userMarkerRef.current && mapRef.current) {
@@ -85,10 +89,10 @@ const useCharactersOnMap = (
   mapRef: React.MutableRefObject<google.maps.Map | undefined>,
   googleMapApiRef: React.MutableRefObject<typeof google.maps | undefined>
 ) => {
-  const characters = useSpawnsContext() as Spawn[];
+  const characters = useSpawns();
   const markersRef = useRef<google.maps.Marker[]>([]);
   useEffect(() => {
-    if (mapRef.current && googleMapApiRef.current) {
+    if (mapRef.current && googleMapApiRef.current && characters) {
       markersRef.current.forEach((marker) => {
         marker.setMap(null);
       });
@@ -103,7 +107,7 @@ const useCharactersOnMap = (
             url: '/images/spawnMarker.png',
             scaledSize: new googleMapApiRef.current!.Size(32, 50),
             origin: new googleMapApiRef.current!.Point(0, 0),
-            anchor: new googleMapApiRef.current!.Point(16, 25)
+            anchor: new googleMapApiRef.current!.Point(16, 50)
           },
           map: mapRef.current
         });

@@ -70,7 +70,7 @@ class UserController extends AbstractController
      */
     public  function login(Request $request)
     {
-        $data = json_decode($request->getContent(), true);
+    $data = json_decode($request->getContent(), true);
 
     $userDTO = new AddUserDTO($data); 
     $errors = $this->validator->validate($userDTO, null, $userDTO->getGroupSequence());
@@ -115,9 +115,9 @@ class UserController extends AbstractController
      */
     public function getMe(Request $request)
     {
-        dump("hekl");
+       
         $id = $request->attributes->get('jwt_payload')['id'];
-        $user = $this->userService->find($id);
+        $user = $this->userService->find($id); 
         return new JsonResponse($user);
         
         
@@ -159,6 +159,19 @@ class UserController extends AbstractController
         } catch (\InvalidArgumentException $e) {
             return createErrorResponse($e->getMessage(), 400);
         }
+    }
+
+
+
+
+    
+    /**
+     * @Route("/logout", name="logout")
+     */
+    public function logout(): Response
+    {
+        localStorage.removeItem('token');
+        return $this->redirectToRoute('api_login');
     }
 
 

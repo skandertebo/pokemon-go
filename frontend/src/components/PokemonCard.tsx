@@ -8,6 +8,8 @@ import Pokemon from '../types/Pokemon';
 import { useNavigate } from 'react-router-dom';
 import getBackground from '../utils/getBackground';
 import { apiBaseUrl } from '../config';
+import shoudDisplayDefaultImage from '../utils/shouldDisplayDefaultImage';
+import defaultPokemonImage from '../assets/images/eevee.png';
 
 export default function PokemonCard({ pokemon }: { pokemon: Pokemon }) {
   const background = getBackground({ pokemon });
@@ -54,7 +56,11 @@ export default function PokemonCard({ pokemon }: { pokemon: Pokemon }) {
       />
       <img src={image} alt='card background' className='w-full z-1 absolute' />
       <img
-        src={apiBaseUrl + '/public/image/' + pokemon.image}
+        src={
+          shoudDisplayDefaultImage(pokemon.image)
+            ? defaultPokemonImage
+            : apiBaseUrl + '/public/image/' + pokemon.image
+        }
         alt='eevee'
         id='pokemon'
         className={'w-32 absolute top-8 right-6 z-20 rotate-data' + showPokemon}
