@@ -127,10 +127,10 @@ const MainLayout: React.FC = () => {
 
   if (!token) return <Navigate to='/login' />
 
-    if (user.playerTag){
+    if (!user.playerTag){
         return(
         <Navigate
-        to={'/'}
+        to={'/dashboard'}
        />)
     }
   return (
