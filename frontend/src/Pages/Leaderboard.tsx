@@ -11,7 +11,10 @@ import SecondPlace from '../components/PodiumComponents/SecondPlace';
 import ThirdPlace from '../components/PodiumComponents/ThirdPlace';
 
 function Leaderboard() {
-  const { token } = useAuthContext()!;
+  const { token, user } = useAuthContext() as {
+    token: string;
+    user: User;
+  };
   const players = useLeaderboard(token);
 
   if (!players) {

@@ -50,7 +50,6 @@ function Dashboard(){
             if (spawn.error) {
                 throw new Error(spawn.error.details[0].field+':'+spawn.error.details[0].message);
             }
-            navigate('/')
             makeNotification({
                 message:"spawn added successfully", 
                 type:"success"
@@ -62,17 +61,20 @@ function Dashboard(){
             console.error(error);
         }
     };
-
-    if (user.role!='admin'){
-        <Navigate
-        to={'/'}
-       />
-    }
     if (!token){
+        return(
         <Navigate
         to={'/login'}
-        />
+        />)
     }
+
+    if (user.playerTag){
+        return(
+        <Navigate
+        to={'/'}
+       />)
+    }
+
     if(!pokemons){
         return <div>Loading...</div>
     }

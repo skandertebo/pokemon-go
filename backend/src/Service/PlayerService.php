@@ -35,6 +35,13 @@ class PlayerService
         {
             unlink("../public/files/images/".$player->getImage());
         }
+        //set owner of all spawns to null
+        $spawns = $player->getSpawns();
+        foreach($spawns as $spawn)
+        {
+            $spawn->setOwner(null);
+        }
+        $this->playerRepository->save($player,true);
         $this->playerRepository->remove($player,true);
     }
 

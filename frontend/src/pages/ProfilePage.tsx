@@ -10,7 +10,10 @@ import PokemonProgress from '../components/PokemonProgress';
 import { error } from '@material-tailwind/react/types/components/input';
 
 function ProfilePage() {
-  const { user, token } = useAuthContext() as UseLoginReturnType;
+  const { user, token } = useAuthContext() as {
+    user: User;
+    token: string;
+  };
   const { makeNotification } = useAppContext();
   const [localUser, setLocalUser] = useState<User | undefined>();
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
