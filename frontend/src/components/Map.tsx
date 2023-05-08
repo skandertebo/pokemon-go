@@ -103,7 +103,7 @@ const useCharactersOnMap = (
             url: '/images/spawnMarker.png',
             scaledSize: new googleMapApiRef.current!.Size(32, 50),
             origin: new googleMapApiRef.current!.Point(0, 0),
-            anchor: new googleMapApiRef.current!.Point(16, 25)
+            anchor: new googleMapApiRef.current!.Point(16, 50)
           },
           map: mapRef.current
         });
