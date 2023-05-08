@@ -18,7 +18,7 @@ class UserNotificationRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, NotificationPlayer::class);
+        parent::__construct($registry, UserNotification::class);
     }
 
     public function save(UserNotification $entity, bool $flush = false): void

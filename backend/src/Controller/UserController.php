@@ -70,7 +70,7 @@ class UserController extends AbstractController
      */
     public  function login(Request $request)
     {
-        $data = json_decode($request->getContent(), true);
+    $data = json_decode($request->getContent(), true);
 
     $userDTO = new AddUserDTO($data); 
     $errors = $this->validator->validate($userDTO, null, $userDTO->getGroupSequence());

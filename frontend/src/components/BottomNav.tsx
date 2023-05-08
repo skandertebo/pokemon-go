@@ -13,6 +13,9 @@ import {
 } from '@heroicons/react/24/solid';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useIsShowingMenu } from '../Layouts/MainLayout';
+import { useAppContext } from '../context/AppContext';
+import NotificationIcon from './NotificationIcon';
+import useLastNotificationCheck from '../hooks/useLastNotificationCheck';
 
 const BottomNav: React.FC = () => {
   const route = useLocation().pathname;
@@ -21,18 +24,28 @@ const BottomNav: React.FC = () => {
   const iconClassName = 'h-6 w-6 text-white';
   const { palette } = useTheme();
   const { isShowing, toggleIsShowing } = useIsShowingMenu()!;
-
+  const { backendNotifications } = useAppContext();
+  const [lastNotificationCheck, setLastNotificationCheck] =
+    useLastNotificationCheck();
   const bottomNavigationRoutes = [
     { value: '/', label: 'Home', icon: <HomeIcon className={iconClassName} /> },
-    {
-      value: '/insights',
-      label: 'Insights',
-      icon: <LightBulbIcon className={iconClassName} />
-    },
     {
       value: '/leaderboard',
       label: 'Leaderboard',
       icon: <TrophyIcon className={iconClassName} />
+    },
+    {
+      value: '/notifications',
+      label: 'Notifications',
+      icon: (
+        <NotificationIcon
+          notificationCount={
+            backendNotifications.filter((e) => e.date > lastNotificationCheck)
+              .length
+          }
+          className={iconClassName}
+        />
+      )
     }
   ];
 

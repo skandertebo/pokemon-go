@@ -2,17 +2,21 @@
 
 namespace App\Controller;
 
+use App\Entity\Notification;
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use App\Service\NotificationService;
 use App\Service\UserService;
+use Doctrine\ORM\EntityManager;
 use FOS\RestBundle\Controller\Annotations\Delete;
 use FOS\RestBundle\Controller\Annotations\Post;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Mercure\HubInterface;
+use Symfony\Component\Mercure\PublisherInterface;
 use Symfony\Component\Mercure\Update;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use function App\createErrorResponse;
@@ -25,18 +29,6 @@ class NotificationController extends AbstractController
         private UserService $userService
     ){}
 
-
-/*     public function publish(HubInterface $hub): Response
-    {
-        $update = new Update(
-            '/notificationstream',
-            json_encode(['status' => 'OutOfStock'])
-        );
-
-        $hub->publish($update);
-
-        return new Response('published!');
-    } */
 
     // getAllByPaginationd
     /**
@@ -70,7 +62,7 @@ class NotificationController extends AbstractController
             $resp = createErrorResponse('User not found', Response::HTTP_NOT_FOUND);
             return $resp;
         }
-        $notifications = $this->notificationService->getNotificationsByUser($user);
+        $notifications = $this->notificationService->getNotificationsByUser($user, $req->query->get('page'), $req->query->get('rows'));
         return new JsonResponse($notifications, Response::HTTP_OK);
     }
 
@@ -180,12 +172,14 @@ class NotificationController extends AbstractController
             $resp = createErrorResponse('Notification not found', Response::HTTP_NOT_FOUND);
             return $resp;
         }
-        if(is_null($data['contenu'])){
+        if(is_null($data['notification']['contenu'])){
             $resp = createErrorResponse('Contenu not found', Response::HTTP_NOT_FOUND);
             return $resp;
         }
-        $notification = $this->notificationService->createNotification($data['notification']);
-        if(is_null($data['users']))
+        $receivedNotification = new Notification();
+        $receivedNotification->setContenu($data['notification']['contenu']);
+        $notification = $this->notificationService->createNotification($receivedNotification);
+        if(!isset($data['users']))
             $this->notificationService->addNotificationToAllUsers($notification);
         else
             $this->notificationService->addNotificationToUsers($data['users'], $notification);

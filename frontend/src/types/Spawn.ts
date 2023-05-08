@@ -7,8 +7,8 @@ export interface Spawn extends Entity {
   radius: number; // the range of the area where the character becomes catchable
   spawnDate: Date; // the time when the character spawns ( timestamp )
   longitude: number; // the longitude of the spawn
-  latitude: number; // the latitude of the spawns
+  latitude: number; // the latitude of the spawn
+  owner?: User | null; // user who caught the character
+  captureDate?: number | null; // the time when the character was caught ( timestamp )
   pokemon: Pokemon;
-  owner: User;
-  captureDate: Date;
 }
