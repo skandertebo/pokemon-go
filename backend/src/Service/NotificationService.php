@@ -30,7 +30,7 @@ class NotificationService {
             'body' => [
                 'id' => $notification->getId(),
                 'contenu' => $notification->getContenu(),
-                'date' => $notification->getDate()->getTimestamp(),
+                'date' => $notification->getDate()->getTimestamp()*1000,
                 'user' => $user->getId()
             ]]
         ));

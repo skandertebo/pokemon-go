@@ -1,6 +1,5 @@
 import React from 'react';
 import PokemonCard from '../components/PokemonCard';
-import pokemons from '../assets/pokemonsdata';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { apiBaseUrl } from '../config';
