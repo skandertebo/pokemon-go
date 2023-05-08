@@ -12,10 +12,7 @@ import User from "../types/User";
 export default function PokemonPage() {
   const { id } = useParams();
   const [pokemon, setPokemon] = useState(null);
-  const { token, user } = useAuthContext() as {
-    token: string;
-    user : User;
-  }
+  const { token } = useAuthContext()!;
   const { makeNotification } = useAppContext();
   const { enableWaiting, disableWaiting } = useAppContext();
 
@@ -42,13 +39,6 @@ export default function PokemonPage() {
     }
     fetchData();
   }, []);
-
-  if (!token) {
-    return <Navigate to='/login' />;
-  }
-  if (!user.playerTag) {
-    return <Navigate to='/dashboard' />;
-  }
 
   return (
     <div>

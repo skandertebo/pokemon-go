@@ -15,10 +15,7 @@ import User from '../types/User';
 
 export default function CapturePage() {
   const [pokemons, setPokemons] = useState([]);
-  const { token, user } = useAuthContext() as {
-    token: string;
-    user: User;
-  }
+  const { token } = useAuthContext()!;
   const { makeNotification } = useAppContext();
   const { enableWaiting, disableWaiting } = useAppContext();
   useEffect(() => {
@@ -45,12 +42,6 @@ export default function CapturePage() {
     fetchData();
   }, []);
 
-    if (!token){
-      return <Navigate to='/login'/>;
-    }
-    if (!user.playerTag){
-    return <Navigate to='/dashboard'/>;
-  }
       return (
     <>
       <div className='bg-secondary pt-4 w-screen min-h-screen overflow-y-auto overflow-x-hidden pb-32'>

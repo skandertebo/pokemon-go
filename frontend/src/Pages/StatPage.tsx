@@ -7,16 +7,6 @@ import User from "../types/User";
 
 
 export default function StatPage() {
-    const { token , user} = useAuthContext()as {
-        token: string;
-        user: User;
-    }
-    if (!token) {
-        return <Navigate to="/login" />;
-    }
-    if (!user.playerTag) {
-        return <Navigate to="/dashboard" />;
-    }
     return (
         <div className="w-screen bg-third text-sans">
             <h1 className="text-2xl text-white text-center w-full pt-8 ">

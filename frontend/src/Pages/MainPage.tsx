@@ -20,10 +20,7 @@ declare global {
 
 const MainPage: React.FC = () => {
   const [isCapturing, setIsCapturing] = useState<Spawn | null>(null);
-  const { token, user } = useAuthContext() as{
-    token: string;
-    user: User;
-  }
+  const { token ,user} = useAuthContext() as UseLoginReturnType;
   const [spawns, nearbySpawn] = useSpawns(token);
   const { makeNotification } = useAppContext();
   
@@ -57,12 +54,6 @@ const MainPage: React.FC = () => {
       setIsCapturing(null);
     }
   }, []);
-  if (!token) {
-    return <Navigate to='/login'/>;
-  }
-  if (!user.playerTag){
-    return <Navigate to='/dashboard'/>;
-  }
   return (
     <spawnsContext.Provider value={spawns}>
        <div className='w-screen h-screen sm:w-full flex flex-col gap-5 items-center'>

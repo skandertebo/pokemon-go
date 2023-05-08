@@ -3,6 +3,7 @@ import BottomNav from '../components/BottomNav';
 import React, { createContext, useContext, useState } from 'react';
 import { useAuthContext } from '../context/AuthContext';
 import MenuPage from '../pages/MenuPage';
+import User from '../types/User';
 
 const isShowingMenuContext = createContext<
   { isShowing: boolean; toggleIsShowing: () => void } | undefined
@@ -11,11 +12,20 @@ export const useIsShowingMenu = () => useContext(isShowingMenuContext);
 
 const MainLayout: React.FC = () => {
   const outlet = useOutlet();
-  const { token } = useAuthContext()!;
+  const { token,user } = useAuthContext()as {
+    token: string;
+    user: User;
+  }
   const [isShowingMenu, setIsShowingMenu] = useState<boolean>(false);
 
-  if (!token) return <Navigate to='/login' />;
+  if (!token) return <Navigate to='/login' />
 
+    if (user.playerTag){
+        return(
+        <Navigate
+        to={'/'}
+       />)
+    }
   return (
     <isShowingMenuContext.Provider
       value={{

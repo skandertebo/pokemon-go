@@ -17,15 +17,13 @@ function Dashboard(){
         radius: '',
     });
 
-    const {user,token}=useAuthContext()as {
-        token: string;
+    const {user}=useAuthContext()as {
         user: User;
     }
 
     const {makeNotification} = useAppContext();
     const [pokemons, setPokemons] = useState<Pokemon[] | undefined>(undefined);
     const [error, setError] = useState<string>('');
-    const navigate = useNavigate();
 
     useEffect(()=>{
         async function fetchPokemons() {
@@ -61,12 +59,6 @@ function Dashboard(){
             console.error(error);
         }
     };
-    if (!token){
-        return(
-        <Navigate
-        to={'/login'}
-        />)
-    }
 
     if (user.playerTag){
         return(

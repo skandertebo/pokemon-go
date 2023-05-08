@@ -9,18 +9,9 @@ import { apiBaseUrl } from '../config';
 import { Navigate } from 'react-router-dom';
 
 function Leaderboard() {
-  const { token,user } = useAuthContext() as{
-    token: string;
-    user: User;
-  }
+  const { token } = useAuthContext()!;
   const players = useLeaderboard(token);
 
-  if (!user.playerTag){
-    return <Navigate to='/dashboard'/>;
-  }
-  if (!token) {
-    return <Navigate to='/login' />;
-  }
   if (!players) {
     return <></>;
   }

@@ -12,10 +12,7 @@ import PokemonProgress from '../components/PokemonProgress';
 import { Navigate } from 'react-router-dom';
 
 function ProfilePage() {
-  const { user, token } = useAuthContext() as {
-    user: User;
-    token: string;
-  }
+  const { user, token } = useAuthContext() as UseLoginReturnType;
   const { makeNotification } = useAppContext();
   const [localUser, setLocalUser] = useState<User | undefined>();
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
@@ -58,12 +55,6 @@ function ProfilePage() {
         duration: 4000
       });
     }
-  }
-  if (!token) {
-    return <Navigate to='/login' />;
-  }
-  if (!user.playerTag){
-    return <Navigate to='/dashboard'/>;
   }
   if (!isLoaded) return <PokemonProgress />;
   else {
