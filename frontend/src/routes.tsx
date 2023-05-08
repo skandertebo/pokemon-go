@@ -11,6 +11,7 @@ import PokemonPage from './pages/PokemonPage';
 import StatPage from './pages/StatPage';
 import ErrorPage from './pages/ErrorPage';
 import PokedexPage from './pages/PokedexPage';
+import NotificationsPage from './pages/NotificationsPage';
 
 const routes = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const routes = createBrowserRouter([
       {
         path: '/insights',
         element: <StatPage />
+      },
+      {
+        path: '/notifications',
+        element: <NotificationsPage />
       }
     ]
   },

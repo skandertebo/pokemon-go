@@ -89,7 +89,7 @@ class Notification implements JsonSerializable
         return [
             'id' => $this->getId(),
             'contenu' => $this->getContenu(),
-            'date' => $this->getDate()->getTimestamp(),
+            'date' => $this->getDate()->getTimestamp()*1000,
         ];
     }
 

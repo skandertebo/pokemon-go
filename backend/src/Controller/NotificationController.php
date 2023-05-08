@@ -204,7 +204,26 @@ class NotificationController extends AbstractController
             $resp = createErrorResponse('Notification not found', Response::HTTP_NOT_FOUND);
             return $resp;
         }
-        $this->notificationService->readNotification($notification, $user);
+        $res = $this->notificationService->readNotification($user['id'], $notification['id']);
+        return new JsonResponse($res, Response::HTTP_OK);
+    }
+
+    #[Post('/notification/readMany')]
+    public function markManyAsRead(Request $req, LoggerInterface $logger): JsonResponse
+    {
+        $data = json_decode($req->getContent(), true);
+        $user = $data['user'];
+        if(is_null($user)){
+            $resp = createErrorResponse('User not found', Response::HTTP_NOT_FOUND);
+            return $resp;
+        }
+        $notifications = $data['notifications'];
+        if(is_null($notifications)){
+            $resp = createErrorResponse('Notification not found', Response::HTTP_NOT_FOUND);
+            return $resp;
+        }
+        //$logger->info('notifications: '.json_encode($notifications));
+        $res = $this->notificationService->readNotifications($user['id'], $notifications);
         return new JsonResponse(null, Response::HTTP_OK);
     }
 

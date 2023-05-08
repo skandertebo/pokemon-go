@@ -183,19 +183,43 @@ class NotificationService {
         return $q->getResult();
     }
     
-    public function readNotification(User $user, Notification $notification): void
+    public function readNotification($userid, $notificationid)
     {
-        $userNotification = $this->userNotificationRepository->findOneBy(['user' => $user, 'notification' => $notification]);
+        $userNotification = $this->userNotificationRepository->findOneBy(['user' => $userid, 'notification' => $notificationid]);
         if($userNotification){
             $this->userNotificationRepository->updateRead($userNotification, true);
         }else{
             throw new HttpException(404, 'Notification not found');
         }
+        return ([
+            'status' => 'success',
+            'message' => 'Notification read successfully'
+        ]);
+    }
+
+    public function readNotifications($userid, $notifications){
+        foreach($notifications as $notification){
+            $this->readNotification($userid, $notification);
+        }
+        return ([
+            'status' => 'success',
+            'message' => 'Notifications read successfully'
+        ]);
     }
 
     public function getAllNotifications(): array
     {
         return $this->notificationRepository->findAll();
     }
+
+ 
+    public function readAllNotifications(User $user): void
+    {
+        $notifications = $this->getUnreadNotificationsByUser($user);
+        if(count($notifications) > 0){
+            $this->readNotifications($user, $notifications);
+        }
+    }
+
 }
 

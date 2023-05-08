@@ -40,8 +40,9 @@ const BottomNav: React.FC = () => {
       icon: (
         <NotificationIcon
           notificationCount={
-            backendNotifications.filter((e) => e.date > lastNotificationCheck)
-              .length
+            backendNotifications.filter(
+              (e) => e.date > lastNotificationCheck && e.isRead === false
+            ).length
           }
           className={iconClassName}
         />
