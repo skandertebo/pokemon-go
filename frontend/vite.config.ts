@@ -14,8 +14,8 @@ export default defineConfig({
         target: 'https://127.0.0.1:8000',
         secure: false
       },
-      '/.well-known/mercure/': {
-        target: 'http://127.0.0.1:56080/',
+      '/.well-known/mercure': {
+        target: 'http://localhost:8080',
         rewrite: (path) => path.replace(/^\/\.well-known\/mercure\//, ''),
         secure: false
       }

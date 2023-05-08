@@ -7,10 +7,7 @@ import { RegisterBody } from '../types/RegisterBody';
 
 function RegisterComp() {
   const { setToken, token } = useAuthContext()!;
-
   const [error, setError] = useState();
-
-  const navigate = useNavigate();
 
   const [registerData, setRegisterData] = useState<RegisterBody>({
     playerTag: '',
