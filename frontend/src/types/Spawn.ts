@@ -10,5 +10,5 @@ export interface Spawn extends Entity {
   latitude: number; // the latitude of the spawn
   owner?: User | null; // user who caught the character
   captureDate?: number | null; // the time when the character was caught ( timestamp )
-  pokemon: Pokemon;
+  pokemon?: Pokemon;
 }
