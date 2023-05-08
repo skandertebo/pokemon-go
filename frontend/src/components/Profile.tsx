@@ -3,6 +3,8 @@ import { Card, Button, Typography } from '@material-tailwind/react';
 import { AiFillEdit } from 'react-icons/ai';
 import User from '../types/User';
 import { apiBaseUrl } from '../config';
+import avatarGirl2 from '../assets/avatar-girl2.png';
+import shoudDisplayDefaultImage from '../utils/shouldDisplayDefaultImage';
 
 type EditedFieldsType = Map<keyof User | 'password', any>;
 
@@ -90,7 +92,11 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
           >
             <div>
               <img
-                src={imagePreview}
+                src={
+                  shoudDisplayDefaultImage(imagePreview)
+                    ? avatarGirl2
+                    : imagePreview
+                }
                 alt='image avatar'
                 className='mx-auto mb-4 w-[200px] h-[200px] rounded-full border-8 border-third p-3 justify-self-center flex '
               />

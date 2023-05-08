@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Notification;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
+use phpDocumentor\Reflection\DocBlock\Tags\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,6 +15,7 @@ use App\Service\UserService;
 use Doctrine\ORM\EntityManager;
 use FOS\RestBundle\Controller\Annotations\Delete;
 use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\Route;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\PublisherInterface;
@@ -208,6 +210,9 @@ class NotificationController extends AbstractController
         return new JsonResponse($res, Response::HTTP_OK);
     }
 
+    /**
+     * @Security("is_granted('ROLE_USER')")
+    */
     #[Post('/notification/readMany')]
     public function markManyAsRead(Request $req, LoggerInterface $logger): JsonResponse
     {

@@ -1,6 +1,8 @@
 import { FaCrown } from 'react-icons/fa';
 import { apiBaseUrl } from '../../config';
 import User from '../../types/User';
+import shoudDisplayDefaultImage from '../../utils/shouldDisplayDefaultImage';
+import avatarGirl2 from '../../assets/avatar-girl2.png';
 const FirstPlace: React.FC<{ player: User | null }> = ({ player }) => {
   return (
     <div
@@ -14,7 +16,11 @@ const FirstPlace: React.FC<{ player: User | null }> = ({ player }) => {
       />
       {player ? (
         <img
-          src={apiBaseUrl + '/public/image/' + player.image}
+          src={
+            shoudDisplayDefaultImage(player.image)
+              ? avatarGirl2
+              : apiBaseUrl + '/public/image/' + player.image
+          }
           className='relative bottom-20 h-20 w-20 rounded-full bg-black border-4 border-[#FFD700] '
         ></img>
       ) : (

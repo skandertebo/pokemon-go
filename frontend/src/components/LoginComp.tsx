@@ -55,8 +55,11 @@ function LoginComp() {
     lg:mr-[100px] lg:mb-[350px] lg:w-[600px]'
       onSubmit={handleSubmit}
     >
-      <h1 className='text-sm text-primary font-bold md:text-primary lg:text-secondary '>
-        Time To Catch Some Pokemons
+      <h1
+        className='text-lg text-primary font-bold md:text-primary bg-white p-4 rounded-md mx-auto'
+        style={{ width: 'fit-content' }}
+      >
+        Time To Catch Some Pokemons!
       </h1>
       <div className='m-4'>
         <input
@@ -97,13 +100,15 @@ function LoginComp() {
         )}
       </div>
       <div>
-        <h2 className='text-primary text-base'>
+        <h2
+          className='text-primary text-base bg-white mx-auto px-4 py-1 rounded-md'
+          style={{ width: 'fit-content' }}
+        >
           Don't have an account?
           <Link
             className='text-base font-bold text-primary italic hover:not-italic md:text-secondary lg:text-primary'
             to='/register'
           >
-            {' '}
             Join Us
           </Link>
         </h2>

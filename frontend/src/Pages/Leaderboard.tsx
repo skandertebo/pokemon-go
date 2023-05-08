@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import User from '../types/User';
 import Player from '../components/Player';
-
 import { useAppContext } from '../context/AppContext';
 import useLeaderboard from '../hooks/useLeaderboard';
 import { useAuthContext } from '../context/AuthContext';
@@ -9,6 +8,8 @@ import { apiBaseUrl } from '../config';
 import FirstPlace from '../components/PodiumComponents/FirstPlace';
 import SecondPlace from '../components/PodiumComponents/SecondPlace';
 import ThirdPlace from '../components/PodiumComponents/ThirdPlace';
+import avatarGirl2 from '../assets/avatar-girl2.png';
+import shoudDisplayDefaultImage from '../utils/shouldDisplayDefaultImage';
 
 function Leaderboard() {
   const { token, user } = useAuthContext() as {

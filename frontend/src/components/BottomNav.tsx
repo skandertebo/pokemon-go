@@ -25,8 +25,6 @@ const BottomNav: React.FC = () => {
   const { palette } = useTheme();
   const { isShowing, toggleIsShowing } = useIsShowingMenu()!;
   const { backendNotifications } = useAppContext();
-  const [lastNotificationCheck, setLastNotificationCheck] =
-    useLastNotificationCheck();
   const bottomNavigationRoutes = [
     { value: '/', label: 'Home', icon: <HomeIcon className={iconClassName} /> },
     {
@@ -40,9 +38,7 @@ const BottomNav: React.FC = () => {
       icon: (
         <NotificationIcon
           notificationCount={
-            backendNotifications.filter(
-              (e) => e.date > lastNotificationCheck && e.isRead === false
-            ).length
+            backendNotifications.filter((e) => e.isRead === false).length
           }
           className={iconClassName}
         />

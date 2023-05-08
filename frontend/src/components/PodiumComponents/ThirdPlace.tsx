@@ -1,5 +1,8 @@
 import { apiBaseUrl } from '../../config';
 import User from '../../types/User';
+import shoudDisplayDefaultImage from '../../utils/shouldDisplayDefaultImage';
+import avatarGirl2 from '../../assets/avatar-girl2.png';
+
 const ThirdPlace: React.FC<{ player: User | null }> = ({ player }) => {
   return (
     <div
@@ -9,7 +12,11 @@ const ThirdPlace: React.FC<{ player: User | null }> = ({ player }) => {
     >
       {player ? (
         <img
-          src={apiBaseUrl + '/public/image/' + player.image}
+          src={
+            shoudDisplayDefaultImage(player.image)
+              ? avatarGirl2
+              : apiBaseUrl + '/public/image/' + player.image
+          }
           className='relative bottom-7 h-16 w-16 rounded-full bg-white border-4 border-[#CD7F32]'
         ></img>
       ) : (

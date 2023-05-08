@@ -119,7 +119,7 @@ class NotificationService {
     public function getNotificationsByUser(User $user, $page=null, $limit=null): array
     {
         if(is_null($page) || is_null($limit)){
-            return $this->userNotificationRepository->findBy(['user' => $user]);
+            return $this->userNotificationRepository->findBy(['user' => $user], ['notification' => 'DESC'], 50);
         }
         return $this->userNotificationRepository->findBy(['user' => $user], null, $limit, ($page-1)*$limit);
     }

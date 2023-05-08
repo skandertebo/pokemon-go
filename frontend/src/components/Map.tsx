@@ -22,7 +22,10 @@ const WebMap: React.FC = () => {
     zoom: 16,
     streetViewControl: false,
     mapTypeControl: false,
-    fullscreenControl: false
+    fullscreenControl: false,
+    zoomControlOptions: {
+      position: google.maps.ControlPosition.TOP_LEFT
+    }
   };
   const handleLocateClick = useCallback(() => {
     if (userMarkerRef.current && mapRef.current) {

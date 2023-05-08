@@ -13,7 +13,6 @@ export default function NotificationComponent({
   const { user } = useAuthContext() as UseLoginReturnType;
   const userTag = user?.playerTag;
   const notificationDate = new Date(notification.date);
-  console.log(notificationDate);
   const [background, setbackground] = useState(' bg-blue-gray-200');
   const [hide, sethide] = useState('');
   useEffect(() => {
