@@ -22,7 +22,7 @@ const ThirdPlace: React.FC<{ player: User | null }> = ({ player }) => {
       ) : (
         <div className='relative bottom-7 h-16 w-16 rounded-full bg-fourth border-4 border-[#CD7F32]' />
       )}
-      <p className=' break-all  pl-1 pr-1  relative bottom-5 font-black text-sm text-[#CD7F32]'>
+      <p className=' overflow-hidden w-full text-ellipsis text-center  pl-1 pr-1  relative bottom-5 font-black text-sm text-[#CD7F32]'>
         {player ? player.playerTag : ''}
       </p>
       <p className=' relative bottom-3'>{player ? player.score : ''}</p>
