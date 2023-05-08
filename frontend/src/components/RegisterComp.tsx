@@ -35,6 +35,7 @@ function RegisterComp() {
       setToken(userData.token);
       window.location.reload();
     } catch (error) {
+      console.error(error);
       //@ts-ignore
       setError(error.message);
     }
@@ -45,13 +46,14 @@ function RegisterComp() {
   }
 
   return (
+    <>
     <form
-      className='text-center max-w-screen-md w-full m-auto p-5 mb-[210px]
+      className='text-center max-w-screen-md w-full m-auto p-5 mb-[240px]
     md:p-1/5 md:mb-[100px] md:mr-[100px] md:w-[400px] 
     lg:mr-[100px] lg:mb-[350px] lg:w-[600px]'
       onSubmit={handleSubmit}
     >
-      <div className='m-3.5'>
+      <div className='m-2'>
         <input
           className='w-full h-12 px-2.5 rounded-md border-solid border-2 lg:w-[400px]'
           type='text'
@@ -60,9 +62,10 @@ function RegisterComp() {
           value={registerData.playerTag}
           onChange={handleChange}
           placeholder='Enter your playerTag'
+          required
         />
       </div>
-      <div className='m-3.5'>
+      <div className='m-2'>
         <input
           className='w-full h-12 px-2.5 rounded-md border-solid border-2 lg:w-[400px]'
           type='email'
@@ -71,9 +74,10 @@ function RegisterComp() {
           value={registerData.email}
           onChange={handleChange}
           placeholder='Enter your Email'
+          required
         />
       </div>
-      <div className='m-3.5'>
+      <div className='m-2'>
         <input
           className='w-full h-12 px-2.5 rounded-md border-solid border-2 lg:w-[400px]'
           type='password'
@@ -82,26 +86,29 @@ function RegisterComp() {
           value={registerData.password}
           onChange={handleChange}
           placeholder='Enter Your Password'
+          required
         />
       </div>
-      <div className='mb-3'>
+      <div className='m-2'>
         <Button
-          className='bg-primary  w-3/4 h-12 rounded-md font-bold text-secondary md:w-[300px] lg:w-[300px] disabled:bg-secondary disabled:text-primary'
+          className='bg-primary  w-3/4 h-12 rounded-md font-bold text-secondary md:w-[300px] lg:w-[300px]'
           type='submit'
         >
           Register
         </Button>
       </div>
-      <h2 className='text-primary text-base'>
+      <h2 className='text-primary text-l mx-auto text-bold'>
         Already have an account?
         <Link
-          className='text-base font-bold text-primary italic hover:not-italic md:text-secondary lg:text-primary'
+          className='text-base font-bold text-primary italic hover:not-italic md:text-secondary lg:text-primary '
           to='/login'
         >
           {' '}
           Login
         </Link>
       </h2>
+        </form>
+      <div className='absolute bottom-3 left-1/2 transform -translate-x-1/2 w-full '>
       {error && (
         <div
           className='p-2 rounded-md mt-4 bg-red-500 text-white text-center mx-auto'
@@ -110,7 +117,8 @@ function RegisterComp() {
           {error}
         </div>
       )}
-    </form>
+      </div>
+      </>
   );
 }
 

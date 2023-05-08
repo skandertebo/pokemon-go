@@ -49,19 +49,21 @@ function LoginComp() {
   }
 
   return (
+    <>
     <form
-      className='text-center max-w-screen-md w-full m-auto p-5 mb-[240px]
+      className='text-center max-w-screen-md w-full m-auto p-5 mb-[250px]
     md:p-1/5 md:mb-[100px] md:mr-[100px] md:w-[400px] 
     lg:mr-[100px] lg:mb-[350px] lg:w-[600px]'
       onSubmit={handleSubmit}
     >
       <h1
-        className='text-lg text-primary font-bold md:text-primary bg-white p-4 rounded-md mx-auto'
-        style={{ width: 'fit-content' }}
+        className='text-lg text-primary font-bold md:text-primary rounded-md mx-auto'
+        //  bg-white p-4
+        // style={{ width: 'fit-content' }}
       >
         Time To Catch Some Pokemons!
       </h1>
-      <div className='m-4'>
+      <div className='m-3'>
         <input
           className='w-full h-12 px-2.5 rounded-md border-solid border-2  lg:w-[400px]'
           type='email'
@@ -72,7 +74,7 @@ function LoginComp() {
           placeholder='Enter Your Email'
         />
       </div>
-      <div className='m-4 '>
+      <div className='m-3 '>
         <input
           className='w-full h-12 px-2.5 rounded-md border-solid border-2  lg:w-[400px]'
           type='password'
@@ -83,37 +85,41 @@ function LoginComp() {
           placeholder='Enter Your Password'
         />
       </div>
-      <div className='m-4 mb-3'>
+      <div className='m-1'>
         <Button
           className='bg-primary w-3/4 h-12 rounded-md font-bold text-secondary md:w-[300px] lg:w-[300px]'
           type='submit'
         >
           Login
         </Button>
-        {error && (
-          <div
-            className='p-2 rounded-md mt-4 bg-red-500 text-white text-center mx-auto'
-            style={{ width: 'fit-content' }}
-          >
-            {error}
-          </div>
-        )}
       </div>
       <div>
         <h2
-          className='text-primary text-base bg-white mx-auto px-4 py-1 rounded-md'
-          style={{ width: 'fit-content' }}
+          className='text-primary text-base mx-auto px-4 py-1 rounded-md'
+          // bg-white 
+          // style={{ width: 'fit-content' }}
         >
           Don't have an account?
           <Link
             className='text-base font-bold text-primary italic hover:not-italic md:text-secondary lg:text-primary'
             to='/register'
-          >
+            >
             Join Us
           </Link>
         </h2>
       </div>
-    </form>
+        </form>
+        <div className='absolute bottom-3 left-1/2 transform -translate-x-1/2 w-full '> 
+      {error && (
+        <div
+          className='p-2 rounded-md mt-4 bg-red-500 text-white text-center mx-auto'
+          style={{ width: 'fit-content' }}
+        >
+          {error}
+        </div>
+      )}
+      </div>
+      </>
   );
 }
 
