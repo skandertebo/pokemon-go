@@ -17,15 +17,32 @@ class SpawnService
 
 
 
-    function addSpawnComm()
+    function autoSpawn($latitude,$longitude)
     {
-        $pokemon=$this->pokemonRepository->find(14);
-        $spawn=new Spawn();
-        $spawn->setLatitude(36.860418);
-        $spawn->setLongitude(10.113047);
-        $spawn->setRadius(10000);
-        $spawn->setPokemon($pokemon);
-        $this->spawnRepository->save($spawn,true);
+        //you can set the chance that a spawn will happen here (between 0 and 1)
+        $chance=1;
+        $precision =1000;
+        if(mt_rand(0,$precision)/$precision<=$chance)
+        {
+            //you can set the radius (in meters) of the random generated location with respect to the current location
+            $radius=10;
+            $newPosition=generateRandomLocation($latitude,$longitude,$radius);
+
+            $pokemons=$this->pokemonRepository->findAll();
+
+            $spawn=new Spawn();
+
+            $spawn->setLatitude($newPosition[0]);
+            $spawn->setLongitude($newPosition[1]);
+
+            //the radius is somewhere between 1 and 1000 km 
+            $spawn->setRadius(rand(1,1000));
+
+            //getting a random pokemon from the list
+            $spawn->setPokemon($pokemons[rand(0,count($pokemons)-1)]);
+
+            $this->spawnRepository->save($spawn,true);
+        }
     }
     function addSpawn(AddSpawnDTO $data)
     {
