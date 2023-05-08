@@ -6,7 +6,6 @@ import { Spawn } from '../types/Spawn';
 import { useSpawnsContext } from '../context/SpawnsContext';
 import { useSpawns } from '../Layouts/MainLayout';
 const WebMap: React.FC = () => {
-  const spawns = useSpawns();
   const googleMapsRef = useRef<typeof google.maps>();
   const mapRef = useRef<google.maps.Map>();
   const loader = useGoogleMapsLoader();
@@ -22,10 +21,7 @@ const WebMap: React.FC = () => {
     zoom: 16,
     streetViewControl: false,
     mapTypeControl: false,
-    fullscreenControl: false,
-    zoomControlOptions: {
-      position: google.maps.ControlPosition.TOP_LEFT
-    }
+    fullscreenControl: false
   };
   const handleLocateClick = useCallback(() => {
     if (userMarkerRef.current && mapRef.current) {
@@ -40,7 +36,10 @@ const WebMap: React.FC = () => {
         {
           ...mapOptions,
           mapId: '29b1e9be7c81fd4a',
-          gestureHandling: 'greedy'
+          gestureHandling: 'greedy',
+          zoomControlOptions: {
+            position: google.maps.ControlPosition.TOP_LEFT
+          }
         }
       );
 

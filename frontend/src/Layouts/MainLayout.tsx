@@ -85,7 +85,7 @@ const MainLayout: React.FC = () => {
     let eventSource: EventSource;
     Promise.all([getNotifications(abort), getSpawns(spawnsAbort)]).then(
       (res) => {
-        const url = new URL('http://localhost:8080/.well-known/mercure');
+        const url = new URL('.well-known/mercure', document.baseURI);
         url.searchParams.append(
           'topic',
           `https://mercure-updates/users/${user?.id}`
@@ -97,7 +97,7 @@ const MainLayout: React.FC = () => {
           if (data.type === 'notification') {
             const mercureMessage = data as CustomMercureMessage<'notification'>;
             mercureMessage.body.isRead = false;
-            setBackendNotifications((prev) => [...prev, mercureMessage.body]);
+            setBackendNotifications((prev) => [mercureMessage.body, ...prev!]);
           }
           if (data.type === 'spawn') {
             const mercureMessage = data as CustomMercureMessage<'spawn'>;
