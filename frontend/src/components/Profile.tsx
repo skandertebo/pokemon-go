@@ -77,7 +77,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
   return (
     <div
       className='w-full sm:absolute sm:top-1/3 sm:mt-20 sm:left-1/2  sm:transform sm:-translate-x-1/2 sm:-translate-y-1/2 
-              lg:w-2/3 p-3'
+              lg:w-2/3 p-3 bg-secondary'
     >
       <Card className=' bg-secondary shadow-2xl mx-auto mb-16 rounded-2xl xl:mt-32'>
         <Button
@@ -130,7 +130,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                     disabled={!modify}
                 ></input>
               </div>
-              <div className='w-full flex flex-row justify-center gap-9 mb-4'>
+              <div className={modify ? 'w-full flex flex-row justify-center gap-9 mb-4' : 'hidden'}>
                 <div
                 className='w-20 bg-red-300 h-12 rounded-full flex justify-center items-center cursor-pointer clickable shadow-md shadow-gray-500 '
                 onClick={handleImageRemoval}
@@ -234,7 +234,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
             </div>
             <div className='mb-4'>
               <Button
-                className=' save mt-2 w-1/2 mx-auto bg-primary focus:opacity-50 '
+                className={modify?' save mt-2 w-1/2 mx-auto bg-primary focus:opacity-50 ': 'hidden'}
                 fullWidth
                 type='submit'
                 onClick={lockForm}
