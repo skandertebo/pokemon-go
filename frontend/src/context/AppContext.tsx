@@ -14,6 +14,7 @@ import PokemonProgress from '../components/PokemonProgress';
 import useLastNotificationCheck from '../hooks/useLastNotificationCheck';
 import { apiBaseUrl } from '../config';
 import { useAuthContext } from './AuthContext';
+import OfflinePage from '../pages/OfflinePage';
 type AppContextType = {
   makeNotification: (props: NotificationType) => void;
   enableWaiting: () => void;

@@ -8,6 +8,8 @@ import { AppContextProvider } from './context/AppContext';
 import { ThemeProvider, createTheme } from '@mui/material';
 import { AuthContextProvider } from './context/AuthContext';
 import './App.css';
+import { registerSW } from 'virtual:pwa-register';
+import OfflinePage from './pages/OfflinePage';
 
 declare module '@mui/material/styles' {
   interface Palette {
@@ -33,16 +35,28 @@ const theme = createTheme({
   }
 });
 
+const updateSW = registerSW({
+  onNeedRefresh() {
+    if (confirm('New content available. Reload?')) {
+      updateSW(true);
+    }
+  }
+});
+
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-    <AuthContextProvider>
-      <GoogleMapsLoaderProvider>
-        <AppContextProvider>
-          <ThemeProvider theme={theme}>
-            <RouterProvider router={routes} />
-          </ThemeProvider>
-        </AppContextProvider>
-      </GoogleMapsLoaderProvider>
-    </AuthContextProvider>
-  </React.StrictMode>
+  !navigator.onLine ? (
+    <OfflinePage />
+  ) : (
+    <React.StrictMode>
+      <AuthContextProvider>
+        <GoogleMapsLoaderProvider>
+          <AppContextProvider>
+            <ThemeProvider theme={theme}>
+              <RouterProvider router={routes} />
+            </ThemeProvider>
+          </AppContextProvider>
+        </GoogleMapsLoaderProvider>
+      </AuthContextProvider>
+    </React.StrictMode>
+  )
 );
