@@ -67,6 +67,10 @@ class PlayerService
             $data->image->move('../public/files/images',$imageFileName);
             $player->setImage($imageFileName);
         }
+        else if ($data -> image == "")
+        {
+            $player -> setImage("");
+        }
 
 
         $this->playerRepository->save($player,true);

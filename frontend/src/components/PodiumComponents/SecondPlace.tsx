@@ -23,7 +23,7 @@ const SecondPlace: React.FC<{ player: User | null }> = ({ player }) => {
         <div className=' relative bottom-7 h-16 w-16 rounded-full border-4 border-[#C0C0C0] bg-fourth ' />
       )}
 
-      <p className='break-all  pl-1 pr-1  relative bottom-3 text-[#C0C0C0] font-black'>
+      <p className='overflow-hidden w-full text-ellipsis text-center pl-1 pr-1  relative bottom-3 text-[#C0C0C0] font-black'>
         {player ? player.playerTag : ''}
       </p>
       <p className='text-md relative bottom-1'>{player ? player.score : ''}</p>
