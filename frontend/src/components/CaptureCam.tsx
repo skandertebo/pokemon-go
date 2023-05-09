@@ -6,8 +6,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 //@ts-ignore
 import TouchControls from '../assets/threeControls/TouchControls.js';
 import { Button, Typography } from '@material-tailwind/react';
-import {BsArrowLeft} from 'react-icons/bs';
-
+import { BsArrowLeft } from 'react-icons/bs';
 
 enum CapturingState {
   NOT_STARTED,
@@ -18,7 +17,7 @@ enum CapturingState {
 const CaptureCam: React.FC<{
   spawn: Spawn;
   captureAction: (spawn: Spawn) => void;
-  setIsCapturing:(el:Spawn | null)=>void;
+  setIsCapturing: (el: Spawn | null) => void;
 }> = ({ spawn, captureAction, setIsCapturing }) => {
   const modelRef = useRef<THREE.Group | undefined>();
   const cameraRef = useRef<THREE.Camera | undefined>();
@@ -132,19 +131,22 @@ const CaptureCam: React.FC<{
 
   return createPortal(
     <div
-    id='capture-cam-wrapper'
-    className='absolute top-0 h-screen w-screen bg-black bg-opacity-90 z-20 flex p-0 overflow-hidden'
+      id='capture-cam-wrapper'
+      className='absolute top-0 h-screen w-screen bg-black bg-opacity-90 z-20 flex p-0 overflow-hidden'
     >
       <div className='absolute top-0 w-full flex justify-between items-center z-30 p-2 px-6'>
-          <div className='w-4'> 
-            <BsArrowLeft className='text-4xl text-secondary ' onClick={()=>setIsCapturing(null)}/>
-          </div>
+        <div className='w-4'>
+          <BsArrowLeft
+            className='text-4xl text-secondary '
+            onClick={() => setIsCapturing(null)}
+          />
+        </div>
         <Typography variant='h6' className='text-center text-secondary'>
           Find the pokemon and press the PokeBall
         </Typography>
       </div>
       <div id='3d-container' className='absolute h-screen w-screen'>
-        <div className='absolute bottom-10 left-[calc(50%-2rem)]'>
+        <div className='absolute bottom-16 left-[calc(50%-2rem)]'>
           <button
             className="bg-[url('/public/images/pokeball.png')] bg-cover animate-bounce w-16 h-16 rounded-full flex items-center justify-center shadow-md focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed disabled:animate-none disabled:shadow-none"
             disabled={!isReady}
