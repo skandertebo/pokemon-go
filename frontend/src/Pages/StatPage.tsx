@@ -18,7 +18,7 @@ export default function StatPage() {
   const { makeNotification, enableWaiting, disableWaiting } = useAppContext();
 
   const [spawns, setSpawns] = useState<Spawn[] | null>(null); //this is the data you need to fetch from the backend
-  let score = user?.score;
+  let score = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!).score : 0;
   async function fetchData(pagination: string) {
     try {
       const res = await axios.get(
@@ -56,7 +56,7 @@ export default function StatPage() {
     return <PokemonProgress />;
   } else {
     return (
-      <div className='w-full min-h-screen  bg-third text-sans mb-16'>
+      <div className='w-full min-h-screen  bg-third text-sans pb-16'>
         <h1 className='text-3xl text-white font-semibold font-sans text-center w-full pt-8 '>
           Statistics
         </h1>
@@ -93,7 +93,7 @@ export default function StatPage() {
             </h1>
           </div>
           {spawns.length === 0 ? (
-            <h1 className='text-xl text-primary text-center w-full py-6'>
+            <h1 className='text-xl text-primary text-center w-full pt-20 h-[calc(100vh-300px)]'>
               No Pokemons Captured Yet
             </h1>
           ) : (

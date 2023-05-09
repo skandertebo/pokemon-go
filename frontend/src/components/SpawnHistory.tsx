@@ -8,7 +8,7 @@ import shoudDisplayDefaultImage from '../utils/shouldDisplayDefaultImage';
 
 export default function SpawnHistory({ capture }: { capture: CaptureBody }) {
   return (
-    <div className='w-[calc(100%-25px)] sm:w-fit h-fit px-2 py-1 relative border-b-[1px] border-primary mx-auto  '>
+    <div className='w-[calc(100%-25px)] sm:w-fit h-fit min-h-max px-2 py-1 relative border-b-[1px] border-primary mx-auto  '>
       <img
         src={
           shoudDisplayDefaultImage(capture.pokemon.image)
