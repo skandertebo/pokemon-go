@@ -1,3 +1,4 @@
+import Button from "@mui/material/Button";
 import Dashboard from "../components/DashboardAdmin";
 
 function DashboardPage(){

@@ -10,7 +10,9 @@ import { useAppContext } from "../context/AppContext";
 import { SpawnBody } from "../types/SpawnBody";
 import PokemonProgress from "./PokemonProgress";
 
+
 function Dashboard(){
+    const {setToken} = useAuthContext()!;
     const [spawnData, setSpawnData] = useState<SpawnBody>({
         pokemonId: '',
         longitude: '',
@@ -100,6 +102,13 @@ function Dashboard(){
             <div className='m-4 '>
                 <Button className="bg-third w-3/4 h-12 rounded-md font-bold text-primary md:w-[300px] lg:w-[300px]" type='submit'>Add Spawn</Button>
             </div>
+            <Button className="bg-fourth w-1/2 h-12 rounded-md font-bold text-primary md:w-[300px] lg:w-[300px] mt-12 "
+            onClick={() => {
+                setToken(null);
+            }}
+            >
+                logout
+            </Button>
             {error && <div>{error}</div>}
         </form>
     )
