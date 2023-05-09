@@ -17,6 +17,8 @@ export default function MenuPage(): JSX.Element {
   const pageRef = useRef<HTMLDivElement>(null);
   const { setToken } = useAuthContext()!;
   useEffect(() => {
+    document.body.style.overflow = 'hidden';
+
     // remove animation class after the animation is done
     const timeout = setTimeout(() => {
       document
@@ -24,7 +26,10 @@ export default function MenuPage(): JSX.Element {
         ?.classList.remove('scroll-up-animation');
     }, 500);
 
-    return () => clearTimeout(timeout);
+    return () => {
+      document.body.style.overflow = 'auto';
+      clearTimeout(timeout);
+    };
   }, []);
 
   const routes = [
@@ -48,7 +53,7 @@ export default function MenuPage(): JSX.Element {
   return (
     <div
       ref={pageRef}
-      className='absolute overflow-hidden flex flex-col items-center z-10 bg-white w-screen h-screen scroll-up-animation'
+      className='fixed overflow-hidden flex flex-col items-center z-10 bg-white w-screen h-screen scroll-up-animation'
     >
       <header className='fixed flex justify-between items-center w-full p-4 bg-primary'>
         <ArrowLeftIcon

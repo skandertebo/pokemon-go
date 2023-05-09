@@ -50,7 +50,7 @@ class SpawnController extends AbstractController
         {
             return createValidationErrorResponse($errors);
         }
-        $newPokemon=$this->spawnService->autoSpawn($dto->latitude,$dto->longitude);
+        $this->spawnService->autoSpawn($dto->latitude,$dto->longitude);
         return new JsonResponse() ;
         
     }
