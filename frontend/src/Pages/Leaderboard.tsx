@@ -6,6 +6,7 @@ import { useAuthContext } from '../context/AuthContext';
 import FirstPlace from '../components/PodiumComponents/FirstPlace';
 import SecondPlace from '../components/PodiumComponents/SecondPlace';
 import ThirdPlace from '../components/PodiumComponents/ThirdPlace';
+import PokemonProgress from '../components/PokemonProgress';
 
 function Leaderboard() {
   const { token, user } = useAuthContext() as {
@@ -15,7 +16,7 @@ function Leaderboard() {
   const players = useLeaderboard(token);
 
   if (!players) {
-    return <></>;
+    return <PokemonProgress/>;
   }
 
   return (
