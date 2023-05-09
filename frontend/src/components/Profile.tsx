@@ -51,12 +51,21 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
   };
 
   const handleImageRemoval = () => {
-    // todo
+    setImagePreview('_');
+    setEditedFields((prev) => {
+      const newFields = new Map(prev);
+      newFields.set('image', null);
+      return newFields;
+    });
   };
 
   function lockForm() {
+    if(modify){
+      if(editedFields.size === 0) setModify(false);
+    }else{
     setModify((prev) => !prev);
-  }
+    }}
+  
 
   const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -74,13 +83,13 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
         <Button
           className=' mod_button ml-auto mt-2 mr-2 hover:transform hover:scale-105 hover:transition hover:duration-200 bg-third   rounded-full h-16 border-none w-16 flex justify-center items-center  text-9xl'
           onClick={lockForm}
-          disabled={modify}
+          disabled={editedFields.size !== 0}
         >
           <AiFillEdit className='text-white ' />
         </Button>
         <div className=' p-2 mt-5 ml-2 absolute left-0 top-0 font-sans'>
-          <Typography variant='h4' color='blue-gray'>
-            Profile!
+          <Typography variant='h4' className='text-primary'>
+            Profile
           </Typography>
         </div>
         <div>
@@ -100,30 +109,53 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                 alt='image avatar'
                 className='mx-auto mb-4 w-[200px] h-[200px] rounded-full border-8 border-third p-3 justify-self-center flex '
               />
-              <div>
-                <label className='  hover:text-third   rounded-full text-lg '>
+              <div className='h-0'>
+                <label className='  hover:text-third   rounded-full text-lg ' htmlFor='image' >
                   {modify ? (
-                    <div className='text-center'>Edit profile picture</div>
+                    <div className='bg-secondary border-4 border-third w-12 h-12 rounded-full flex justify-center items-center relative -top-20 left-52 cursor-pointer'>
+                        <AiFillEdit className='text-third text-2xl'/>
+                    </div>
                   ) : (
                     <div></div>
                   )}
-                  <input
+                </label>
+                <input
                     type='file'
+                    accept='image/*'
+                    name='image'
+                    id='image'
                     ref={imageInput}
                     onChange={handleImageChange}
-                    className='hidden '
+                    className='hidden'
                     disabled={!modify}
-                  ></input>
-                </label>
+                ></input>
+              </div>
+              <div className='w-full flex flex-row justify-center gap-9 mb-4'>
+                <div
+                className='w-20 bg-red-300 h-12 rounded-full flex justify-center items-center cursor-pointer clickable shadow-md shadow-gray-500 '
+                onClick={handleImageRemoval}
+                >
+                  <h1 className='text-white font-sans font-medium'>
+                    remove
+                  </h1>
+                </div>
+                <div
+                className='w-20 bg-red-300 h-12 rounded-full flex justify-center items-center cursor-pointer clickable shadow-md shadow-gray-500 '
+                onClick={handleImageReset}
+                >
+                  <h1 className='text-white font-sans'>
+                    reset
+                  </h1>
+                </div>
               </div>
             </div>
             <div className='mb-2 flex flex-col gap-6'>
               <div>
-                <label className='text-black mr-60 p-0  text-lg font-medium'>
+                <label className='text-primary mr-60 p-0  text-lg font-medium'>
                   UserName
                 </label>
                 <input
-                  className='inline-block w-full shrink-1 focus:outline-none  rounded-full bg-transparent  p-3 leading-relaxed text-fourth placeholder-primary shadow focus:shadow-third  placeholder:opacity-50'
+                  className='inline-block w-full shrink-1 focus:outline-none  rounded-full bg-transparent  p-3 leading-relaxed text-fourth placeholder-primary shadow focus:shadow-third  placeholder:opacity-50 bg-white disabled:bg-inherit'
                   type='text'
                   value={playerTag}
                   onChange={(e) => {
@@ -146,11 +178,11 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                 />
               </div>
               <div>
-                <label className='text-black mr-60 p-0  text-lg font-medium'>
+                <label className='text-primary mr-60 p-0  text-lg font-medium'>
                   Email
                 </label>
                 <input
-                  className='inline-block w-full shrink-1 focus:outline-none  rounded-full bg-transparent  p-3 leading-relaxed text-fourth placeholder-primary shadow focus:shadow-third  placeholder:opacity-50'
+                  className='inline-block w-full shrink-1 focus:outline-none  rounded-full bg-transparent  p-3 leading-relaxed text-fourth placeholder-primary shadow focus:shadow-third  placeholder:opacity-50 bg-white disabled:bg-inherit'
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
@@ -172,12 +204,12 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                 />
               </div>
               <div>
-                <label className='text-black mr-60 p-0  text-lg font-medium'>
+                <label className='text-primary mr-60 p-0  text-lg font-medium'>
                   Password
                 </label>
                 <input
                   type='password'
-                  className='inline-block w-full shrink-1 focus:outline-none  rounded-full bg-transparent  p-3 leading-relaxed text-fourth placeholder-primary shadow focus:shadow-third  placeholder:opacity-50'
+                  className='inline-block w-full shrink-1 focus:outline-none  rounded-full bg-transparent  p-3 leading-relaxed text-fourth placeholder-primary shadow focus:shadow-third  placeholder:opacity-50 bg-white disabled:bg-inherit'
                   placeholder='Edit Password'
                   value={password}
                   onChange={(e) => {
@@ -205,7 +237,7 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
                 className=' save mt-2 w-1/2 mx-auto bg-primary focus:opacity-50 '
                 fullWidth
                 type='submit'
-                // onClick={lockForm}
+                onClick={lockForm}
                 disabled={!modify || editedFields.size === 0}
               >
                 Save Profile
