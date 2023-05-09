@@ -66,7 +66,7 @@ function LoginComp() {
   return (
     <>
     <form
-      className='text-center max-w-screen-md w-full m-auto p-5 mb-[245px]
+      className='text-center max-w-screen-md w-full m-auto p-5 mt-[200px]
     md:p-1/5 md:mb-[100px] md:mr-[100px] md:w-[400px] 
     lg:mr-[100px] lg:mb-[350px] lg:w-[600px]'
       onSubmit={handleSubmit}
