@@ -79,10 +79,11 @@ class SpawnRepository extends ServiceEntityRepository
    public function findByOwnerOrdered($id)
    {
         $query = $this->createQueryBuilder('s')
-            ->andWhere('s.owner =: id')
+            ->Where('s.owner = :id')
             ->setParameter('id', $id)
             ->orderBy('s.captureDate', 'DESC')
             ->getQuery();
+        dump($query);
         return $query->getResult();
    }
 

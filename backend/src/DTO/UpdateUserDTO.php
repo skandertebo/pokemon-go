@@ -17,7 +17,7 @@ class UpdateUserDTO
 
     
     #[Assert\File(
-        maxSize: '1024k',
+        maxSize: '5120k',
         extensions: ['jpg','png'],
         extensionsMessage: 'Please upload a valid image: max size is 1MB and allowed extensions are jpg and png',
     )]

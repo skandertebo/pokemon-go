@@ -140,6 +140,7 @@ class SpawnService
                 throw new HttpException(400,"Invalid date parameter");
             }    
         }
+        dump($playerId);
         return $this->spawnRepository->findByOwnerOrdered($playerId);
     }
 
