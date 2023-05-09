@@ -64,6 +64,7 @@ const MainPage: React.FC = () => {
         <CaptureCam
           spawn={isCapturing}
           captureAction={(spawn: Spawn) => handleCapture(spawn)}
+          setIsCapturing={setIsCapturing}
         />
       )}
       <div className='absolute bottom-20 left-1/2 transform -translate-x-1/2 z-5'>

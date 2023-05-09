@@ -18,7 +18,8 @@ enum CapturingState {
 const CaptureCam: React.FC<{
   spawn: Spawn;
   captureAction: (spawn: Spawn) => void;
-}> = ({ spawn, captureAction }) => {
+  setIsCapturing:(el:Spawn | null)=>void;
+}> = ({ spawn, captureAction, setIsCapturing }) => {
   const modelRef = useRef<THREE.Group | undefined>();
   const cameraRef = useRef<THREE.Camera | undefined>();
   const sceneRef = useRef<THREE.Scene | undefined>();
@@ -136,7 +137,7 @@ const CaptureCam: React.FC<{
     >
       <div className='absolute top-0 w-full flex justify-between items-center z-30 p-2 px-6'>
           <div className='w-4'> 
-            <BsArrowLeft className='text-4xl text-secondary ' onClick={() => window.location.reload()}/>
+            <BsArrowLeft className='text-4xl text-secondary ' onClick={()=>setIsCapturing(null)}/>
           </div>
         <Typography variant='h6' className='text-center text-secondary'>
           Find the pokemon and press the PokeBall
