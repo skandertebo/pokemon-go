@@ -12,7 +12,7 @@ export const useAuthContext = () => useContext(AuthContext);
 export const AuthContextProvider: React.FC<PropsWithChildren> = ({
   children
 }) => {
-  const { authentication, setToken, user, token } = useLogin();
+  const { authentication, setToken, user, token, setUser } = useLogin();
   if (authentication === AuthenticationStates.VERIFYING_AUTH) {
     return (
       <Backdrop open={true}>
@@ -21,7 +21,9 @@ export const AuthContextProvider: React.FC<PropsWithChildren> = ({
     );
   }
   return (
-    <AuthContext.Provider value={{ authentication, setToken, user, token }}>
+    <AuthContext.Provider
+      value={{ authentication, setToken, user, token, setUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

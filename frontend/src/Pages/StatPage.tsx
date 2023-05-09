@@ -18,7 +18,7 @@ export default function StatPage() {
   const { makeNotification, enableWaiting, disableWaiting } = useAppContext();
 
   const [spawns, setSpawns] = useState<Spawn[] | null>(null); //this is the data you need to fetch from the backend
-  let score = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!).score : 0;
+  let score = user!.score;
   async function fetchData(pagination: string) {
     try {
       const res = await axios.get(

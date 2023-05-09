@@ -50,7 +50,7 @@ const MainLayout: React.FC = () => {
     ) => {
       const url =
         !page || !limit
-          ? apiBaseUrl + `/notification/user/${user!.id}?`
+          ? apiBaseUrl + `/notification/user/${user?.id}?`
           : apiBaseUrl +
             `/notification/user/${user!.id}?page=${page}&limit=${limit}`;
       const res = await axios.get(url, {

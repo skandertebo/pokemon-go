@@ -20,11 +20,7 @@ declare global {
 
 const MainPage: React.FC = () => {
   const [isCapturing, setIsCapturing] = useState<Spawn | null>(null);
-  const { token, user } = useAuthContext() as{
-    token: string;
-    user:User;
-  }
-  //const [spawns, nearbySpawn] = useSpawns(token);
+  const { token, user, setUser } = useAuthContext()!;
   const spawns = useSpawns();
   const nearbySpawn = useNearbySpawn(spawns);
   const { makeNotification } = useAppContext();
@@ -43,14 +39,16 @@ const MainPage: React.FC = () => {
           }
         }
       );
-      localStorage.setItem('user',
-        JSON.stringify({...user , score: user!.score + res.data.pokemon.baseScore}));
+      setUser({
+        ...user,
+        score: user!.score + res.data.pokemon.baseScore
+      } as User);
+
       makeNotification({
         message: 'Pokemon Captured!',
         type: 'success',
         duration: 4000
       });
-      
     } catch (e) {
       console.error(e);
       makeNotification({
