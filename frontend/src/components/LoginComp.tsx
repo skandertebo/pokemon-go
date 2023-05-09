@@ -6,8 +6,12 @@ import { loginUser } from '../apiCalls/login';
 import { useAuthContext } from '../context/AuthContext';
 import { Navigate } from 'react-router-dom';
 import { LoginBody } from '../types/LoginBody';
+import {GiEvilEyes} from 'react-icons/gi'
+import{VscEyeClosed,VscEye} from 'react-icons/vsc'
+
 
 function LoginComp() {
+  const [openEye,setOpenEye]=useState<boolean>(true)
   const { token, setToken } = useAuthContext() as {
     token: string;
     setToken: React.Dispatch<React.SetStateAction<string>>;
@@ -20,6 +24,7 @@ function LoginComp() {
 
   const navigate = useNavigate();
   const [error, setError] = useState<string>('');
+  const [type, setType] = useState<string>('password');
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -44,6 +49,11 @@ function LoginComp() {
     }
   };
 
+  const onClickEye = () => {
+    setType(type === 'password' ? 'text' : 'password');
+    setOpenEye(!openEye)
+  }
+
   if (token) {
     return <Navigate to={'/'} />;
   }
@@ -51,7 +61,7 @@ function LoginComp() {
   return (
     <>
     <form
-      className='text-center max-w-screen-md w-full m-auto p-5 mb-[250px]
+      className='text-center max-w-screen-md w-full m-auto p-5 mb-[245px]
     md:p-1/5 md:mb-[100px] md:mr-[100px] md:w-[400px] 
     lg:mr-[100px] lg:mb-[350px] lg:w-[600px]'
       onSubmit={handleSubmit}
@@ -74,16 +84,18 @@ function LoginComp() {
           placeholder='Enter Your Email'
         />
       </div>
-      <div className='m-3 '>
+      <div className='m-3 relative'>
         <input
           className='w-full h-12 px-2.5 rounded-md border-solid border-2  lg:w-[400px]'
-          type='password'
+          type={type}
           id='password'
           name='password'
           value={loginData.password}
           onChange={handleInputChange}
           placeholder='Enter Your Password'
         />
+        <VscEye className={openEye ? 'absolute text-2xl text-primary right-2 top-3 cursor-pointer' : 'hidden'} onClick={()=>onClickEye()}/>
+        <VscEyeClosed className={openEye ? 'hidden' :'absolute text-2xl text-primary right-2 top-3 cursor-pointer' } onClick={()=>onClickEye()}/>
       </div>
       <div className='m-1'>
         <Button

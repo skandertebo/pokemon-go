@@ -4,8 +4,11 @@ import { registerUser } from '../apiCalls/register';
 import { useAuthContext } from '../context/AuthContext';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { RegisterBody } from '../types/RegisterBody';
+import { VscEye,VscEyeClosed} from 'react-icons/vsc';
 
 function RegisterComp() {
+  const [openEye, setOpenEye] = useState<boolean>(false);
+  const [type, setType] = useState<string>('password');
   const { setToken, token } = useAuthContext()!;
   const [error, setError] = useState();
 
@@ -16,6 +19,11 @@ function RegisterComp() {
     image: '',
     role: 'player'
   });
+
+  const onClickEye = () => {
+    setType(type === 'password' ? 'text' : 'password');
+    setOpenEye(!openEye);
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -48,9 +56,9 @@ function RegisterComp() {
   return (
     <>
     <form
-      className='text-center max-w-screen-md w-full m-auto p-5 mb-[240px]
+      className='text-center max-w-screen-md w-full m-auto p-5 mb-[210px]
     md:p-1/5 md:mb-[100px] md:mr-[100px] md:w-[400px] 
-    lg:mr-[100px] lg:mb-[350px] lg:w-[600px]'
+    lg:mr-[100px] lg:mb-[350px] lg:w-[600px] '
       onSubmit={handleSubmit}
     >
       <div className='m-2'>
@@ -77,10 +85,10 @@ function RegisterComp() {
           required
         />
       </div>
-      <div className='m-2'>
+      <div className='m-2 relative'>
         <input
           className='w-full h-12 px-2.5 rounded-md border-solid border-2 lg:w-[400px]'
-          type='password'
+          type={type}
           id='password'
           name='password'
           value={registerData.password}
@@ -88,6 +96,8 @@ function RegisterComp() {
           placeholder='Enter Your Password'
           required
         />
+        <VscEyeClosed className={openEye ? 'absolute text-2xl text-primary right-2 top-3 cursor-pointer' : 'hidden'} onClick={()=>onClickEye()}/>
+        <VscEye className={openEye ? 'hidden' :'absolute text-2xl text-primary right-2 top-3 cursor-pointer' } onClick={()=>onClickEye()}/>
       </div>
       <div className='m-2'>
         <Button
@@ -97,7 +107,10 @@ function RegisterComp() {
           Register
         </Button>
       </div>
-      <h2 className='text-primary text-l mx-auto text-bold'>
+      <h2
+        className='text-base text-primary md:text-primary rounded-md mx-auto bg-gray-100 rounded-md bg-opacity-60 p-2'
+         style={{ width: 'fit-content' }}
+      >
         Already have an account?
         <Link
           className='text-base font-bold text-primary italic hover:not-italic md:text-secondary lg:text-primary '
