@@ -8,6 +8,7 @@ import { getPokemons } from "../apiCalls/getPokemons";
 import Pokemon from "../types/Pokemon";
 import { useAppContext } from "../context/AppContext";
 import { SpawnBody } from "../types/SpawnBody";
+import PokemonProgress from "./PokemonProgress";
 
 function Dashboard(){
     const [spawnData, setSpawnData] = useState<SpawnBody>({
@@ -17,8 +18,9 @@ function Dashboard(){
         radius: '',
     });
 
-    const {user}=useAuthContext()as {
+    const {user,token}=useAuthContext()as {
         user: User;
+        token: string;
     }
 
     const {makeNotification} = useAppContext();
@@ -60,6 +62,12 @@ function Dashboard(){
         }
     };
 
+    if (!token){
+        return(
+        <Navigate
+        to={'/login'}
+       />)
+    }
     if (user.playerTag){
         return(
         <Navigate
@@ -68,7 +76,7 @@ function Dashboard(){
     }
 
     if(!pokemons){
-        return <div>Loading...</div>
+        return <PokemonProgress/>
     }
     return(
         <form className='text-center max-w-screen-md w-full m-auto p-5 ' onSubmit={handleSubmit}>
