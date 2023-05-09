@@ -56,12 +56,12 @@ export default function StatPage() {
     return <PokemonProgress />;
   } else {
     return (
-      <div className='w-full min-h-screen  bg-third text-sans pb-16'>
+      <div className='w-full min-h-screen  bg-third text-sans pb-16'> {/* //complete this div to make the page cover the whole screen */}
         <h1 className='text-3xl text-white font-semibold font-sans text-center w-full pt-8 '>
           Statistics
         </h1>
         <ScoreComponent score={score} />
-        <div className='bg-secondary rounded-xl w-full md:w-1/2 mx-auto'>
+        <div className='bg-secondary rounded-xl w-full md:w-1/2 mx-auto min-h-full'>
           <h1 className='text-2xl text-primary text-center w-full py-6 '>
             Capture History
           </h1>
