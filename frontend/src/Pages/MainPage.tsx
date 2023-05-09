@@ -11,6 +11,7 @@ import { spawnsContext } from '../context/SpawnsContext';
 import axios from 'axios';
 import { apiBaseUrl } from '../config';
 import useNearbySpawn from '../hooks/useNearbySpawn';
+import User from '../types/User';
 declare global {
   interface Window {
     initMap: () => void;
@@ -19,8 +20,7 @@ declare global {
 
 const MainPage: React.FC = () => {
   const [isCapturing, setIsCapturing] = useState<Spawn | null>(null);
-  const { token, user } = useAuthContext() as UseLoginReturnType;
-  //const [spawns, nearbySpawn] = useSpawns(token);
+  const { token, user, setUser } = useAuthContext()!;
   const spawns = useSpawns();
   const nearbySpawn = useNearbySpawn(spawns);
   const { makeNotification } = useAppContext();
@@ -39,6 +39,11 @@ const MainPage: React.FC = () => {
           }
         }
       );
+      setUser({
+        ...user,
+        score: user!.score + res.data.pokemon.baseScore
+      } as User);
+
       makeNotification({
         message: 'Pokemon Captured!',
         type: 'success',

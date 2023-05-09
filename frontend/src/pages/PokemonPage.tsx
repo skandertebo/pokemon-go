@@ -6,25 +6,24 @@ import axios from 'axios';
 import { apiBaseUrl } from '../config';
 import { useAppContext } from '../context/AppContext';
 import { useAuthContext } from '../context/AuthContext';
-import { UseLoginReturnType } from '../types';
 import User from '../types/User';
+import PokemonProgress from '../components/PokemonProgress';
+import {BsArrowLeft} from 'react-icons/bs';
 
 export default function PokemonPage() {
   const { id } = useParams();
   const [pokemon, setPokemon] = useState(null);
   const { token } = useAuthContext()!;
   const { makeNotification } = useAppContext();
-  const { enableWaiting, disableWaiting } = useAppContext();
 
   useEffect(() => {
     async function fetchData() {
-      enableWaiting();
       try {
         const res = await axios.get(apiBaseUrl + '/pokemon/' + id, {
           headers: {
             Authorization: `Bearer ${token}`
           }
-        });
+        }); 
         setPokemon(res.data);
       } catch (e) {
         console.error(e);
@@ -33,12 +32,19 @@ export default function PokemonPage() {
           type: 'error',
           duration: 4000
         });
-      } finally {
-        disableWaiting();
       }
     }
     fetchData();
   }, []);
-
-  return <div>{pokemon && <PokemonComponent pokemon={pokemon} />}</div>;
+  if(!pokemon) {
+    return <PokemonProgress />;
+  }
+  return (
+    <div className='relative'>
+      {pokemon && <PokemonComponent pokemon={pokemon} />}
+      <div>
+        <BsArrowLeft className='absolute top-0 left-0 text-4xl text-primary mt-4 ml-4' onClick={() => window.history.back()}/>
+      </div>
+    </div>
+  );
 }

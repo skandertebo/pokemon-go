@@ -52,6 +52,7 @@ function ProfilePage() {
         }
       });
       setLocalUser(res.data);
+      setLocalUser(res.data);
       makeNotification({
         message: res.data.message,
         type: 'success',

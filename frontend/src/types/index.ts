@@ -21,6 +21,7 @@ export type UseLoginReturnType = {
   authentication: AuthenticationStates;
   setToken: (token: string | null) => void;
   user: User | null;
+  setUser: (user: User) => void;
   token: string | null;
 };
 
