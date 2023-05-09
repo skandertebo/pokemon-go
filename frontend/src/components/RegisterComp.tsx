@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button } from '@material-tailwind/react';
 import { registerUser } from '../apiCalls/register';
 import { useAuthContext } from '../context/AuthContext';
@@ -10,7 +10,7 @@ function RegisterComp() {
   const [openEye, setOpenEye] = useState<boolean>(false);
   const [type, setType] = useState<string>('password');
   const { setToken, token } = useAuthContext()!;
-  const [error, setError] = useState();
+  const [error, setError] = useState<string>('');
 
   const [registerData, setRegisterData] = useState<RegisterBody>({
     playerTag: '',
@@ -48,6 +48,17 @@ function RegisterComp() {
       setError(error.message);
     }
   };
+
+  
+  useEffect(() => {
+    if (error !== '') {
+      const timeout = setTimeout(() => {
+        setError('');
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [error]);
 
   if (token) {
     return <Navigate to={'/'} />;

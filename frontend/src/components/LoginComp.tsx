@@ -22,7 +22,6 @@ function LoginComp() {
     password: ''
   });
 
-  const navigate = useNavigate();
   const [error, setError] = useState<string>('');
   const [type, setType] = useState<string>('password');
 
@@ -53,6 +52,16 @@ function LoginComp() {
     setType(type === 'password' ? 'text' : 'password');
     setOpenEye(!openEye)
   }
+
+  useEffect(() => {
+    if (error !== '') {
+      const timeout = setTimeout(() => {
+        setError('');
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [error]);
 
   if (token) {
     return <Navigate to={'/'} />;
