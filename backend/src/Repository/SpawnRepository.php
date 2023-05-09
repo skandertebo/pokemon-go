@@ -45,6 +45,7 @@ class SpawnRepository extends ServiceEntityRepository
     {
         return  $this->createQueryBuilder('s')
        ->andWhere('s.captureDate>:date')
+       ->orderBy("s.captureDate",'DESC')
        ->setParameter('date', $date);
         
     }
@@ -75,6 +76,15 @@ class SpawnRepository extends ServiceEntityRepository
         return $query->getResult();
    }
 
+   public function findByOwnerOrdered($id)
+   {
+        $query = $this->createQueryBuilder('s')
+            ->andWhere('s.owner =: id')
+            ->setParameter('id', $id)
+            ->orderBy('s.captureDate', 'DESC')
+            ->getQuery();
+        return $query->getResult();
+   }
 
 
 //    /**
