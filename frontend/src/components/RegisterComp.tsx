@@ -5,13 +5,14 @@ import { useAuthContext } from '../context/AuthContext';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { RegisterBody } from '../types/RegisterBody';
 import { VscEye,VscEyeClosed} from 'react-icons/vsc';
+import { useAppContext } from '../context/AppContext';
 
 function RegisterComp() {
   const [openEye, setOpenEye] = useState<boolean>(false);
   const [type, setType] = useState<string>('password');
   const { setToken, token } = useAuthContext()!;
   const [error, setError] = useState<string>('');
-
+  const {enableWaiting, disableWaiting} = useAppContext();
   const [registerData, setRegisterData] = useState<RegisterBody>({
     playerTag: '',
     email: '',
@@ -35,6 +36,8 @@ function RegisterComp() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    enableWaiting();
+    setError('');
     try {
       const userData = await registerUser(registerData);
       if (userData.error) {
@@ -46,19 +49,10 @@ function RegisterComp() {
       console.error(error);
       //@ts-ignore
       setError(error.message);
+    } finally {
+      disableWaiting();
     }
   };
-
-  
-  useEffect(() => {
-    if (error !== '') {
-      const timeout = setTimeout(() => {
-        setError('');
-      }, 3000);
-
-      return () => clearTimeout(timeout);
-    }
-  }, [error]);
 
   if (token) {
     return <Navigate to={'/'} />;

@@ -8,10 +8,12 @@ import { Navigate } from 'react-router-dom';
 import { LoginBody } from '../types/LoginBody';
 import {GiEvilEyes} from 'react-icons/gi'
 import{VscEyeClosed,VscEye} from 'react-icons/vsc'
+import { useAppContext } from '../context/AppContext';
 
 
 function LoginComp() {
   const [openEye,setOpenEye]=useState<boolean>(true)
+  const {enableWaiting, disableWaiting} = useAppContext();
   const { token, setToken } = useAuthContext() as {
     token: string;
     setToken: React.Dispatch<React.SetStateAction<string>>;
@@ -35,6 +37,8 @@ function LoginComp() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    enableWaiting();
+    setError('');
     try {
       const userData = await loginUser(loginData);
       if (userData.error) {
@@ -45,6 +49,8 @@ function LoginComp() {
     } catch (error) {
       //@ts-ignore
       setError(error.message);
+    }finally{
+      disableWaiting();
     }
   };
 
@@ -52,16 +58,6 @@ function LoginComp() {
     setType(type === 'password' ? 'text' : 'password');
     setOpenEye(!openEye)
   }
-
-  useEffect(() => {
-    if (error !== '') {
-      const timeout = setTimeout(() => {
-        setError('');
-      }, 3000);
-
-      return () => clearTimeout(timeout);
-    }
-  }, [error]);
 
   if (token) {
     return <Navigate to={'/'} />;
