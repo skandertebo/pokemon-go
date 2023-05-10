@@ -36,10 +36,10 @@ export default function ScoreComponent({
   return (
     <div className='w-full h-20 mt-8 md:w-1/2 mx-auto '>
       <div className='w-full sm:w-96 h-full mx-auto relative'>
-        <div className='inline-block text-5xl text-primary absolute left-[10%]'>
+        <div className='inline-block text-5xl text-primary absolute left-[13%]'>
           <h1>Score:</h1>
         </div>
-        <div className='w-fit inline-block absolute top-2 right-[16%]'>
+        <div className='w-fit inline-block absolute top-2 right-[13%]'>
           <div className={hide}>
             <RiCopperCoinLine
               className={
