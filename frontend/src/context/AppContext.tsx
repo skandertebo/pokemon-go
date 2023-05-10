@@ -97,7 +97,12 @@ export const AppContextProvider: React.FC<React.PropsWithChildren> = ({
         )}
       {waiting &&
         createPortal(
-          <Backdrop open={waiting}>
+          <Backdrop
+            open={waiting}
+            style={{
+              zIndex: 999
+            }}
+          >
             <CircularProgress color='inherit' />
           </Backdrop>,
           document.body

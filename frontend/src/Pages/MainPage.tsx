@@ -23,9 +23,10 @@ const MainPage: React.FC = () => {
   //const [spawns, nearbySpawn] = useSpawns(token);
   const spawns = useSpawns();
   const nearbySpawn = useNearbySpawn(spawns);
-  const { makeNotification } = useAppContext();
+  const { makeNotification, enableWaiting, disableWaiting } = useAppContext();
 
   const handleCapture = useCallback(async (spawn: Spawn) => {
+    enableWaiting();
     try {
       const res = await axios.post(
         apiBaseUrl + '/spawn/catch',
@@ -52,6 +53,7 @@ const MainPage: React.FC = () => {
         duration: 4000
       });
     } finally {
+      disableWaiting();
       setIsCapturing(null);
     }
   }, []);

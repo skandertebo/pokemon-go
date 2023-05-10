@@ -23,7 +23,6 @@ const CaptureCam: React.FC<{
   const [isReady, setIsReady] = useState<boolean>(false);
   const isReadyRef = useRef<boolean>(false);
   const animationFrameRef = useRef<number | undefined>(); // for cleanup
-
   useEffect(() => {
     document.body.style.overflow = 'hidden';
 
