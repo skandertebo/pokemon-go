@@ -104,7 +104,7 @@ function RegisterComp() {
           <VscEyeClosed
             className={
               openEye
-                ? 'absolute text-2xl text-primary right-2 top-3 cursor-pointer'
+                ? 'absolute text-2xl text-primary right-2 top-3 cursor-pointer lg:right-7'
                 : 'hidden'
             }
             onClick={() => onClickEye()}
@@ -113,7 +113,7 @@ function RegisterComp() {
             className={
               openEye
                 ? 'hidden'
-                : 'absolute text-2xl text-primary right-2 top-3 cursor-pointer'
+                : 'absolute text-2xl text-primary right-2 top-3 cursor-pointer lg:right-7'
             }
             onClick={() => onClickEye()}
           />

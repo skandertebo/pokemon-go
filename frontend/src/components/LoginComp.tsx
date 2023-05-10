@@ -100,7 +100,7 @@ function LoginComp() {
           <VscEye
             className={
               openEye
-                ? 'absolute text-2xl text-primary right-2 top-3 cursor-pointer'
+                ? 'absolute text-2xl text-primary right-2 top-3 cursor-pointer lg:right-6'
                 : 'hidden'
             }
             onClick={() => onClickEye()}
@@ -109,7 +109,7 @@ function LoginComp() {
             className={
               openEye
                 ? 'hidden'
-                : 'absolute text-2xl text-primary right-2 top-3 cursor-pointer'
+                : 'absolute text-2xl text-primary right-2 top-3 cursor-pointer lg:right-6'
             }
             onClick={() => onClickEye()}
           />
