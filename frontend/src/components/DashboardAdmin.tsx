@@ -8,8 +8,11 @@ import { getPokemons } from "../apiCalls/getPokemons";
 import Pokemon from "../types/Pokemon";
 import { useAppContext } from "../context/AppContext";
 import { SpawnBody } from "../types/SpawnBody";
+import PokemonProgress from "./PokemonProgress";
+
 
 function Dashboard(){
+    const {setToken} = useAuthContext()!;
     const [spawnData, setSpawnData] = useState<SpawnBody>({
         pokemonId: '',
         longitude: '',
@@ -18,14 +21,13 @@ function Dashboard(){
     });
 
     const {user,token}=useAuthContext()as {
-        token: string;
         user: User;
+        token: string;
     }
 
     const {makeNotification} = useAppContext();
     const [pokemons, setPokemons] = useState<Pokemon[] | undefined>(undefined);
     const [error, setError] = useState<string>('');
-    const navigate = useNavigate();
 
     useEffect(()=>{
         async function fetchPokemons() {
@@ -61,13 +63,13 @@ function Dashboard(){
             console.error(error);
         }
     };
+
     if (!token){
         return(
         <Navigate
         to={'/login'}
-        />)
+       />)
     }
-
     if (user.playerTag){
         return(
         <Navigate
@@ -76,7 +78,7 @@ function Dashboard(){
     }
 
     if(!pokemons){
-        return <div>Loading...</div>
+        return <PokemonProgress/>
     }
     return(
         <form className='text-center max-w-screen-md w-full m-auto p-5 ' onSubmit={handleSubmit}>
@@ -100,6 +102,13 @@ function Dashboard(){
             <div className='m-4 '>
                 <Button className="bg-third w-3/4 h-12 rounded-md font-bold text-primary md:w-[300px] lg:w-[300px]" type='submit'>Add Spawn</Button>
             </div>
+            <Button className="bg-fourth w-1/2 h-12 rounded-md font-bold text-primary md:w-[300px] lg:w-[300px] mt-12 "
+            onClick={() => {
+                setToken(null);
+            }}
+            >
+                logout
+            </Button>
             {error && <div>{error}</div>}
         </form>
     )

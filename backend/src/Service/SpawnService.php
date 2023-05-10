@@ -82,7 +82,8 @@ class SpawnService
             //getting a random pokemon from the list
             $spawn->setPokemon($pokemons[rand(0,count($pokemons)-1)]);
 
-            $this->spawnRepository->save($spawn,true);
+            $result = $this->spawnRepository->save($spawn,true);
+            $this->publishSpawnUpdate('spawn', $result);
         }
     }
     function addSpawn(AddSpawnDTO $data)
@@ -140,6 +141,7 @@ class SpawnService
                 throw new HttpException(400,"Invalid date parameter");
             }    
         }
+        dump($playerId);
         return $this->spawnRepository->findByOwnerOrdered($playerId);
     }
 

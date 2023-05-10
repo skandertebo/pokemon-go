@@ -2,14 +2,13 @@ import React from 'react';
 import './PokemonCard.css';
 import { useState, useEffect } from 'react';
 import { RiCopperCoinLine } from 'react-icons/ri';
-import { BsFire } from 'react-icons/bs';
-import { MdCatchingPokemon } from 'react-icons/md';
 import Pokemon from '../types/Pokemon';
 import { useNavigate } from 'react-router-dom';
 import getBackground from '../utils/getBackground';
 import { apiBaseUrl } from '../config';
 import shoudDisplayDefaultImage from '../utils/shouldDisplayDefaultImage';
 import defaultPokemonImage from '../assets/images/eevee.png';
+import {TbHandClick} from 'react-icons/tb';
 
 export default function PokemonCard({ pokemon }: { pokemon: Pokemon }) {
   const background = getBackground({ pokemon });
@@ -18,6 +17,7 @@ export default function PokemonCard({ pokemon }: { pokemon: Pokemon }) {
   const [isRotated, setIsRotated] = useState(false);
   const [showPokemon, setShowPokemon] = useState(' hidden');
   const [rotate, setRotate] = useState('cursor-pointer');
+  const [pointer, setPointer] = useState(' hidden');
   const navigate = useNavigate();
   const delayedExecution = () => {
     setImage('/images/cardface.png');
@@ -28,6 +28,12 @@ export default function PokemonCard({ pokemon }: { pokemon: Pokemon }) {
     if (!isRotated) {
       setRotate('pokemoncard cursor-pointer');
       setTimeout(delayedExecution, 340);
+      setTimeout(() => {
+        setPointer('');
+      }, 1000);
+      setTimeout(() => {
+        setPointer(' hidden');
+      }, 3000);
     } else {
       navigate('/pokemon/' + pokemon.id);
     }
@@ -86,6 +92,9 @@ export default function PokemonCard({ pokemon }: { pokemon: Pokemon }) {
             Score: {pokemon.baseScore}
           </p>
         </div>
+      </div>
+      <div className={pointer}>
+      <TbHandClick className='absolute top-[160px] right-12 w-28 h-16 text-primary z-30 animate-bounce'/>
       </div>
     </div>
   );

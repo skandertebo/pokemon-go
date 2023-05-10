@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { Suspense } from 'react';
 import './index.css';
 import { GoogleMapsLoaderProvider } from './context/GoogleMapsLoaderContext';
 import { RouterProvider } from 'react-router-dom';
@@ -10,6 +11,7 @@ import { AuthContextProvider } from './context/AuthContext';
 import './App.css';
 import { registerSW } from 'virtual:pwa-register';
 import OfflinePage from './pages/OfflinePage';
+import PokemonProgress from './components/PokemonProgress';
 
 declare module '@mui/material/styles' {
   interface Palette {
@@ -52,7 +54,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         <GoogleMapsLoaderProvider>
           <AppContextProvider>
             <ThemeProvider theme={theme}>
-              <RouterProvider router={routes} />
+              <Suspense fallback={<PokemonProgress />}>
+                <RouterProvider router={routes} />
+              </Suspense>
             </ThemeProvider>
           </AppContextProvider>
         </GoogleMapsLoaderProvider>

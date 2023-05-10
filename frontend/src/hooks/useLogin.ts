@@ -6,6 +6,7 @@ import { apiBaseUrl } from '../config';
 
 export default function useLogin(): UseLoginReturnType {
   const [token, setTokenLocally] = useState(localStorage.getItem('token'));
+  const [user, setUser] = useState<User | null>(null);
 
   const setToken = useCallback(
     (token: string | null) => {
@@ -58,59 +59,15 @@ export default function useLogin(): UseLoginReturnType {
         });
     }
   }, [token]);
-  const [user, locallySetUser] = useState<User | null>(null);
-  const setUser = useCallback(
-    (user: User | null) => {
-      locallySetUser(user);
-      if (user) {
-        localStorage.setItem('user', JSON.stringify(user));
-      } else {
-        localStorage.removeItem('user');
-      }
-    },
-    [locallySetUser]
-  );
-  useEffect(() => {
-    window.addEventListener('storage', (event) => {
-      if (event.key === 'user') {
-        if (event.newValue === null) {
-          locallySetUser(null);
-          if (localStorage.getItem('token')) {
-            localStorage.removeItem('token');
-            setToken(null);
-          }
-        } else {
-          if (user !== JSON.parse(event.newValue)) {
-            setUser(null);
-            if (localStorage.getItem('token')) {
-              localStorage.removeItem('token');
-              setToken(null);
-            }
-          }
-        }
-      }
-    });
-  }, []);
   useEffect(() => {
     window.addEventListener('storage', (event) => {
       if (event.key === 'token') {
         if (event.newValue === null) {
-          if (localStorage.getItem('user')) {
-            localStorage.removeItem('user');
-            setUser(null);
-            setTokenLocally(null);
-          }
-        } else {
-          if (token !== event.newValue) {
-            if (localStorage.getItem('user')) {
-              localStorage.removeItem('user');
-              setUser(null);
-            }
-          }
+          setTokenLocally(null);
         }
       }
     });
   });
 
-  return { authentication, setToken, token, user };
+  return { authentication, setToken, token, user, setUser };
 }
