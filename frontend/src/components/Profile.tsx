@@ -5,6 +5,7 @@ import User from '../types/User';
 import { apiBaseUrl } from '../config';
 import avatarGirl2 from '../assets/avatar-girl2.png';
 import shoudDisplayDefaultImage from '../utils/shouldDisplayDefaultImage';
+import { GrEdit } from 'react-icons/gr';
 
 type EditedFieldsType = Map<keyof User | 'password', any>;
 
@@ -79,8 +80,8 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
           <AiFillEdit className='text-white ' />
         </Button>
         <div className=' p-2 mt-5 ml-2 absolute left-0 top-0 font-sans'>
-          <Typography variant='h4' color='blue-gray'>
-            Profile!
+          <Typography variant='h4' className='text-primary'>
+            Profile
           </Typography>
         </div>
         <div>
@@ -103,7 +104,9 @@ const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
               <div>
                 <label className='  hover:text-third   rounded-full text-lg '>
                   {modify ? (
-                    <div className='text-center'>Edit profile picture</div>
+                    <div className='text-center'>
+                      <GrEdit className='text-2xl text-secondary' />
+                    </div>
                   ) : (
                     <div></div>
                   )}
