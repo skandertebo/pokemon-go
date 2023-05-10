@@ -7,6 +7,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import TouchControls from '../assets/threeControls/TouchControls.js';
 import { Button, Typography } from '@material-tailwind/react';
 import { BsArrowLeft } from 'react-icons/bs';
+import { useAppContext } from '../context/AppContext';
 
 enum CapturingState {
   NOT_STARTED,
@@ -19,12 +20,22 @@ const CaptureCam: React.FC<{
   captureAction: (spawn: Spawn) => void;
   setIsCapturing: (el: Spawn | null) => void;
 }> = ({ spawn, captureAction, setIsCapturing }) => {
+  const { enableWaiting, disableWaiting } = useAppContext();
   const modelRef = useRef<THREE.Group | undefined>();
   const cameraRef = useRef<THREE.Camera | undefined>();
   const sceneRef = useRef<THREE.Scene | undefined>();
   const [isReady, setIsReady] = useState<boolean>(false);
   const isReadyRef = useRef<boolean>(false);
+  const [allLoaded, setAllLoaded] = useState(0); // should equal 3
   const animationFrameRef = useRef<number | undefined>(); // for cleanup
+  useEffect(() => {
+    console.log(allLoaded);
+    if (allLoaded >= 3) {
+      disableWaiting();
+    } else {
+      enableWaiting();
+    }
+  }, [allLoaded]);
   useEffect(() => {
     document.body.style.overflow = 'hidden';
 
@@ -32,7 +43,12 @@ const CaptureCam: React.FC<{
     const scene = new THREE.Scene();
     const geometry = new THREE.PlaneGeometry(100, 100, 32);
     const material = new THREE.MeshBasicMaterial({
-      map: new THREE.TextureLoader().load('/models/grass/oeeb7_2K_Albedo.jpg'),
+      map: new THREE.TextureLoader().load(
+        '/models/grass/oeeb7_2K_Albedo.jpg',
+        () => {
+          setAllLoaded((prev) => prev + 1);
+        }
+      ),
       side: THREE.DoubleSide
     });
 
@@ -64,12 +80,13 @@ const CaptureCam: React.FC<{
     // load models
     const gltfLoader = new GLTFLoader();
     gltfLoader.load('/models/animals/scene.gltf', (gltf) => {
+      setAllLoaded((prev) => prev + 1);
       scene.add(gltf.scene);
     });
     gltfLoader.load('/models/bird_orange/scene.gltf', (gltf) => {
       const position = [0, 0, 1];
       gltf.scene.position.set(position[0], position[1], position[2]);
-
+      setAllLoaded((prev) => prev + 1);
       scene.add(gltf.scene);
       modelRef.current = gltf.scene;
     });

@@ -6,6 +6,7 @@ import { apiBaseUrl } from '../config';
 import avatarGirl2 from '../assets/avatar-girl2.png';
 import shoudDisplayDefaultImage from '../utils/shouldDisplayDefaultImage';
 import { GrEdit } from 'react-icons/gr';
+import { useAuthContext } from '../context/AuthContext';
 
 type EditedFieldsType = Map<keyof User | 'password', any>;
 
@@ -15,6 +16,7 @@ interface ProfileProps {
 }
 
 const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
+  const { setUser } = useAuthContext()!;
   const [playerTag, setPlayerTag] = useState<string>(user.playerTag);
   const [email, setEmail] = useState<string>(user.email);
   const imageInput = useRef<HTMLInputElement>(null);

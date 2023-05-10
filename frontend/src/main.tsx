@@ -49,18 +49,16 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   !navigator.onLine ? (
     <OfflinePage />
   ) : (
-    <React.StrictMode>
-      <AuthContextProvider>
-        <GoogleMapsLoaderProvider>
-          <AppContextProvider>
-            <ThemeProvider theme={theme}>
-              <Suspense fallback={<PokemonProgress />}>
-                <RouterProvider router={routes} />
-              </Suspense>
-            </ThemeProvider>
-          </AppContextProvider>
-        </GoogleMapsLoaderProvider>
-      </AuthContextProvider>
-    </React.StrictMode>
+    <AuthContextProvider>
+      <GoogleMapsLoaderProvider>
+        <AppContextProvider>
+          <ThemeProvider theme={theme}>
+            <Suspense fallback={<PokemonProgress />}>
+              <RouterProvider router={routes} />
+            </Suspense>
+          </ThemeProvider>
+        </AppContextProvider>
+      </GoogleMapsLoaderProvider>
+    </AuthContextProvider>
   )
 );
