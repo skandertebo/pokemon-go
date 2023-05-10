@@ -6,6 +6,7 @@ import { useAuthContext } from '../context/AuthContext';
 import FirstPlace from '../components/PodiumComponents/FirstPlace';
 import SecondPlace from '../components/PodiumComponents/SecondPlace';
 import ThirdPlace from '../components/PodiumComponents/ThirdPlace';
+import PokemonProgress from '../components/PokemonProgress';
 
 function Leaderboard() {
   const { token, user } = useAuthContext() as {
@@ -15,11 +16,11 @@ function Leaderboard() {
   const players = useLeaderboard(token);
 
   if (!players) {
-    return <></>;
+    return <PokemonProgress />;
   }
 
   return (
-    <div className='flex h-screen w-screen bg-background flex-col mb-16 '>
+    <div className='flex min-h-screen h-fit w-screen bg-background flex-col pb-12 '>
       <div className='flex h-96 flex-none flex-col items-center justify-between text-fourth bg-third md:h-[450px]'>
         <div className='h-1/5 text-white font-black text-3xl mt-3'>
           Leaderboard

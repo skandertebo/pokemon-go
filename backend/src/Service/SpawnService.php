@@ -35,11 +35,11 @@ class SpawnService
         ));
         $notification = new Notification();
         if($type === 'spawn'){
-            $notification->setContenu("A new spawn has been added!");
+            $notification->setContenu($spawn -> getPokemon() -> getName() . " spawned Nearby!");
             $notification = $this->notificationService->createNotification($notification);
             $this->notificationService->addNotificationToAllUsers($notification);
         }else if($type === 'capture'){
-            $notification->setContenu("A spawn has been caught!");
+            $notification->setContenu($spawn->getOwner()->getPlayerTag() . " has caught " . $spawn->getPokemon()->getName() . "!");
             $notification = $this->notificationService->createNotification($notification);
             $concernedUsers = $this->playerRepository->createQueryBuilder('p')
                 ->select('p')
@@ -82,7 +82,8 @@ class SpawnService
             //getting a random pokemon from the list
             $spawn->setPokemon($pokemons[rand(0,count($pokemons)-1)]);
 
-            $this->spawnRepository->save($spawn,true);
+            $result = $this->spawnRepository->save($spawn,true);
+            $this->publishSpawnUpdate('spawn', $result);
         }
     }
     function addSpawn(AddSpawnDTO $data)
@@ -140,8 +141,8 @@ class SpawnService
                 throw new HttpException(400,"Invalid date parameter");
             }    
         }
-        //automatically generated method findByOwner
-        return $this->spawnRepository->findByOwner($playerId);
+        dump($playerId);
+        return $this->spawnRepository->findByOwnerOrdered($playerId);
     }
 
 

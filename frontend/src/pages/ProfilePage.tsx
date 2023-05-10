@@ -52,6 +52,7 @@ function ProfilePage() {
         }
       });
       setLocalUser(res.data);
+      setLocalUser(res.data);
       makeNotification({
         message: res.data.message,
         type: 'success',
@@ -93,7 +94,6 @@ function ProfilePage() {
       }
     }
   }
-
   if (!isLoaded) return <PokemonProgress />;
   else {
     return <Profile user={localUser!} updateUser={updateUser} />;

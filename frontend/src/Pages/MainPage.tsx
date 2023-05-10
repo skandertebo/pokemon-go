@@ -11,6 +11,7 @@ import { spawnsContext } from '../context/SpawnsContext';
 import axios from 'axios';
 import { apiBaseUrl } from '../config';
 import useNearbySpawn from '../hooks/useNearbySpawn';
+import User from '../types/User';
 declare global {
   interface Window {
     initMap: () => void;
@@ -19,8 +20,7 @@ declare global {
 
 const MainPage: React.FC = () => {
   const [isCapturing, setIsCapturing] = useState<Spawn | null>(null);
-  const { token, user } = useAuthContext() as UseLoginReturnType;
-  //const [spawns, nearbySpawn] = useSpawns(token);
+  const { token, user, setUser } = useAuthContext()!;
   const spawns = useSpawns();
   const nearbySpawn = useNearbySpawn(spawns);
   const { makeNotification, enableWaiting, disableWaiting } = useAppContext();
@@ -40,6 +40,11 @@ const MainPage: React.FC = () => {
           }
         }
       );
+      setUser({
+        ...user,
+        score: user!.score + res.data.pokemon.baseScore
+      } as User);
+
       makeNotification({
         message: 'Pokemon Captured!',
         type: 'success',
@@ -57,7 +62,6 @@ const MainPage: React.FC = () => {
       setIsCapturing(null);
     }
   }, []);
-
   return (
     <div className='w-screen  h-screen sm:w-full flex flex-col gap-8 items-center'>
       <div className='relative h-full w-full shadow-md rounde-md'>
@@ -67,9 +71,10 @@ const MainPage: React.FC = () => {
         <CaptureCam
           spawn={isCapturing}
           captureAction={(spawn: Spawn) => handleCapture(spawn)}
+          setIsCapturing={setIsCapturing}
         />
       )}
-      <div className='absolute bottom-20 left-1/2 transform -translate-x-1/2 z-10'>
+      <div className='absolute bottom-20 left-1/2 transform -translate-x-1/2 z-5'>
         <CaptureButton
           disabled={!nearbySpawn}
           onClick={() => setIsCapturing(nearbySpawn)}

@@ -50,7 +50,7 @@ class SpawnController extends AbstractController
         {
             return createValidationErrorResponse($errors);
         }
-        $newPokemon=$this->spawnService->autoSpawn($dto->latitude,$dto->longitude);
+        $this->spawnService->autoSpawn($dto->latitude,$dto->longitude);
         return new JsonResponse() ;
         
     }
@@ -112,7 +112,7 @@ class SpawnController extends AbstractController
         try
         {
             $id = $request->attributes->get('jwt_payload')['id'];
-            $dateParam=$request->query->get('date','all');
+            $dateParam=$request->query->get('date');
             $newPokemon=$this->spawnService->getCaptureHistory($id,$dateParam);
         }
         catch(HttpException $e)

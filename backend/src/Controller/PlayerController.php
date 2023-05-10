@@ -99,7 +99,7 @@ class PlayerController extends AbstractController
         $id = $request->attributes->get('jwt_payload')['id'];
         
         $data= [
-            "image" => $request->files->get('image') ,
+            "image" => $request->files->get('image')  ,
             "playerTag" => $request -> request -> get('playerTag') ,
             "email" => $request -> request -> get('email') ,
             "password" => $request -> request -> get('password') 
@@ -110,6 +110,12 @@ class PlayerController extends AbstractController
         $errors = $this->validator->validate($userDTO);
         if (count($errors) > 0) {
             return createValidationErrorResponse($errors); }
+        
+        $noImage=$request->request->get('image');
+        if(isset($noImage) && $noImage=="")
+        {
+            $userDTO->image="";
+        }
         try {
             $this->playerService->updatePlayer($id,$userDTO);
             $user = $this->userService->updateUser($id, $data);

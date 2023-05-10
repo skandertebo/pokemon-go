@@ -15,6 +15,7 @@ import { Notification as BackendNotification } from '../types/Notification';
 import { useAppContext } from '../context/AppContext';
 import axios from 'axios';
 import PokemonProgress from '../components/PokemonProgress';
+import User from '../types/User';
 
 type CustomMercureMessage<
   T extends 'notification' | 'spawnDelete' | 'spawn' | 'catch'
@@ -37,7 +38,10 @@ export const useSpawns = () => useContext(spawnsContext);
 
 const MainLayout: React.FC = () => {
   const outlet = useOutlet();
-  const { token, user } = useAuthContext()!;
+  const { token,user } = useAuthContext()as {
+    token: string;
+    user: User;
+  }
   const [isShowingMenu, setIsShowingMenu] = useState<boolean>(false);
   const { setBackendNotifications } = useAppContext();
   const [spawns, setSpawns] = useState<Spawn[] | undefined>(undefined);
@@ -50,7 +54,7 @@ const MainLayout: React.FC = () => {
     ) => {
       const url =
         !page || !limit
-          ? apiBaseUrl + `/notification/user/${user!.id}?`
+          ? apiBaseUrl + `/notification/user/${user?.id}?`
           : apiBaseUrl +
             `/notification/user/${user!.id}?page=${page}&limit=${limit}`;
       const res = await axios.get(url, {
@@ -121,8 +125,14 @@ const MainLayout: React.FC = () => {
     };
   }, []);
 
-  if (!token) return <Navigate to='/login' />;
+  if (!token) return <Navigate to='/login' />
 
+    if (!user.playerTag){
+        return(
+        <Navigate
+        to={'/dashboard'}
+       />)
+    }
   return (
     <spawnsContext.Provider value={spawns}>
       <isShowingMenuContext.Provider
