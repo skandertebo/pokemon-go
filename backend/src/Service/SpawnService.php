@@ -66,7 +66,7 @@ class SpawnService
         if(mt_rand(0,$precision)/$precision<=$chance)
         {
             //you can set the radius (in meters) of the random generated location with respect to the current location
-            $radius=10;
+            $radius=200;
             $newPosition=generateRandomLocation($latitude,$longitude,$radius);
 
             $pokemons=$this->pokemonRepository->findAll();

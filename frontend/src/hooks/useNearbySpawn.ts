@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Spawn } from '../types/Spawn';
 import { useAppContext } from '../context/AppContext';
 import getDistance from '../utils/getDistance';
-
+const maxDistance = 0.9;
 export default function useNearbySpawn(
   spawns: Spawn[] | undefined
 ): Spawn | null {
@@ -20,7 +20,7 @@ export default function useNearbySpawn(
         geoLocationPosition!.coords.latitude,
         geoLocationPosition!.coords.longitude
       );
-      if (distance < 0.5) {
+      if (distance < maxDistance) {
         if (findNearbySpawnDistance > distance) {
           findNearbySpawnDistance = distance;
           findNearbySpawn = spawn;
